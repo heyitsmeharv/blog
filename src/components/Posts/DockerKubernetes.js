@@ -49,7 +49,9 @@ import alpineShellPng from "../../resources/images/blog/DockerKubernetes/alpine-
 import nodeApiTestPng from "../../resources/images/blog/DockerKubernetes/node-api-test.png";
 import dockerEnvVarsPng from "../../resources/images/blog/DockerKubernetes/docker-env-vars.png";
 import nodeApiNotesPng from "../../resources/images/blog/DockerKubernetes/node-api-notes.png";
-
+import nodeApiRedisPng from "../../resources/images/blog/DockerKubernetes/node-api-redis.png"
+import dockerTaggingPng from "../../resources/images/blog/DockerKubernetes/docker-tagging.png"
+import dockerTaggingCliPng from "../../resources/images/blog/DockerKubernetes/docker-tagging-cli.png"
 
 const dockerDocs = "https://docs.docker.com/";
 const dockerInstallation = "https://docs.docker.com/get-started/get-docker/";
@@ -351,8 +353,8 @@ const compareImageSizes = `docker images node-api`;
 const inspectImage = `docker inspect node-api:prod`;
 const viewLayers = `docker history node-api:prod`;
 const runNodeApiProd = `docker run --rm -p 8080:8080 node-api:prod`;
-const tagForRegistry = `# Example: tag for pushing later (Docker Hub / ECR etc)
-docker tag node-api:prod yourrepo/node-api:1.0.0`;
+const tagForRegistry = `# Example: tag for pushing (Docker Hub / ECR etc)
+docker tag node-api:prod repo/node-api:1.0.0`;
 const dockerCommands = `docker ps                          # what's running
 docker ps -a                       # what ran (and exited)
 docker images                      # what images you have locally
@@ -997,6 +999,16 @@ const DockerKubernetes = () => {
 
         <CodeBlockWithCopy code={testCounterCmd} />
 
+        <Carousel
+          items={[
+            {
+              title: "Recording data with Redis",
+              description: "The API should return a response when hitting GET /counter and POST /counter/incr",
+              src: nodeApiRedisPng,
+            },
+          ]}
+        />
+
         <Banner title="What just happened?" variant="info">
           <Paragraph>
             You didn't expose Redis to your machine - only the API. Redis is reachable privately inside the Compose network.
@@ -1023,7 +1035,7 @@ const DockerKubernetes = () => {
 
         <CodeBlockWithCopy code={composeDownWithVolumes} />
 
-        <SubSectionHeading>Make it shippable (best practices)</SubSectionHeading>
+        <SubSectionHeading>Moving to Production</SubSectionHeading>
 
         <Paragraph>
           Once something runs, it's tempting to stop. But "shippable" containers have a few boring qualities that make them reliable:
@@ -1040,8 +1052,6 @@ const DockerKubernetes = () => {
           <TextListItem><Strong>Simple entrypoint</Strong> - run Node directly instead of shelling through npm.</TextListItem>
         </TextList>
 
-        <TertiaryHeading>Shippable Dockerfile</TertiaryHeading>
-
         <Paragraph>
           Here's a cleaned-up Dockerfile that keeps the same behaviour, but is more production-friendly:
         </Paragraph>
@@ -1049,7 +1059,7 @@ const DockerKubernetes = () => {
         <Carousel
           items={[
             {
-              title: "Dockerfile (shippable)",
+              title: "Dockerfile (production)",
               description: "Same app, better defaults: deterministic installs, production deps only, and a non-root runtime.",
               code: dockerfileNodeApiShippable,
             },
@@ -1060,6 +1070,15 @@ const DockerKubernetes = () => {
 
         <CodeBlockWithCopy code={buildNodeApiProd} />
         <CodeBlockWithCopy code={runNodeApiProd} />
+
+        <Banner title="docker compose vs run" variant="warning">
+          <Paragraph>
+            <Strong>docker compose down</Strong> only stops/removes containers that were created by{" "}
+            <Strong>docker compose up</Strong>. If you start your production container with{" "}
+            <Strong>docker run</Strong> (like <Strong>docker run --rm -p 8080:8080 node-api:prod</Strong>),
+            it's not part of a Compose project, so Compose won't touch it.
+          </Paragraph>
+        </Banner>
 
         <Paragraph>
           Now compare the image size and look at what's inside:
@@ -1081,7 +1100,7 @@ const DockerKubernetes = () => {
           </Paragraph>
         </Banner>
 
-        <TertiaryHeading>Tagging for “shipping”</TertiaryHeading>
+        <TertiaryHeading>Tagging</TertiaryHeading>
 
         <Paragraph>
           Shipping usually means pushing to a registry (Docker Hub, ECR, GHCR). Tagging is how you create a clean, versioned artifact.
@@ -1089,14 +1108,29 @@ const DockerKubernetes = () => {
 
         <CodeBlockWithCopy code={tagForRegistry} />
 
+        <Paragraph>You now should be able to see tags you've made in Docker Desktop or by running the cli command:</Paragraph>
+
+        <Carousel
+          items={[
+            {
+              title: "Tags via Docker Desktop ",
+              description: "Showing existing tags made for images in Docker Desktop.",
+              src: dockerTaggingPng,
+            },
+            {
+              title: "Tags via CLI",
+              description: "Running 'docker images node-api'",
+              src: dockerTaggingCliPng,
+            },
+          ]}
+        />
+
         <SubSectionHeading>Docker wrap-up</SubSectionHeading>
 
         <Paragraph>
           At this point, we've covered the full Docker loop: you can run containers, build images, wire services together, persist data, and make an image
           that's actually safe to ship.
         </Paragraph>
-
-        <TertiaryHeading>The mental model to keep</TertiaryHeading>
 
         <TextList>
           <TextListItem>
@@ -1346,7 +1380,7 @@ const DockerKubernetes = () => {
           <TextListItem><TextLink href={k8sDocs} target="_blank" rel="noreferrer">Kubernetes Docs</TextLink></TextListItem>
         </TextList>
       </PostContainer>
-    </PageWrapper>
+    </PageWrapper >
   );
 };
 

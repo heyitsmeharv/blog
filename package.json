@@ -22,7 +22,9 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky",
+    "release": "commit-and-tag-version"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,7 +42,18 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.4.3",
+    "@commitlint/config-conventional": "^20.4.3",
     "@vitejs/plugin-react": "^5.1.2",
+    "commit-and-tag-version": "^12.6.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.2",
+    "prettier": "^3.8.1",
     "vite": "^7.3.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }

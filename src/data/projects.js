@@ -10,7 +10,7 @@ export const projects = [
   {
     name: "Fantasy Fight Picker",
     description:
-      "A full-stack Instagram clone with image uploads, likes, and a followers feed.",
+      "Fantasy Fight Picker is a prediction app built with React and AWS. Browse upcoming fight cards, research fighters, make picks before lock, and earn points based on prediction accuracy. ",
     image: FantasyFightPicker,
     github: "https://github.com/heyitsmeharv/fantasy-fight-picker",
     link: "https://d18kh2aenn5ywj.cloudfront.net",

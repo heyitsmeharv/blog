@@ -1,106 +1,146 @@
-import React, { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
+import React from "react";
+import styled from "styled-components";
+import { motion } from "motion/react";
 
 // icons
 import { Github } from "@styled-icons/boxicons-logos/Github";
 import { ExternalLink } from "@styled-icons/evaicons-solid/ExternalLink";
 
-const createBox = keyframes`
-  from {
-    transform: scale(0);
-  }
-  to {
-    transform: scale(1);
-  }
-`;
+// data
+import { tagColors } from "../../data/tagColors";
 
-const StyledGithub = styled(Github)`
-  width: 50px;
-  height: 50px;
-  margin: 0 25px;
-`;
-
-const StyledExternalLink = styled(ExternalLink)`
-  width: 50px;
-  height: 50px;
-  margin: 0 25px;
-`;
-
-const Flex = styled.div`
+const Card = styled(motion.div)`
+  background: ${({ theme }) => theme.secondary};
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  height: 100%;
 `;
 
-const Container = styled.div`
+const ImageWrapper = styled.div`
   width: 100%;
-  position: relative;
-  display: inline-block;
-   
-  @media only screen and (min-width: 585px) {
-    width: 50%;
-    animation: ${createBox} .25s;
-    transition: 0.25s;
-    -webkit-transition: 0.25s;
-  }
+  height: 200px;
+  overflow: hidden;
 `;
 
 const Image = styled.img`
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  ${props => props.hovered && css`
-    opacity: 0.8;
-  `}
 `;
 
-const LinkContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+const Body = styled.div`
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const Name = styled.h3`
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text};
+  margin: 0 0 0.8rem;
+`;
+
+const Description = styled.p`
+  font-size: 1.3rem;
+  color: ${({ theme }) => theme.text};
+  opacity: 0.8;
+  margin: 0 0 1.4rem;
+  line-height: 1.6;
+  flex: 1;
+`;
+
+const TagRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.6rem;
+`;
+
+const Tag = styled.span`
+  font-size: 1.1rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  background: ${({ $bg, theme }) => $bg || theme.buttonColour};
+  color: ${({ $text, theme }) => $text || theme.buttonText};
+  font-weight: 600;
+`;
+
+const LinkRow = styled.div`
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
 `;
 
 const StyledAnchor = styled.a`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: ${({ theme }) => theme.text};
-`;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 600;
+  opacity: 0.75;
+  transition: opacity 0.2s;
 
-const StyledName = styled.span`
-  font-size: 2.5rem;
-  color: ${({ theme }) => theme.text};
-  @media only screen and (max-width: 585px) {
-    font-size: 2rem;
+  &:hover {
+    opacity: 1;
   }
 `;
 
-const Project = ({ name, link, image, github, hide }) => {
-  const [hovered, setHovered] = useState(false);
+const StyledGithub = styled(Github)`
+  width: 20px;
+  height: 20px;
+`;
 
+const StyledExternalLink = styled(ExternalLink)`
+  width: 20px;
+  height: 20px;
+`;
+
+const Project = ({ name, description, image, github, link, tags }) => {
   return (
-    <Container hovered={hovered} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-      <Image hovered={hovered} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} src={image} />
-      {hovered &&
-        <LinkContainer onMouseEnter={() => setHovered(true)}>
-          <Flex>
-            <StyledAnchor
-              target="_blank"
-              href={github}
+    <Card
+      whileHover={{ y: -6, boxShadow: "0 10px 28px rgba(0,0,0,0.22)" }}
+      transition={{ duration: 0.2 }}
+    >
+      <ImageWrapper>
+        <Image src={image} alt={name} />
+      </ImageWrapper>
+      <Body>
+        <Name>{name}</Name>
+        <Description>{description}</Description>
+        <TagRow>
+          {tags.map((tag) => (
+            <Tag
+              key={tag}
+              $bg={tagColors[tag]?.bg}
+              $text={tagColors[tag]?.text}
             >
-              <StyledGithub onMouseEnter={() => setHovered(true)} />
+              {tag}
+            </Tag>
+          ))}
+        </TagRow>
+        <LinkRow>
+          <StyledAnchor href={github} target="_blank" rel="noopener noreferrer">
+            <StyledGithub />
+            GitHub
+          </StyledAnchor>
+          {link && (
+            <StyledAnchor href={link} target="_blank" rel="noopener noreferrer">
+              <StyledExternalLink />
+              Live Demo
             </StyledAnchor>
-            {!hide &&
-              <StyledAnchor
-                target="_blank"
-                href={link}
-              >
-                <StyledExternalLink onMouseEnter={() => setHovered(true)} />
-              </StyledAnchor>
-            }
-          </Flex>
-          <StyledName>{name}</StyledName>
-        </LinkContainer>
-      }
-    </Container>
+          )}
+        </LinkRow>
+      </Body>
+    </Card>
   );
-}
+};
 
 export default Project;

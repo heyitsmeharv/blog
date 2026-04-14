@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "motion/react";
 
 // helpers
 import { Analytics } from "../helpers/analytics";
+import {
+  allText,
+  filterProjectsByTagText,
+  nextProjectPageText,
+  previousProjectPageText,
+  projectsPageStatusText,
+  projectsText,
+} from "../helpers/i18nText";
 
 // data
 import { projects } from "../data/projects";
 import { tagColors } from "../data/tagColors";
+
+// context
+import { LanguageContext } from "../context/languageContext";
 
 // components
 import Project from "../components/Project/Project";
@@ -119,6 +130,7 @@ const pageVariants = {
 };
 
 export default function Projects() {
+  const language = useContext(LanguageContext);
   const [activeFilter, setActiveFilter] = useState("All");
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -154,8 +166,8 @@ export default function Projects() {
 
   return (
     <Container>
-      <PageHeading>Projects</PageHeading>
-      <FilterBar role="toolbar" aria-label="Filter projects by tag">
+      <PageHeading>{projectsText(language)}</PageHeading>
+      <FilterBar role="toolbar" aria-label={filterProjectsByTagText(language)}>
         {allTags.map((tag) => (
           <FilterButton
             key={tag}
@@ -166,7 +178,7 @@ export default function Projects() {
             onClick={() => handleFilter(tag)}
             aria-pressed={activeFilter === tag}
           >
-            {tag}
+            {tag === "All" ? allText(language) : tag}
           </FilterButton>
         ))}
       </FilterBar>
@@ -176,14 +188,18 @@ export default function Projects() {
           type="button"
           onClick={goPrev}
           disabled={page === 0}
-          aria-label="Previous project page"
+          aria-label={previousProjectPageText(language)}
         >
           ‹
         </ArrowButton>
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={`${activeFilter}-${page}`}
-            aria-label={`Project page ${page + 1} of ${Math.max(totalPages, 1)}`}
+            aria-label={projectsPageStatusText(
+              language,
+              page + 1,
+              Math.max(totalPages, 1),
+            )}
             custom={direction}
             variants={pageVariants}
             initial="enter"
@@ -218,7 +234,7 @@ export default function Projects() {
           type="button"
           onClick={goNext}
           disabled={page >= totalPages - 1}
-          aria-label="Next project page"
+          aria-label={nextProjectPageText(language)}
         >
           ›
         </ArrowButton>

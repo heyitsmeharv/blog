@@ -5,6 +5,10 @@ import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 
 import SlideInBottom from "../../animations/SlideInBottom";
+import {
+  contributionTooltipText,
+  githubActivityText,
+} from "../../helpers/i18nText";
 
 const Container = styled.section`
   width: 100%;
@@ -53,12 +57,10 @@ const CalendarWrapper = styled.div`
 `;
 
 const GitHubActivity = ({ language }) => {
-  const label = language === "ES" ? "Actividad de GitHub" : "GitHub Activity";
-
   return (
     <Container id="github">
       <Inner>
-        <Title>{label}</Title>
+        <Title>{githubActivityText(language)}</Title>
         <Separator />
         <CalendarWrapper>
           <GitHubCalendar
@@ -70,7 +72,11 @@ const GitHubActivity = ({ language }) => {
             renderBlock={(block, activity) =>
               React.cloneElement(block, {
                 "data-tooltip-id": "github-activity-tooltip",
-                "data-tooltip-content": `${activity.count} contribution${activity.count !== 1 ? "s" : ""} on ${activity.date}`,
+                "data-tooltip-content": contributionTooltipText(
+                  language,
+                  activity.count,
+                  activity.date,
+                ),
               })
             }
           />

@@ -1,15 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import styled from "styled-components";
 
 import Toast from "../Toast/Toast";
 
 import Confetti from "canvas-confetti";
+import { LanguageContext } from "../../context/languageContext";
 
 //icons
 import { CheckSVG } from "../../resources/styles/icons";
 import { ErrorSVG } from "../../resources/styles/icons";
 import { Like } from "@styled-icons/boxicons-solid/Like";
+import {
+  errorText,
+  likeFailureText,
+  likeSuccessText,
+  likeThisPostText,
+  successText,
+} from "../../helpers/i18nText";
 
 const Container = styled.div`
   background: ${({ theme }) => theme.secondary};
@@ -46,6 +54,7 @@ const StyledText = styled.p`
 `;
 
 const LikeCounter = () => {
+  const language = useContext(LanguageContext);
   const [count, setCount] = useState();
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
@@ -68,9 +77,11 @@ const LikeCounter = () => {
     const id = Math.floor(Math.random() * 100 + 1);
     const toast = {
       id,
-      title: type === "Success" ? "Success" : "Error",
+      title: type === "Success" ? successText(language) : errorText(language),
       description:
-        type === "Success" ? "Successfully Added Like" : "Failed To Add Like",
+        type === "Success"
+          ? likeSuccessText(language)
+          : likeFailureText(language),
       backgroundColor: type === "Success" ? "#5cb85c" : "#d9534f",
       icon: type === "Success" ? <CheckSVG /> : <ErrorSVG />,
     };
@@ -115,7 +126,7 @@ const LikeCounter = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => handleSubmitLike()}
-          aria-label="Like this post"
+          aria-label={likeThisPostText(language)}
         >
           <StyledLikeIcon />
         </StyledButton>

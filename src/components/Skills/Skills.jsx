@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import SlideInBottom from "../../animations/SlideInBottom";
-import { skillsText, skillsListText } from "../../helpers/text";
+import { skillsText, skillsListText } from "../../helpers/i18nText";
 import awscp from "../../resources/images/aws-certified-cloud-practitioner.png";
 
 import {
@@ -77,8 +77,9 @@ const Separator = styled.div`
 `;
 
 const Subtitle = styled.p`
-  font-size: 1.5rem;
-  color: ${({ theme }) => theme.secondary};
+  font-size: 1.6rem;
+  color: ${({ theme }) => theme.mutedText || theme.secondary};
+  font-weight: 600;
   margin-bottom: 2.5rem;
 `;
 

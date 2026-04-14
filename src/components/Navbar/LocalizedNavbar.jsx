@@ -227,14 +227,14 @@ const MobileLangRow = styled.div`
 `;
 
 const THEMES = [
-  { name: "light", label: "Light theme", colour: "#ffffff", border: "#999999" },
-  { name: "dark", label: "Dark theme", colour: "#1b1c22", border: "#555555" },
-  { name: "blue", label: "Blue theme", colour: "#0c6e8c", border: "#053546" },
-  { name: "red", label: "Red theme", colour: "#6a040f", border: "#240104" },
-  { name: "green", label: "Green theme", colour: "#486221", border: "#273506" },
+  { name: "light", colour: "#ffffff", border: "#999999" },
+  { name: "dark", colour: "#1b1c22", border: "#555555" },
+  { name: "blue", colour: "#0c6e8c", border: "#053546" },
+  { name: "red", colour: "#6a040f", border: "#240104" },
+  { name: "green", colour: "#486221", border: "#273506" },
 ];
 
-const AccessibleNavbar = ({
+const LocalizedNavbar = ({
   currentLanguage,
   currentTheme,
   toggleTheme,
@@ -314,13 +314,13 @@ const AccessibleNavbar = ({
   );
 
   return (
-    <Nav aria-label="Primary navigation">
+    <Nav aria-label={primaryNavigationText(currentLanguage)}>
       <NavInner>
         <NavLinks>{desktopLinks}</NavLinks>
         <NavControls>
           <LangButton
             onClick={() => toggleLanguage("EN")}
-            aria-label="Switch language to English"
+            aria-label={switchLanguageToEnglishText(currentLanguage)}
             aria-pressed={currentLanguage === "EN"}
             title="English"
           >
@@ -328,9 +328,9 @@ const AccessibleNavbar = ({
           </LangButton>
           <LangButton
             onClick={() => toggleLanguage("ES")}
-            aria-label="Cambiar idioma a español"
+            aria-label={switchLanguageToSpanishText(currentLanguage)}
             aria-pressed={currentLanguage === "ES"}
-            title="Español"
+            title="Espanol"
           >
             ES
           </LangButton>
@@ -341,16 +341,18 @@ const AccessibleNavbar = ({
               $colour={themeOption.colour}
               $border={themeOption.border}
               onClick={() => toggleTheme(themeOption.name)}
-              aria-label={`Switch to ${themeOption.label.toLowerCase()}`}
+              aria-label={switchToThemeText(currentLanguage, themeOption.name)}
               aria-pressed={currentTheme === themeOption.name}
-              title={themeOption.label}
+              title={themeLabelText(currentLanguage, themeOption.name)}
             />
           ))}
         </NavControls>
         <HamburgerBtn
           onClick={() => setIsMenuOpen((open) => !open)}
           aria-label={
-            isMenuOpen ? "Close navigation menu" : "Open navigation menu"
+            isMenuOpen
+              ? closeNavigationMenuText(currentLanguage)
+              : openNavigationMenuText(currentLanguage)
           }
           aria-expanded={isMenuOpen}
           aria-controls="mobile-navigation"
@@ -368,7 +370,7 @@ const AccessibleNavbar = ({
               toggleLanguage("EN");
               closeMenu();
             }}
-            aria-label="Switch language to English"
+            aria-label={switchLanguageToEnglishText(currentLanguage)}
             aria-pressed={currentLanguage === "EN"}
             title="English"
           >
@@ -379,9 +381,9 @@ const AccessibleNavbar = ({
               toggleLanguage("ES");
               closeMenu();
             }}
-            aria-label="Cambiar idioma a español"
+            aria-label={switchLanguageToSpanishText(currentLanguage)}
             aria-pressed={currentLanguage === "ES"}
-            title="Español"
+            title="Espanol"
           >
             ES
           </LangButton>
@@ -391,4 +393,4 @@ const AccessibleNavbar = ({
   );
 };
 
-export default AccessibleNavbar;
+export default LocalizedNavbar;

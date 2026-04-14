@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 
 import { StyledNavLink } from "../Button/Button";
 import { Journal } from "@styled-icons/bootstrap/Journal";
+import { LanguageContext } from "../../context/languageContext";
+import {
+  comingSoonText,
+  notPublishedText,
+  postTypeText,
+  readMoreText,
+  readingTimeText,
+  tagsForItemText,
+} from "../../helpers/i18nText";
 
 const Container = styled.article`
   background: ${({ theme }) => theme.surface || theme.secondary};
@@ -130,16 +139,20 @@ const BlogPost = ({
   navigate,
   published,
 }) => {
+  const language = useContext(LanguageContext);
+
   return (
     <Container $disabled={!published} aria-labelledby={`blog-post-${navigate}`}>
-      {!published && <ComingSoonBanner>Not Published</ComingSoonBanner>}
+      {!published && (
+        <ComingSoonBanner>{notPublishedText(language)}</ComingSoonBanner>
+      )}
       <TopBarText>
-        <StyledTopBarText>{type}</StyledTopBarText>
+        <StyledTopBarText>{postTypeText(language, type)}</StyledTopBarText>
         <StyledTopBarText>{date}</StyledTopBarText>
       </TopBarText>
       <StyledTitle id={`blog-post-${navigate}`}>{title}</StyledTitle>
-      <ReadingTime>{readingTime}</ReadingTime>
-      <Flex aria-label={`Tags for ${title}`}>
+      <ReadingTime>{readingTimeText(language, readingTime)}</ReadingTime>
+      <Flex aria-label={tagsForItemText(language, title)}>
         {tags?.map((tag, index) =>
           tag.name === "Misc" ? (
             <StyledJournal
@@ -164,10 +177,12 @@ const BlogPost = ({
       <BottomBarText>
         {published ? (
           <StyledBorderLink exact to={`/blog/${navigate}`}>
-            Read more
+            {readMoreText(language)}
           </StyledBorderLink>
         ) : (
-          <StyledTopBarText as="span">Coming soon</StyledTopBarText>
+          <StyledTopBarText as="span">
+            {comingSoonText(language)}
+          </StyledTopBarText>
         )}
       </BottomBarText>
     </Container>

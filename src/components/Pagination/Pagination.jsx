@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -7,6 +7,8 @@ import BlogPost from "../BlogPost/BlogPost";
 
 // animations
 import SlideInTop from "../../animations/SlideInTop";
+import { LanguageContext } from "../../context/languageContext";
+import { blogPageStatusText, goToPageText } from "../../helpers/i18nText";
 
 const Container = styled.div`
   display: flex;
@@ -60,6 +62,7 @@ const PaginationNav = styled.nav`
 `;
 
 const Pagination = ({ currentPage, setCurrentPage, itemsPerPage, items }) => {
+  const language = useContext(LanguageContext);
   const [displayItems, setDisplayItems] = useState([]);
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
@@ -96,7 +99,9 @@ const Pagination = ({ currentPage, setCurrentPage, itemsPerPage, items }) => {
         })}
       </Container>
       {totalPages > 1 && (
-        <PaginationNav aria-label="Blog post pagination">
+        <PaginationNav
+          aria-label={blogPageStatusText(language, currentPage, totalPages)}
+        >
           <PaginationWrapper>
             {Array.from({ length: totalPages }, (_, index) => index + 1).map(
               (page) => (
@@ -107,7 +112,7 @@ const Pagination = ({ currentPage, setCurrentPage, itemsPerPage, items }) => {
                   $active={currentPage === page}
                   $isActive={currentPage === page}
                   aria-current={currentPage === page ? "page" : undefined}
-                  aria-label={`Go to page ${page}`}
+                  aria-label={goToPageText(language, page)}
                 >
                   {page}
                 </PaginationButton>

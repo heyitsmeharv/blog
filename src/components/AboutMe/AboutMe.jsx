@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import SlideInBottom from "../../animations/SlideInBottom";
-import { aboutMe, aboutMeText } from "../../helpers/text";
+import { aboutMe, aboutMeText, introductionText } from "../../helpers/i18nText";
 
 const Container = styled.section`
   width: 100%;
@@ -52,6 +52,8 @@ const AboutMe = ({ language }) => (
       <Title>{aboutMe(language)}</Title>
       <Separator />
       <Text>{aboutMeText(language)}</Text>
+      <br />
+      <Text>{introductionText(language)}</Text>
     </Inner>
   </Container>
 );

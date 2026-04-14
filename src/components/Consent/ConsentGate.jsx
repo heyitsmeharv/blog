@@ -1,6 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Analytics } from "../../helpers/analytics";
+import { LanguageContext } from "../../context/languageContext";
+import {
+  acceptAnalyticsText,
+  acceptText,
+  cookiesAnalyticsDescriptionText,
+  cookiesAnalyticsTitleText,
+  declineAnalyticsText,
+  declineText,
+  disableAnalyticsText,
+  enableAnalyticsText,
+  manageCookiePreferencesText,
+} from "../../helpers/i18nText";
 
 const Container = styled.div`
   position: fixed;
@@ -54,7 +66,7 @@ const LinkButton = styled.button.attrs({ type: "button" })`
   cursor: pointer;
 `;
 
-function CookieBanner({ onAccept, onDecline }) {
+function CookieBanner({ language, onAccept, onDecline }) {
   const titleId = "cookie-banner-title";
   const descriptionId = "cookie-banner-description";
 
@@ -66,20 +78,24 @@ function CookieBanner({ onAccept, onDecline }) {
       "aria-labelledby": titleId,
       "aria-describedby": descriptionId,
     },
-    React.createElement(Title, { id: titleId }, "Cookies & analytics"),
+    React.createElement(
+      Title,
+      { id: titleId },
+      cookiesAnalyticsTitleText(language),
+    ),
     React.createElement(
       Text,
       { id: descriptionId },
       null,
-      "I use Google Analytics to understand usage. Accept to enable analytics. You can change this anytime.",
+      cookiesAnalyticsDescriptionText(language),
     ),
     React.createElement(
       Row,
       null,
       React.createElement(
         Button,
-        { onClick: onDecline, "aria-label": "Decline analytics" },
-        "Decline",
+        { onClick: onDecline, "aria-label": declineAnalyticsText(language) },
+        declineText(language),
       ),
       React.createElement(
         PrimaryButton,
@@ -88,15 +104,16 @@ function CookieBanner({ onAccept, onDecline }) {
             Analytics.start();
             onAccept();
           },
-          "aria-label": "Accept analytics",
+          "aria-label": acceptAnalyticsText(language),
         },
-        "Accept",
+        acceptText(language),
       ),
     ),
   );
 }
 
 export default function ConsentGate({ children }) {
+  const language = useContext(LanguageContext);
   const [consent, setConsent] = useState(() => {
     try {
       return localStorage.getItem("consent");
@@ -117,6 +134,7 @@ export default function ConsentGate({ children }) {
       React.Fragment,
       null,
       React.createElement(CookieBanner, {
+        language,
         onAccept: () => {
           try {
             localStorage.setItem("consent", "accepted");
@@ -138,6 +156,7 @@ export default function ConsentGate({ children }) {
 }
 
 export function ManageCookies() {
+  const language = useContext(LanguageContext);
   const [granted, setGranted] = useState(() => {
     try {
       return localStorage.getItem("consent") === "accepted";
@@ -164,8 +183,8 @@ export function ManageCookies() {
           setGranted(true);
         }
       },
-      "aria-label": "Manage cookie preferences",
+      "aria-label": manageCookiePreferencesText(language),
     },
-    granted ? "Disable analytics" : "Enable analytics",
+    granted ? disableAnalyticsText(language) : enableAnalyticsText(language),
   );
 }

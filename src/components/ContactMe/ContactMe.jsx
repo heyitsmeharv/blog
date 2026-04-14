@@ -16,7 +16,15 @@ import {
   companyInput,
   messageInput,
   sendMessageText,
-} from "../../helpers/text";
+  contactMessageValidationText,
+  sendingMessageStatusText,
+  messageSentSuccessfullyText,
+  unableToSendMessageText,
+  errorText,
+  successText,
+  sentEmailFailureText,
+  sentEmailSuccessText,
+} from "../../helpers/i18nText";
 
 const Container = styled.section`
   width: 100%;
@@ -119,11 +127,11 @@ const ContactMe = ({ language, open }) => {
   const createToast = (type) => {
     const toast = {
       id: `${Date.now()}-${Math.random()}`,
-      title: type === "Success" ? "Success" : "Error",
+      title: type === "Success" ? successText(language) : errorText(language),
       description:
         type === "Success"
-          ? "Successfully sent email."
-          : "Failed to send email.",
+          ? sentEmailSuccessText(language)
+          : sentEmailFailureText(language),
       backgroundColor: type === "Success" ? "#15803d" : "#b91c1c",
       icon: type === "Success" ? <CheckSVG /> : <ErrorSVG />,
     };
@@ -136,13 +144,13 @@ const ContactMe = ({ language, open }) => {
 
     if (!formRef.current?.reportValidity()) {
       setError(true);
-      setStatusMessage("Please complete the required fields before sending.");
+      setStatusMessage(contactMessageValidationText(language));
       return;
     }
 
     setIsSending(true);
     setError(false);
-    setStatusMessage("Sending message...");
+    setStatusMessage(sendingMessageStatusText(language));
 
     const emailObj = {
       name,
@@ -169,7 +177,7 @@ const ContactMe = ({ language, open }) => {
       if (response.ok) {
         createToast("Success");
         handleOnReset();
-        setStatusMessage("Message sent successfully.");
+        setStatusMessage(messageSentSuccessfullyText(language));
         Analytics.event("Contact Me Success", {
           category: "Contact Me",
           action: "Successfully sent an email",
@@ -180,7 +188,7 @@ const ContactMe = ({ language, open }) => {
 
       createToast("Fail");
       setError(true);
-      setStatusMessage("Unable to send your message right now.");
+      setStatusMessage(unableToSendMessageText(language));
       Analytics.event("Contact Me Failure", {
         category: "Contact Me",
         action: "Failed to send an email",
@@ -189,7 +197,7 @@ const ContactMe = ({ language, open }) => {
     } catch (sendError) {
       createToast("Fail");
       setError(true);
-      setStatusMessage("Unable to send your message right now.");
+      setStatusMessage(unableToSendMessageText(language));
       Analytics.event("Contact Me Failure", {
         category: "Contact Me",
         action: "Failed to send an email",
@@ -290,7 +298,9 @@ const ContactMe = ({ language, open }) => {
               message.length === 0
             }
           >
-            {isSending ? "Sending..." : sendMessageText(language)}
+            {isSending
+              ? sendingMessageStatusText(language)
+              : sendMessageText(language)}
           </ContactMeSendButton>
         </Actions>
       </Form>

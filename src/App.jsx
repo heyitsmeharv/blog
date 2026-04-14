@@ -32,7 +32,7 @@ import NotFound from "./pages/NotFound";
 
 // components
 import ConsentGate from "./components/Consent/ConsentGate";
-import Navbar from "./components/Navbar/AccessibleNavbar";
+import Navbar from "./components/Navbar/LocalizedNavbar";
 
 // blog posts
 import TheStart from "./components/Posts/TheStart.jsx";
@@ -62,23 +62,29 @@ import DockerKubernetesAdvanced from "./components/Posts/DockerKubernetesAdvance
 import IaCTerraform from "./components/Posts/IaCTerraform";
 import ConventionalCommits from "./components/Posts/ConventionalCommits.jsx";
 import { posts } from "./data/posts";
+import {
+  blogText,
+  portfolioText,
+  projectsText,
+  skipToMainContentText,
+} from "./helpers/i18nText";
 
 const slugFromPath = (p) => {
   const m = (p || "").match(/^\/blog\/([^/?#]+)/);
   return m ? m[1] : null;
 };
 
-const getDocumentTitle = (pathname) => {
+const getDocumentTitle = (pathname, language) => {
   if (pathname === "/") {
-    return "Adam Harvey | Portfolio";
+    return `Adam Harvey | ${portfolioText(language)}`;
   }
 
   if (pathname === "/blog") {
-    return "Blog | Adam Harvey";
+    return `${blogText(language)} | Adam Harvey`;
   }
 
   if (pathname === "/projects") {
-    return "Projects | Adam Harvey";
+    return `${projectsText(language)} | Adam Harvey`;
   }
 
   const slug = slugFromPath(pathname);
@@ -113,18 +119,18 @@ const AppMain = styled.main`
   min-height: calc(100vh - 6.5rem);
 `;
 
-const TrackingGate = ({ location, mainRef, children }) => {
+const TrackingGate = ({ location, mainRef, language, children }) => {
   const skipFirstPv = useRef(true); // avoid double PV with the initial one fired in Analytics.start()
 
   useEffect(() => {
-    document.title = getDocumentTitle(location.pathname);
+    document.title = getDocumentTitle(location.pathname, language);
 
     const id = setTimeout(() => {
       mainRef?.current?.focus({ preventScroll: true });
     }, 0);
 
     return () => clearTimeout(id);
-  }, [location, mainRef]);
+  }, [language, location, mainRef]);
 
   useEffect(() => {
     if (!Consent.isGranted()) return; // only after Accept
@@ -188,11 +194,17 @@ const App = () => {
           <GlobalStyles />
           <ConsentGate>
             <Router>
-              <SkipLink href="#main-content">Skip to main content</SkipLink>
+              <SkipLink href="#main-content">
+                {skipToMainContentText(language)}
+              </SkipLink>
               <Route
                 render={({ location }) => {
                   return (
-                    <TrackingGate location={location} mainRef={mainRef}>
+                    <TrackingGate
+                      location={location}
+                      mainRef={mainRef}
+                      language={language}
+                    >
                       <Navbar
                         currentLanguage={language}
                         currentTheme={theme}

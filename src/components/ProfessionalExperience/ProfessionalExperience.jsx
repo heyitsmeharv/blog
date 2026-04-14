@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import SlideInBottom from "../../animations/SlideInBottom";
-import { experienceText } from "../../helpers/text";
+import { experienceText, viewCvText } from "../../helpers/i18nText";
 
 const Container = styled.section`
   width: 100%;

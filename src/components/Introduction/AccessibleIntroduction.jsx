@@ -6,7 +6,14 @@ import { LinkedinSquare } from "@styled-icons/boxicons-logos/LinkedinSquare";
 
 import SlideInBottom from "../../animations/SlideInBottom";
 import ProfileImg from "../../resources/images/Profile.jpg";
-import { contactMe } from "../../helpers/text";
+import {
+  contactMe,
+  githubProfileLabel,
+  linkedinProfileLabel,
+  locationText,
+  openToWorkText,
+  roleTitleText,
+} from "../../helpers/i18nText";
 import { ContactMeButton } from "../Button/Button";
 
 const HeroSection = styled.section`
@@ -202,16 +209,16 @@ const AccessibleIntroduction = ({ language, open, setOpen }) => {
       <Inner>
         <ProfileImage src={ProfileImg} alt="Adam Harvey" />
         <InfoWrapper>
-          <OpenToWorkBadge>Open to work</OpenToWorkBadge>
+          <OpenToWorkBadge>{openToWorkText(language)}</OpenToWorkBadge>
           <Name>Adam Harvey</Name>
-          <RoleTitle>Software Engineer</RoleTitle>
-          <Location>Oxford, England</Location>
+          <RoleTitle>{roleTitleText(language)}</RoleTitle>
+          <Location>{locationText(language)}</Location>
           <SocialRow>
             <SocialIconLink
               href="https://github.com/heyitsmeharv"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit Adam Harvey's GitHub profile"
+              aria-label={githubProfileLabel(language)}
               title="GitHub"
             >
               <GithubIcon />
@@ -220,7 +227,7 @@ const AccessibleIntroduction = ({ language, open, setOpen }) => {
               href="https://www.linkedin.com/in/heyitsmeharv/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit Adam Harvey's LinkedIn profile"
+              aria-label={linkedinProfileLabel(language)}
               title="LinkedIn"
             >
               <LinkedInIcon />

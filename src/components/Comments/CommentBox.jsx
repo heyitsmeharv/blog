@@ -12,7 +12,16 @@ import { ErrorSVG } from "../../resources/styles/icons";
 
 // helpers
 import { Analytics } from "../../helpers/analytics";
-import { nameInput, commentPrompt, cancel, submit } from "../../helpers/text";
+import {
+  commentFailureText,
+  commentPrompt,
+  commentSuccessText,
+  errorText,
+  nameInput,
+  submit,
+  successText,
+  cancel,
+} from "../../helpers/i18nText";
 
 const INITIAL_HEIGHT = 46;
 
@@ -99,11 +108,11 @@ const CommentBox = ({ setLoading, language }) => {
     const id = Math.floor(Math.random() * 100 + 1);
     const toast = {
       id,
-      title: type === "Success" ? "Success" : "Error",
+      title: type === "Success" ? successText(language) : errorText(language),
       description:
         type === "Success"
-          ? "Successfully Made Comment"
-          : "Failed To Make Comment",
+          ? commentSuccessText(language)
+          : commentFailureText(language),
       backgroundColor: type === "Success" ? "#5cb85c" : "#d9534f",
       icon: type === "Success" ? <CheckSVG /> : <ErrorSVG />,
     };
@@ -194,7 +203,9 @@ const CommentBox = ({ setLoading, language }) => {
           name="name"
         />
       </Header>
-      <HiddenLabel htmlFor="comment-field">What are your thoughts?</HiddenLabel>
+      <HiddenLabel htmlFor="comment-field">
+        {commentPrompt(language)}
+      </HiddenLabel>
       <CommentTextArea
         ref={textRef}
         onClick={onExpand}

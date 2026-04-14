@@ -276,32 +276,38 @@ const ReadMore = styled(NavLink)`
   }
 `;
 
-const FeaturedBlogPosts = ({ language }) => {
-  const featured = posts.filter((p) => p.published).slice(0, FEATURED_COUNT);
+const LocalizedFeaturedBlogPosts = ({ language }) => {
+  const featured = posts
+    .filter((post) => post.published)
+    .slice(0, FEATURED_COUNT);
 
   return (
     <Container id="blog">
       <Inner>
         <Header>
           <Title>{latestPostsText(language)}</Title>
-          <ViewAll to="/blog">{viewAllPostsText(language)} →</ViewAll>
+          <ViewAll to="/blog">
+            {viewAllPostsText(language)}
+            {" ->"}
+          </ViewAll>
         </Header>
         <Separator />
         <Grid>
-          {featured.map((post, i) => {
+          {featured.map((post, index) => {
             const typeStyle = TYPE_COLORS[post.type] || {};
+
             return (
               <motion.div
                 key={post.navigate}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: i * 0.08 }}
+                transition={{ duration: 0.35, delay: index * 0.08 }}
                 style={{ display: "flex" }}
               >
                 <Card>
                   <CardTop>
                     <TypeBadge $bg={typeStyle.bg} $color={typeStyle.text}>
-                      {post.type}
+                      {postTypeText(language, post.type)}
                     </TypeBadge>
                     <DateText>{post.date}</DateText>
                   </CardTop>
@@ -331,9 +337,14 @@ const FeaturedBlogPosts = ({ language }) => {
                       })}
                     </TagsRow>
                   )}
-                  <ReadingTime>{post.readingTime}</ReadingTime>
+                  <ReadingTime>
+                    {readingTimeText(language, post.readingTime)}
+                  </ReadingTime>
                   <Intro>{post.intro}</Intro>
-                  <ReadMore to={`/blog/${post.navigate}`}>Read post →</ReadMore>
+                  <ReadMore to={`/blog/${post.navigate}`}>
+                    {readPostText(language)}
+                    {" ->"}
+                  </ReadMore>
                 </Card>
               </motion.div>
             );
@@ -344,4 +355,4 @@ const FeaturedBlogPosts = ({ language }) => {
   );
 };
 
-export default FeaturedBlogPosts;
+export default LocalizedFeaturedBlogPosts;

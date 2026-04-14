@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import ToastInRight from "../../animations/ToastInRight";
 
 import { ToastCloseButton } from "../Button/Button";
 import { StyledClose } from "../../resources/styles/icons";
+import { LanguageContext } from "../../context/languageContext";
+import {
+  dismissNotificationText,
+  notificationsText,
+} from "../../helpers/i18nText";
 
 const Container = styled.div`
   width: 280px;
@@ -55,6 +60,7 @@ const Text = styled.p`
 `;
 
 const Toast = ({ toastList }) => {
+  const language = useContext(LanguageContext);
   const [list, setList] = useState([]);
 
   const deleteToast = (itemId) => {
@@ -82,7 +88,7 @@ const Toast = ({ toastList }) => {
   }, [list]);
 
   return (
-    <Container role="region" aria-label="Notifications">
+    <Container role="region" aria-label={notificationsText(language)}>
       {list.map((toast) => (
         <Wrapper
           key={toast.id}
@@ -97,7 +103,7 @@ const Toast = ({ toastList }) => {
                 <Title>{toast.title}</Title>
                 <ToastCloseButton
                   onClick={() => deleteToast(toast.id)}
-                  aria-label={`Dismiss ${toast.title} notification`}
+                  aria-label={dismissNotificationText(language, toast.title)}
                 >
                   <StyledClose />
                 </ToastCloseButton>

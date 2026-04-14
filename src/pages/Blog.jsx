@@ -1,8 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
 // helpers
 import { Analytics } from "../helpers/analytics";
+import {
+  blogNoResultsDescriptionText,
+  blogNoResultsTitleText,
+  blogText,
+  clearSearchText,
+  clearText,
+  filterBlogPostsText,
+  searchBlogPostsText,
+  searchPlaceholderText,
+} from "../helpers/i18nText";
+
+// context
+import { LanguageContext } from "../context/languageContext";
 
 // components
 import Pagination from "../components/Pagination/Pagination";
@@ -190,6 +203,7 @@ const Button = styled.button.attrs({ type: "button" })`
 // #84994F
 
 export default function Blog() {
+  const language = useContext(LanguageContext);
   const [isEmpty, setIsEmpty] = useState(false);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -1350,25 +1364,28 @@ export default function Blog() {
 
   return (
     <>
-      <PageHeading>Blog</PageHeading>
+      <PageHeading>{blogText(language)}</PageHeading>
       <SearchBarWrapper>
         <StyledSearchIcon aria-hidden="true" />
         <StyledSearchBar
-          aria-label="Search blog posts"
-          placeholder="Search"
+          aria-label={searchBlogPostsText(language)}
+          placeholder={searchPlaceholderText(language)}
           type="text"
           onChange={(e) => setSearch(e.target.value)}
           value={search}
         />
         <StyledCloseButton
           onClick={() => setSearch("")}
-          aria-label="Clear search"
+          aria-label={clearSearchText(language)}
         >
           {" "}
           <StyledCloseIcon />
         </StyledCloseButton>
       </SearchBarWrapper>
-      <StyledPillButtonWrapper role="toolbar" aria-label="Filter blog posts">
+      <StyledPillButtonWrapper
+        role="toolbar"
+        aria-label={filterBlogPostsText(language)}
+      >
         {filterButtons.map((button, key) => {
           return (
             <StyledPillButton
@@ -1394,11 +1411,9 @@ export default function Blog() {
         />
       ) : (
         <Container>
-          <Message>0 Results Found</Message>
-          <Description>
-            Sorry, but there's no match for your search.
-          </Description>
-          <Button onClick={() => setSearch("")}>Clear</Button>
+          <Message>{blogNoResultsTitleText(language)}</Message>
+          <Description>{blogNoResultsDescriptionText(language)}</Description>
+          <Button onClick={() => setSearch("")}>{clearText(language)}</Button>
         </Container>
       )}
     </>

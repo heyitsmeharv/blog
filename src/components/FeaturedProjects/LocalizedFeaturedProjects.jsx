@@ -84,7 +84,7 @@ const Grid = styled.div`
   }
 `;
 
-const FeaturedProjects = ({ language }) => {
+const LocalizedFeaturedProjects = ({ language }) => {
   const featured = projects.slice(0, FEATURED_COUNT);
 
   return (
@@ -92,24 +92,27 @@ const FeaturedProjects = ({ language }) => {
       <Inner>
         <Header>
           <Title>{featuredProjectsText(language)}</Title>
-          <ViewAll to="/projects">{viewAllProjectsText(language)} →</ViewAll>
+          <ViewAll to="/projects">
+            {viewAllProjectsText(language)}
+            {" ->"}
+          </ViewAll>
         </Header>
         <Separator />
         <Grid>
-          {featured.map((p, i) => (
+          {featured.map((project, index) => (
             <motion.div
-              key={p.name}
+              key={project.name}
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: i * 0.08 }}
+              transition={{ duration: 0.35, delay: index * 0.08 }}
             >
               <Project
-                name={p.name}
-                description={p.description}
-                image={p.image}
-                github={p.github}
-                link={p.link}
-                tags={p.tags}
+                name={project.name}
+                description={project.description}
+                image={project.image}
+                github={project.github}
+                link={project.link}
+                tags={project.tags}
               />
             </motion.div>
           ))}
@@ -119,4 +122,4 @@ const FeaturedProjects = ({ language }) => {
   );
 };
 
-export default FeaturedProjects;
+export default LocalizedFeaturedProjects;

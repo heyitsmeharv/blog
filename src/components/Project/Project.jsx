@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { motion } from "motion/react";
 
@@ -8,6 +8,12 @@ import { ExternalLink } from "@styled-icons/evaicons-solid/ExternalLink";
 
 // data
 import { tagColors } from "../../data/tagColors";
+import { LanguageContext } from "../../context/languageContext";
+import {
+  liveDemoText,
+  openLiveDemoText,
+  viewSourceCodeText,
+} from "../../helpers/i18nText";
 
 const Card = styled(motion.div)`
   background: ${({ theme }) => theme.surface || theme.secondary};
@@ -103,17 +109,25 @@ const StyledExternalLink = styled(ExternalLink)`
 `;
 
 const Project = ({ name, description, image, github, link, tags }) => {
+  const language = useContext(LanguageContext);
+  const projectName =
+    typeof name === "string" ? name : name?.[language] || name?.EN || "";
+  const projectDescription =
+    typeof description === "string"
+      ? description
+      : description?.[language] || description?.EN || "";
+
   return (
     <Card
       whileHover={{ y: -6, boxShadow: "0 10px 28px rgba(0,0,0,0.22)" }}
       transition={{ duration: 0.2 }}
     >
       <ImageWrapper>
-        <Image src={image} alt={name} />
+        <Image src={image} alt={projectName} />
       </ImageWrapper>
       <Body>
-        <Name>{name}</Name>
-        <Description>{description}</Description>
+        <Name>{projectName}</Name>
+        <Description>{projectDescription}</Description>
         <TagRow>
           {tags.map((tag) => (
             <Tag
@@ -130,7 +144,7 @@ const Project = ({ name, description, image, github, link, tags }) => {
             href={github}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`View ${name} source code on GitHub`}
+            aria-label={viewSourceCodeText(language, projectName)}
           >
             <StyledGithub />
             GitHub
@@ -140,10 +154,10 @@ const Project = ({ name, description, image, github, link, tags }) => {
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Open ${name} live demo`}
+              aria-label={openLiveDemoText(language, projectName)}
             >
               <StyledExternalLink />
-              Live Demo
+              {liveDemoText(language)}
             </StyledAnchor>
           )}
         </LinkRow>

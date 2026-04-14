@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from "motion/react";
 
 // components
 import BlogPost from "../BlogPost/BlogPost";
 
 // animations
 import SlideInTop from "../../animations/SlideInTop";
+import { LanguageContext } from "../../context/languageContext";
+import { blogPageStatusText, goToPageText } from "../../helpers/i18nText";
 
 const Container = styled.div`
   display: flex;
@@ -28,32 +30,39 @@ const PaginationWrapper = styled.div`
 `;
 
 const PaginationButton = styled(motion.button)`
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
   background: none;
-  outline: none;
   padding: 6px 0px;
   margin: 0 10px;
   width: 50px;
   height: 30px;
   text-align: center;
   color: ${({ theme }) => theme.text};
-  text-decoration: ${props => props.isActive ? 'underline' : 'none'};
+  text-decoration: ${(props) => (props.$isActive ? "underline" : "none")};
   transition: border-color 0.5s ease;
   border: 2px solid transparent;
   :hover {
     cursor: pointer;
-    border-color:  ${({ theme }) => theme.text};
+    border-color: ${({ theme }) => theme.text};
   }
-  ${props => props.active && css`
-    background: ${({ theme }) => theme.secondary};
-    color: ${({ theme }) => theme.text};
-    transition: background .5s;
-  `};
+  ${(props) =>
+    props.$active &&
+    css`
+      background: ${({ theme }) => theme.secondary};
+      color: ${({ theme }) => theme.text};
+      transition: background 0.5s;
+    `};
+`;
+
+const PaginationNav = styled.nav`
+  display: flex;
+  justify-content: center;
 `;
 
 const Pagination = ({ currentPage, setCurrentPage, itemsPerPage, items }) => {
+  const language = useContext(LanguageContext);
   const [displayItems, setDisplayItems] = useState([]);
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
@@ -73,22 +82,45 @@ const Pagination = ({ currentPage, setCurrentPage, itemsPerPage, items }) => {
     <>
       <Container>
         {displayItems.map((p, i) => {
-          return <BlogPost key={i} index={i} title={p.title} readingTime={p.readingTime} type={p.type} date={p.date} tags={p.tags} intro={p.intro} navigate={p.navigate} published={p.published} />
+          return (
+            <BlogPost
+              key={i}
+              index={i}
+              title={p.title}
+              readingTime={p.readingTime}
+              type={p.type}
+              date={p.date}
+              tags={p.tags}
+              intro={p.intro}
+              navigate={p.navigate}
+              published={p.published}
+            />
+          );
         })}
       </Container>
-      <PaginationWrapper>
-        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-          (page) => (
-            <PaginationButton
-              key={page}
-              onClick={() => changePage(page)}
-              active={currentPage === page}
-            >
-              {page}
-            </PaginationButton>
-          )
-        )}
-      </PaginationWrapper>
+      {totalPages > 1 && (
+        <PaginationNav
+          aria-label={blogPageStatusText(language, currentPage, totalPages)}
+        >
+          <PaginationWrapper>
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              (page) => (
+                <PaginationButton
+                  key={page}
+                  type="button"
+                  onClick={() => changePage(page)}
+                  $active={currentPage === page}
+                  $isActive={currentPage === page}
+                  aria-current={currentPage === page ? "page" : undefined}
+                  aria-label={goToPageText(language, page)}
+                >
+                  {page}
+                </PaginationButton>
+              ),
+            )}
+          </PaginationWrapper>
+        </PaginationNav>
+      )}
     </>
   );
 };

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import hdate from "human-date";
 
-import CommentBox from './CommentBox';
+import CommentBox from "./CommentBox";
 
-import Loader from '../Loader/Loader';
+import Loader from "../Loader/Loader";
 
 // helpers
-import { comment, commentText } from "../../helpers/text";
+import { comment, commentText } from "../../helpers/i18nText";
 
 const Container = styled.section`
   width: 100%;
@@ -33,20 +33,20 @@ const Separator = styled.span`
 const FlexWrapper = styled.div`
   display: flex;
   align-items: center;
-  flex-direction: ${props => props.direction};
+  flex-direction: ${(props) => props.direction};
   align-items: baseline;
   width: 100%;
 `;
 
 const Title = styled.h1`
   font-size: 4rem;
-  font-family: 'Raleway';
+  font-family: "Raleway";
   font-weight: 600;
   text-align: center;
 `;
 
 const Text = styled.p`
-  font-family: 'Raleway';
+  font-family: "Raleway";
   font-size: 18px;
   text-align: center;
   margin-top: 30px;
@@ -66,7 +66,7 @@ const Comment = styled.div`
 `;
 
 const Message = styled.div`
-  font-family: 'Raleway';
+  font-family: "Raleway";
   font-weight: 600;
   font-size: 20px;
   padding: 10px 0px;
@@ -74,16 +74,16 @@ const Message = styled.div`
 `;
 
 const Author = styled.p`
-  font-family: 'Raleway';
+  font-family: "Raleway";
   font-weight: 600;
-  font-size: 18px; 
+  font-size: 18px;
   margin-right: auto;
 `;
 
 const Timestamp = styled.p`
-  font-family: 'Raleway';
+  font-family: "Raleway";
   font-weight: 600;
-  font-size: 18px; 
+  font-size: 18px;
 `;
 
 const Comments = ({ language }) => {
@@ -91,16 +91,17 @@ const Comments = ({ language }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch('https://heyitsmeharv-backend.herokuapp.com/comments/')
-      .then(response => {
+    fetch("https://heyitsmeharv-backend.herokuapp.com/comments/")
+      .then((response) => {
         return response.json();
-      }).then(comment => {
+      })
+      .then((comment) => {
         setComments(comment);
         setLoading(false);
       })
-      .catch(error => {
-        console.log(`Unable to get comments: ${error}`)
-      })
+      .catch((error) => {
+        console.log(`Unable to get comments: ${error}`);
+      });
   }, [loading]);
 
   return (
@@ -109,10 +110,11 @@ const Comments = ({ language }) => {
       <Separator />
       <Text>{commentText(language)}</Text>
       <CommentBox setLoading={setLoading} language={language} />
-      {comments.length !== 0 ?
+      {comments.length !== 0 ? (
         <CommentList>
           {comments.map((item, i) => {
-            const nameCapitalized = item.name.charAt(0).toUpperCase() + item.name.slice(1)
+            const nameCapitalized =
+              item.name.charAt(0).toUpperCase() + item.name.slice(1);
             const timestamp = hdate.prettyPrint(item.createdAt);
             return (
               <Comment key={i}>
@@ -124,13 +126,13 @@ const Comments = ({ language }) => {
                   <Message>{item.comment}</Message>
                 </FlexWrapper>
               </Comment>
-            )
+            );
           })}
         </CommentList>
-        : // <div style={{ height: "100px" }}><Loader /></div>}
-        null}
+      ) : // <div style={{ height: "100px" }}><Loader /></div>}
+      null}
     </Container>
   );
-}
+};
 
 export default Comments;

@@ -1,70 +1,61 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
-import hdate from 'human-date';
-
-// animations
 import SlideInBottom from "../../animations/SlideInBottom";
-
-// helpers
-import { aboutMe, aboutMeText, aliveText } from "../../helpers/text";
+import { aboutMe, aboutMeText, introductionText } from "../../helpers/i18nText";
 
 const Container = styled.section`
   width: 100%;
-  max-height: 100%;
-  padding: 4rem 0;
-  background: ${({ theme }) => theme.secondary};
+  padding: 6rem 0;
+  background: ${({ theme }) => theme.secondary}18;
   animation: ${SlideInBottom} 0.5s forwards;
-  border: 2px solid transparent;
-  :hover {
-    transition: border .5s ease;
-    border: 2px solid ${({ theme }) => theme.text};
+
+  @media only screen and (max-width: 900px) {
+    padding: 5rem 0;
+  }
+
+  @media only screen and (max-width: 600px) {
+    padding: 4rem 0;
   }
 `;
 
-const Title = styled.h1`
-  font-size: 4rem;
-  font-weight: bold;
-  text-align: center;
+const Inner = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 5rem);
+`;
+
+const Title = styled.h2`
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+`;
+
+const Separator = styled.div`
+  width: 4rem;
+  height: 3px;
+  background: ${({ theme }) => theme.text};
+  margin-bottom: 3rem;
+  border-radius: 2px;
 `;
 
 const Text = styled.p`
-  font-size: 2rem;
-  letter-spacing: 1.4px;
-  margin: 1rem 4rem;
-  margin-top: 30px;
-  text-align: center;
-  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 1.9;
+  max-width: 80ch;
+  letter-spacing: 0.2px;
 `;
 
-const Separator = styled.span`
-  width: 30px;
-  height: 2px;
-  display: block;
-  margin: 20px auto;
-  background-color: ${({ theme }) => theme.separator};
-`;
-
-const AboutMe = ({ language }) => {
-  const [age, setAge] = useState(hdate.relativeTime(new Date("09-27-1993".replace(/-/g, "/")), { returnObject: true }));
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAge(hdate.relativeTime(new Date("09-27-1993".replace(/-/g, "/")), { returnObject: true }));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <Container>
+const AboutMe = ({ language }) => (
+  <Container id="about">
+    <Inner>
       <Title>{aboutMe(language)}</Title>
       <Separator />
-      <Text>
-        {aboutMeText(language)}
-      </Text>
-      {/* <Text>{aliveText(language, age)}</Text> */}
-    </Container>
-  )
-}
+      <Text>{aboutMeText(language)}</Text>
+      <br />
+      <Text>{introductionText(language)}</Text>
+    </Inner>
+  </Container>
+);
 
 export default AboutMe;

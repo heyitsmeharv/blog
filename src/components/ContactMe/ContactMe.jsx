@@ -1,159 +1,427 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
+import { motion, AnimatePresence } from "motion/react";
 
-// components
-import Toast from '../Toast/Toast';
+import Toast from "../Toast/Toast";
 import { ContactMeInput, ContactMeTextArea } from "../Input/Input";
 import { ContactMeSendButton } from "../Button/Button";
 
-//icons
-import { CheckSVG } from '../../resources/styles/icons';
-import { ErrorSVG } from '../../resources/styles/icons';
-
-// helpers
+import { CheckSVG, ErrorSVG } from "../../resources/styles/icons";
 import { Analytics } from "../../helpers/analytics";
-import { contactMe, contactMeText, nameInput, emailInput, phoneInput, companyInput, messageInput, sendMessageText } from "../../helpers/text";
+import {
+  contactMe,
+  contactMeText,
+  nameInput,
+  emailInput,
+  phoneInput,
+  companyInput,
+  messageInput,
+  sendMessageText,
+  contactMessageValidationText,
+  sendingMessageStatusText,
+  messageSentSuccessfullyText,
+  unableToSendMessageText,
+  errorText,
+  successText,
+  sentEmailFailureText,
+  sentEmailSuccessText,
+} from "../../helpers/i18nText";
 
-
-const Container = styled.section`
-  width: 100%;
-  background: ${({ theme }) => theme.secondary};
-  max-height: ${props => props.open ? "100%" : "0"};
-  padding: ${props => props.open ? "4rem 0;" : "0"};
-  margin: ${props => props.open ? "4rem 0;" : "0"};
-  transition: all 0.3s ease-out;
-  overflow: hidden;
+/* ── Overlay scrim ─────────────────────────────────── */
+const Scrim = styled(motion.div)`
+  position: fixed;
+  inset: 0;
+  z-index: 8999;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 `;
 
-const FlexWrapper = styled.div`
+/* ── Floating card (shares layoutId with hero button) ─ */
+const Card = styled(motion.div)`
+  position: fixed;
+  z-index: 9000;
+  top: 50%;
+  left: 50%;
+  width: min(640px, 92vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: ${({ theme }) => theme.surface || theme.secondary};
+  border-radius: 1.4rem;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.3);
+  padding: 4rem;
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.secondary} transparent;
+`;
+
+/* ── Form elements ─────────────────────────────────── */
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1.6rem;
+  right: 1.6rem;
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.text};
+  font-size: 1.8rem;
+  cursor: pointer;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
   display: flex;
+  align-items: center;
   justify-content: center;
+  opacity: 0.55;
+  transition:
+    opacity 0.15s,
+    background 0.15s;
+  font-family: inherit;
+
+  &:hover {
+    opacity: 1;
+    background: ${({ theme }) => theme.secondary};
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.focus || theme.text};
+    outline-offset: 2px;
+    opacity: 1;
+  }
 `;
 
-const Title = styled.h1`
-  font-size: 4rem;
-  font-weight: bold;
-  text-align: center;
+const Form = styled.form`
+  width: 100%;
 `;
 
-const Text = styled.p`
-  font-size: 18px;
-  text-align: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  line-height: 25px;
+const FieldGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.6rem;
+  margin-bottom: 1.6rem;
+
+  @media only screen and (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Field = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+`;
+
+const Title = styled.h2`
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem;
+  padding-right: 4rem;
 `;
 
 const Separator = styled.span`
   width: 30px;
   height: 2px;
   display: block;
-  margin: 20px auto;
+  margin: 1.4rem 0;
   background-color: ${({ theme }) => theme.separator};
 `;
 
-const ContactMe = ({ language, open }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [company, setCompany] = useState('');
-  const [telephone, setTelephone] = useState('');
-  const [message, setMessage] = useState('');
+const SubText = styled.p`
+  font-size: 1.5rem;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.mutedText || theme.text};
+  margin: 0 0 2rem;
+`;
+
+const FieldLabel = styled.label`
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.text};
+`;
+
+const Actions = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StatusMessage = styled.p`
+  margin: 2rem 0 0;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: ${({ $error, theme }) =>
+    $error ? "#b91c1c" : theme.mutedText || theme.text};
+`;
+
+/* ── Content fade-in — delayed so morph finishes first ─ */
+const contentVariants = {
+  hidden: { opacity: 0, y: 6 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.22, delay: 0.28 } },
+  exit: { opacity: 0, transition: { duration: 0.08 } },
+};
+
+/* ─────────────────────────────────────────────────────── */
+
+const ContactMe = ({ language, open, setOpen }) => {
+  const formRef = useRef(null);
+  const closeRef = useRef(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [message, setMessage] = useState("");
   const [list, setList] = useState([]);
   const [error, setError] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
+
+  /* Focus close button when dialog opens */
+  useEffect(() => {
+    if (open) {
+      const id = setTimeout(() => closeRef.current?.focus(), 320);
+      return () => clearTimeout(id);
+    }
+  }, [open]);
+
+  /* Escape key dismissal */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") handleClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const handleClose = () => {
+    setOpen(false);
+    handleOnReset();
+  };
 
   const handleOnReset = () => {
-    setName('');
-    setEmail('');
-    setTelephone('');
-    setCompany('');
-    setMessage('');
+    setName("");
+    setEmail("");
+    setTelephone("");
+    setCompany("");
+    setMessage("");
     setError(false);
+    setStatusMessage("");
   };
 
-  const createToast = type => {
-    const id = Math.floor((Math.random() * 100) + 1);
+  const createToast = (type) => {
     const toast = {
-      id,
-      title: type === 'Success' ? 'Success' : 'Error',
-      description: type === 'Success' ? 'Successfully Sent Email' : 'Failed To Send Email',
-      backgroundColor: type === 'Success' ? '#5cb85c' : '#d9534f',
-      icon: type === 'Success' ? <CheckSVG /> : <ErrorSVG />
-    }
-    let array = [];
-    array.push(...list, toast);
-    setList(array);
+      id: `${Date.now()}-${Math.random()}`,
+      title: type === "Success" ? successText(language) : errorText(language),
+      description:
+        type === "Success"
+          ? sentEmailSuccessText(language)
+          : sentEmailFailureText(language),
+      backgroundColor: type === "Success" ? "#15803d" : "#b91c1c",
+      icon: type === "Success" ? <CheckSVG /> : <ErrorSVG />,
+    };
+    setList((currentList) => [...currentList, toast]);
   };
 
-  const handleOnSendEmail = () => {
-    const emailObj = {
-      name,
-      email,
-      company,
-      telephone,
-      message,
-    }
-    fetch('https://heyitsmeharv-backend.herokuapp.com/email/send', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      method: "POST",
-      body: JSON.stringify(emailObj)
-    }).then(response => {
-      if (response.ok) {
-        createToast('Success');
-        handleOnReset();
-        Analytics.event('Contact Me Success', {
-          category: 'Contact Me',
-          action: 'Successfully sent an email',
-          label: 'Send Message'
-        });
-      } else {
-        createToast('Fail');
-        setError(true);
-        Analytics.event('Contact Me Failure', {
-          category: 'Contact Me',
-          action: 'Failed to send an email',
-          label: 'Send Message'
-        });
-      }
-    }).catch(error => {
-      createToast('Fail');
+  const handleOnSendEmail = async (event) => {
+    event.preventDefault();
+
+    if (!formRef.current?.reportValidity()) {
       setError(true);
-      Analytics.event('Contact Me Failure', {
-        category: 'Contact Me',
-        action: 'Failed to send an email',
-        label: 'Send Message'
+      setStatusMessage(contactMessageValidationText(language));
+      return;
+    }
+
+    setIsSending(true);
+    setError(false);
+    setStatusMessage(sendingMessageStatusText(language));
+
+    const emailObj = { name, email, company, telephone, message };
+
+    try {
+      const response = await fetch(
+        import.meta.env.VITE_CONTACT_API_URL ||
+          "https://heyitsmeharv-backend.herokuapp.com/email/send",
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify(emailObj),
+        },
+      );
+
+      if (response.ok) {
+        createToast("Success");
+        handleOnReset();
+        setStatusMessage(messageSentSuccessfullyText(language));
+        Analytics.event("Contact Me Success", {
+          category: "Contact Me",
+          action: "Successfully sent an email",
+          label: "Send Message",
+        });
+        return;
+      }
+
+      createToast("Fail");
+      setError(true);
+      setStatusMessage(unableToSendMessageText(language));
+      Analytics.event("Contact Me Failure", {
+        category: "Contact Me",
+        action: "Failed to send an email",
+        label: "Send Message",
       });
-      console.log(`Unable to send email: ${error}`);
-    });
-  }
+    } catch (sendError) {
+      createToast("Fail");
+      setError(true);
+      setStatusMessage(unableToSendMessageText(language));
+      Analytics.event("Contact Me Failure", {
+        category: "Contact Me",
+        action: "Failed to send an email",
+        label: "Send Message",
+      });
+      console.log(`Unable to send email: ${sendError}`);
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return (
-    <Container open={open}>
-      <Title>{contactMe(language)}</Title>
-      <Separator />
-      <Text>{contactMeText(language)}</Text>
-      <FlexWrapper>
-        <ContactMeInput value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder={nameInput(language)} />
-        <ContactMeInput error={error} value={email} onChange={(e) => setEmail(e.target.value)} type="text" placeholder={emailInput(language)} />
-      </FlexWrapper>
-      <FlexWrapper>
-        <ContactMeInput value={company} onChange={(e) => setCompany(e.target.value)} type="text" placeholder={companyInput(language)} />
-        <ContactMeInput value={telephone} onChange={(e) => setTelephone(e.target.value)} type="text" placeholder={phoneInput(language)} />
-      </FlexWrapper>
-      <FlexWrapper>
-        <ContactMeTextArea value={message} onChange={(e) => setMessage(e.target.value)} type="text" placeholder={messageInput(language)} />
-      </FlexWrapper>
-      <FlexWrapper>
-        <ContactMeSendButton disabled={email.length === 0 || name.length === 0 || message.length === 0} onClick={handleOnSendEmail}>
-          {sendMessageText(language)}
-        </ContactMeSendButton>
-      </FlexWrapper>
+    <>
       <Toast toastList={list} />
-    </Container >
-  )
-}
+      <AnimatePresence>
+        {open && (
+          <>
+            <Scrim
+              key="contact-scrim"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={handleClose}
+            />
+            <Card
+              key="contact-card"
+              layoutId="contact-morph"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="contact-title"
+              style={{ x: "-50%", y: "-50%" }}
+            >
+              <CloseButton
+                ref={closeRef}
+                onClick={handleClose}
+                aria-label="Close contact form"
+              >
+                ✕
+              </CloseButton>
+              <motion.div
+                variants={contentVariants}
+                initial="hidden"
+                animate="show"
+                exit="exit"
+              >
+                <Title id="contact-title">{contactMe(language)}</Title>
+                <Separator />
+                <SubText>{contactMeText(language)}</SubText>
+                <Form
+                  ref={formRef}
+                  onSubmit={handleOnSendEmail}
+                  noValidate={false}
+                >
+                  <FieldGrid>
+                    <Field>
+                      <FieldLabel htmlFor="contact-name">
+                        {nameInput(language)}
+                      </FieldLabel>
+                      <ContactMeInput
+                        id="contact-name"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
+                        type="text"
+                        autoComplete="name"
+                        required
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor="contact-email">
+                        {emailInput(language)}
+                      </FieldLabel>
+                      <ContactMeInput
+                        id="contact-email"
+                        error={error}
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        type="email"
+                        autoComplete="email"
+                        required
+                      />
+                    </Field>
+                  </FieldGrid>
+                  <FieldGrid>
+                    <Field>
+                      <FieldLabel htmlFor="contact-company">
+                        {companyInput(language)}
+                      </FieldLabel>
+                      <ContactMeInput
+                        id="contact-company"
+                        value={company}
+                        onChange={(event) => setCompany(event.target.value)}
+                        type="text"
+                        autoComplete="organization"
+                      />
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor="contact-phone">
+                        {phoneInput(language)}
+                      </FieldLabel>
+                      <ContactMeInput
+                        id="contact-phone"
+                        value={telephone}
+                        onChange={(event) => setTelephone(event.target.value)}
+                        type="tel"
+                        autoComplete="tel"
+                      />
+                    </Field>
+                  </FieldGrid>
+                  <Field>
+                    <FieldLabel htmlFor="contact-message">
+                      {messageInput(language)}
+                    </FieldLabel>
+                    <ContactMeTextArea
+                      id="contact-message"
+                      value={message}
+                      onChange={(event) => setMessage(event.target.value)}
+                      required
+                    />
+                  </Field>
+                  <StatusMessage
+                    role="status"
+                    aria-live="polite"
+                    $error={error}
+                  >
+                    {statusMessage}
+                  </StatusMessage>
+                  <Actions>
+                    <ContactMeSendButton
+                      disabled={
+                        isSending ||
+                        email.length === 0 ||
+                        name.length === 0 ||
+                        message.length === 0
+                      }
+                    >
+                      {isSending
+                        ? sendingMessageStatusText(language)
+                        : sendMessageText(language)}
+                    </ContactMeSendButton>
+                  </Actions>
+                </Form>
+              </motion.div>
+            </Card>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
 
 export default ContactMe;

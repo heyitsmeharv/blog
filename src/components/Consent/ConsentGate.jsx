@@ -1,6 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Analytics } from "../../helpers/analytics";
+import { LanguageContext } from "../../context/languageContext";
+import {
+  acceptAnalyticsText,
+  acceptText,
+  cookiesAnalyticsDescriptionText,
+  cookiesAnalyticsTitleText,
+  declineAnalyticsText,
+  declineText,
+  disableAnalyticsText,
+  enableAnalyticsText,
+  manageCookiePreferencesText,
+} from "../../helpers/i18nText";
 
 const Container = styled.div`
   position: fixed;
@@ -30,9 +42,10 @@ const Row = styled.div`
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+  flex-wrap: wrap;
 `;
 
-const Button = styled.button`
+const Button = styled.button.attrs({ type: "button" })`
   padding: 0.6rem 1rem;
   border-radius: 999px;
   border: 1px solid ${({ theme }) => theme.text};
@@ -46,30 +59,43 @@ const PrimaryButton = styled(Button)`
   border-color: ${({ theme }) => theme.text};
 `;
 
-const LinkButton = styled.button`
+const LinkButton = styled.button.attrs({ type: "button" })`
   background: none;
   border: none;
   text-decoration: underline;
   cursor: pointer;
 `;
 
-function CookieBanner({ onAccept, onDecline }) {
+function CookieBanner({ language, onAccept, onDecline }) {
+  const titleId = "cookie-banner-title";
+  const descriptionId = "cookie-banner-description";
+
   return React.createElement(
     Container,
-    { role: "dialog", "aria-live": "polite" },
-    React.createElement(Title, null, "Cookies & analytics"),
+    {
+      role: "dialog",
+      "aria-modal": false,
+      "aria-labelledby": titleId,
+      "aria-describedby": descriptionId,
+    },
+    React.createElement(
+      Title,
+      { id: titleId },
+      cookiesAnalyticsTitleText(language),
+    ),
     React.createElement(
       Text,
+      { id: descriptionId },
       null,
-      "I use Google Analytics to understand usage. Accept to enable analytics. You can change this anytime."
+      cookiesAnalyticsDescriptionText(language),
     ),
     React.createElement(
       Row,
       null,
       React.createElement(
         Button,
-        { onClick: onDecline, "aria-label": "Decline analytics" },
-        "Decline"
+        { onClick: onDecline, "aria-label": declineAnalyticsText(language) },
+        declineText(language),
       ),
       React.createElement(
         PrimaryButton,
@@ -78,15 +104,16 @@ function CookieBanner({ onAccept, onDecline }) {
             Analytics.start();
             onAccept();
           },
-          "aria-label": "Accept analytics",
+          "aria-label": acceptAnalyticsText(language),
         },
-        "Accept"
-      )
-    )
+        acceptText(language),
+      ),
+    ),
   );
 }
 
 export default function ConsentGate({ children }) {
+  const language = useContext(LanguageContext);
   const [consent, setConsent] = useState(() => {
     try {
       return localStorage.getItem("consent");
@@ -107,15 +134,21 @@ export default function ConsentGate({ children }) {
       React.Fragment,
       null,
       React.createElement(CookieBanner, {
-        onAccept: () => setConsent("accepted"),
+        language,
+        onAccept: () => {
+          try {
+            localStorage.setItem("consent", "accepted");
+          } catch {}
+          setConsent("accepted");
+        },
         onDecline: () => {
           try {
             localStorage.setItem("consent", "declined");
-          } catch { }
+          } catch {}
           setConsent("declined");
         },
       }),
-      children
+      children,
     );
   }
 
@@ -123,6 +156,7 @@ export default function ConsentGate({ children }) {
 }
 
 export function ManageCookies() {
+  const language = useContext(LanguageContext);
   const [granted, setGranted] = useState(() => {
     try {
       return localStorage.getItem("consent") === "accepted";
@@ -137,14 +171,20 @@ export function ManageCookies() {
       onClick: () => {
         if (granted) {
           Analytics.stop();
+          try {
+            localStorage.setItem("consent", "declined");
+          } catch {}
           setGranted(false);
         } else {
           Analytics.start();
+          try {
+            localStorage.setItem("consent", "accepted");
+          } catch {}
           setGranted(true);
         }
       },
-      "aria-label": "Manage cookie preferences",
+      "aria-label": manageCookiePreferencesText(language),
     },
-    granted ? "Disable analytics" : "Enable analytics"
+    granted ? disableAnalyticsText(language) : enableAnalyticsText(language),
   );
 }

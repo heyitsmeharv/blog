@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "motion/react";
 
 // helpers
 import { Analytics } from "../helpers/analytics";
+import {
+  allText,
+  filterProjectsByTagText,
+  nextProjectPageText,
+  previousProjectPageText,
+  projectsPageStatusText,
+  projectsText,
+} from "../helpers/i18nText";
 
 // data
 import { projects } from "../data/projects";
 import { tagColors } from "../data/tagColors";
+
+// context
+import { LanguageContext } from "../context/languageContext";
 
 // components
 import Project from "../components/Project/Project";
@@ -21,6 +32,12 @@ const Container = styled.div`
   padding: 4rem 2rem;
   background: ${({ theme }) => theme.primary};
   animation: ${SlideInBottom} 0.5s forwards;
+`;
+
+const PageHeading = styled.h1`
+  max-width: 1200px;
+  margin: 0 auto 2.4rem;
+  font-size: clamp(3rem, 4vw, 4rem);
 `;
 
 const FilterBar = styled.div`
@@ -69,7 +86,7 @@ const ArrowButton = styled.button`
   border: 2px solid ${({ theme }) => theme.buttonColour};
   background: transparent;
   color: ${({ theme }) => theme.text};
-  font-size: 2.4rem;
+  font-size: 0;
   line-height: 1;
   cursor: pointer;
   transition:
@@ -87,6 +104,11 @@ const ArrowButton = styled.button`
   &:disabled {
     opacity: 0.2;
     cursor: default;
+  }
+
+  &::after {
+    content: attr(data-symbol);
+    font-size: 2.4rem;
   }
 `;
 
@@ -108,6 +130,7 @@ const pageVariants = {
 };
 
 export default function Projects() {
+  const language = useContext(LanguageContext);
   const [activeFilter, setActiveFilter] = useState("All");
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -143,30 +166,40 @@ export default function Projects() {
 
   return (
     <Container>
-      <FilterBar>
+      <PageHeading>{projectsText(language)}</PageHeading>
+      <FilterBar role="toolbar" aria-label={filterProjectsByTagText(language)}>
         {allTags.map((tag) => (
           <FilterButton
             key={tag}
+            type="button"
             $active={activeFilter === tag}
             $color={tagColors[tag]?.bg}
             $textColor={tagColors[tag]?.text}
             onClick={() => handleFilter(tag)}
+            aria-pressed={activeFilter === tag}
           >
-            {tag}
+            {tag === "All" ? allText(language) : tag}
           </FilterButton>
         ))}
       </FilterBar>
-      <CarouselWrapper>
+      <CarouselWrapper aria-live="polite">
         <ArrowButton
+          data-symbol="<"
+          type="button"
           onClick={goPrev}
           disabled={page === 0}
-          aria-label="Previous"
+          aria-label={previousProjectPageText(language)}
         >
           ‹
         </ArrowButton>
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={`${activeFilter}-${page}`}
+            aria-label={projectsPageStatusText(
+              language,
+              page + 1,
+              Math.max(totalPages, 1),
+            )}
             custom={direction}
             variants={pageVariants}
             initial="enter"
@@ -197,9 +230,11 @@ export default function Projects() {
           </motion.div>
         </AnimatePresence>
         <ArrowButton
+          data-symbol=">"
+          type="button"
           onClick={goNext}
           disabled={page >= totalPages - 1}
-          aria-label="Next"
+          aria-label={nextProjectPageText(language)}
         >
           ›
         </ArrowButton>

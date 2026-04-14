@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 // animations
 import SlideInLeft from "../animations/SlideInLeft";
+import { LanguageContext } from "../context/languageContext";
+import { notFoundDescriptionText } from "../helpers/i18nText";
 
 const Container = styled.div`
   display: flex;
@@ -28,10 +30,12 @@ const Description = styled.p`
 `;
 
 const NotFoundPage = () => {
+  const language = useContext(LanguageContext);
+
   return (
     <Container>
       <Message>404</Message>
-      <Description>Oops! The page you're looking for doesn't exist.</Description>
+      <Description>{notFoundDescriptionText(language)}</Description>
     </Container>
   );
 };

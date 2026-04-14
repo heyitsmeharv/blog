@@ -1,8 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
 // helpers
 import { Analytics } from "../helpers/analytics";
+import {
+  blogNoResultsDescriptionText,
+  blogNoResultsTitleText,
+  blogText,
+  clearSearchText,
+  clearText,
+  filterBlogPostsText,
+  searchBlogPostsText,
+  searchPlaceholderText,
+} from "../helpers/i18nText";
+
+// context
+import { LanguageContext } from "../context/languageContext";
 
 // components
 import Pagination from "../components/Pagination/Pagination";
@@ -73,10 +86,16 @@ import {
 // animations
 import SlideInTop from "../animations/SlideInTop";
 
-const SearchBarWrapper = styled.div`
+const SearchBarWrapper = styled.div.attrs({ role: "search" })`
   display: flex;
   position: relative;
   padding: 1rem 4rem;
+`;
+
+const PageHeading = styled.h1`
+  margin: 0;
+  padding: 3rem 4rem 0;
+  font-size: clamp(3rem, 4vw, 4rem);
 `;
 
 const StyledSearchBar = styled.input`
@@ -98,12 +117,11 @@ const StyledCloseIcon = styled(StyledClose)`
   color: ${({ theme }) => theme.icon};
 `;
 
-const StyledCloseButton = styled.button`
+const StyledCloseButton = styled.button.attrs({ type: "button" })`
   position: absolute;
   right: 40px;
   height: 50px;
   width: 60px;
-  outline: none;
   border: none;
   background: none;
   :hover {
@@ -163,7 +181,7 @@ const Description = styled.p`
   max-width: 600px;
 `;
 
-const Button = styled.button`
+const Button = styled.button.attrs({ type: "button" })`
   padding: 0.8rem 1.5rem;
   font-size: 1.5rem;
   background-color: ${({ theme }) => theme.primary};
@@ -185,6 +203,7 @@ const Button = styled.button`
 // #84994F
 
 export default function Blog() {
+  const language = useContext(LanguageContext);
   const [isEmpty, setIsEmpty] = useState(false);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -1345,28 +1364,38 @@ export default function Blog() {
 
   return (
     <>
+      <PageHeading>{blogText(language)}</PageHeading>
       <SearchBarWrapper>
-        <StyledSearchIcon />
+        <StyledSearchIcon aria-hidden="true" />
         <StyledSearchBar
-          placeholder="Search"
+          aria-label={searchBlogPostsText(language)}
+          placeholder={searchPlaceholderText(language)}
           type="text"
           onChange={(e) => setSearch(e.target.value)}
           value={search}
         />
-        <StyledCloseButton onClick={() => setSearch("")}>
+        <StyledCloseButton
+          onClick={() => setSearch("")}
+          aria-label={clearSearchText(language)}
+        >
           {" "}
           <StyledCloseIcon />
         </StyledCloseButton>
       </SearchBarWrapper>
-      <StyledPillButtonWrapper>
+      <StyledPillButtonWrapper
+        role="toolbar"
+        aria-label={filterBlogPostsText(language)}
+      >
         {filterButtons.map((button, key) => {
           return (
             <StyledPillButton
               key={key}
+              type="button"
               $color={button.colour}
               $textColor={button.textColor}
               $active={button.active}
               onClick={() => handlePillButtonClick(button)}
+              aria-pressed={button.active}
             >
               {button.name}
             </StyledPillButton>
@@ -1382,11 +1411,9 @@ export default function Blog() {
         />
       ) : (
         <Container>
-          <Message>0 Results Found</Message>
-          <Description>
-            Sorry, but there's no match for your search.
-          </Description>
-          <Button onClick={() => setSearch("")}>Clear</Button>
+          <Message>{blogNoResultsTitleText(language)}</Message>
+          <Description>{blogNoResultsDescriptionText(language)}</Description>
+          <Button onClick={() => setSearch("")}>{clearText(language)}</Button>
         </Container>
       )}
     </>

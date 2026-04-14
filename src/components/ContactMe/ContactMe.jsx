@@ -146,7 +146,7 @@ const StatusMessage = styled.p`
   margin: 2rem 0 0;
   text-align: center;
   font-size: 2rem;
-  font-weight: bold;
+  font-weight: 700;
   color: ${({ $error, theme }) =>
     $error ? "#b91c1c" : theme.mutedText || theme.text};
 `;
@@ -193,6 +193,7 @@ const ContactMe = ({ language, open, setOpen }) => {
 
   const handleClose = () => {
     setOpen(false);
+    setList([]);
     handleOnReset();
   };
 
@@ -217,7 +218,7 @@ const ContactMe = ({ language, open, setOpen }) => {
       backgroundColor: type === "Success" ? "#15803d" : "#b91c1c",
       icon: type === "Success" ? <CheckSVG /> : <ErrorSVG />,
     };
-    setList((currentList) => [...currentList, toast]);
+    setList([toast]);
   };
 
   const handleOnSendEmail = async (event) => {

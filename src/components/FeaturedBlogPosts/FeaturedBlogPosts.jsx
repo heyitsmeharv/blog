@@ -15,6 +15,51 @@ const TYPE_COLORS = {
   Theory: { bg: "#ede9fe", text: "#5b21b6" },
 };
 
+const normalizeHex = (value) => {
+  if (!value || typeof value !== "string" || !value.startsWith("#")) {
+    return null;
+  }
+
+  const hex = value.slice(1);
+
+  if (hex.length === 3) {
+    return hex
+      .split("")
+      .map((char) => `${char}${char}`)
+      .join("");
+  }
+
+  if (hex.length === 6) {
+    return hex;
+  }
+
+  return null;
+};
+
+const getTagTextColor = (background) => {
+  const hex = normalizeHex(background);
+
+  if (!hex) {
+    return "#1a1a1a";
+  }
+
+  const r = Number.parseInt(hex.slice(0, 2), 16);
+  const g = Number.parseInt(hex.slice(2, 4), 16);
+  const b = Number.parseInt(hex.slice(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  return luminance > 0.62 ? "#111827" : "#ffffff";
+};
+
+const getTagFallback = (name = "") =>
+  name
+    .split(/[\s/&-]+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
 const Container = styled.section`
   width: 100%;
   padding: 6rem 0;
@@ -156,26 +201,57 @@ const Intro = styled.p`
 const TagsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.8rem;
   align-items: center;
 `;
 
 const TagPill = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.3rem 1rem;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem 0.45rem 0.55rem;
   border-radius: 999px;
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 700;
   background: ${({ $bg }) => $bg || "#e5e7eb"};
-  color: #1a1a1a;
+  color: ${({ $color }) => $color || "#1a1a1a"};
+  box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.08);
+`;
+
+const TagIconWrap = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: ${({ $dark }) =>
+    $dark ? "rgba(255, 255, 255, 0.92)" : "rgba(255, 255, 255, 0.45)"};
+  border: 1px solid
+    ${({ $dark }) =>
+      $dark ? "rgba(255, 255, 255, 0.22)" : "rgba(17, 24, 39, 0.08)"};
 
   svg {
     width: 14px !important;
     height: 14px !important;
     flex-shrink: 0;
+    margin: 0 !important;
+    display: block;
   }
+
+  svg svg {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+  }
+`;
+
+const TagFallback = styled.span`
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.04em;
 `;
 
 const ReadMore = styled(NavLink)`
@@ -224,17 +300,32 @@ const FeaturedBlogPosts = ({ language }) => {
                     <DateText>{post.date}</DateText>
                   </CardTop>
                   <PostTitle>{post.title}</PostTitle>
-                  <ReadingTime>{post.readingTime}</ReadingTime>
                   {post.tags?.length > 0 && (
                     <TagsRow>
-                      {post.tags.map((tag) => (
-                        <TagPill key={tag.name} $bg={tag.background}>
-                          {tag.icon}
-                          {tag.name}
-                        </TagPill>
-                      ))}
+                      {post.tags.map((tag) => {
+                        const textColor = getTagTextColor(tag.background);
+                        const isDark = textColor === "#ffffff";
+
+                        return (
+                          <TagPill
+                            key={tag.name}
+                            $bg={tag.background}
+                            $color={textColor}
+                          >
+                            <TagIconWrap $dark={isDark} aria-hidden="true">
+                              {tag.icon || (
+                                <TagFallback>
+                                  {getTagFallback(tag.name)}
+                                </TagFallback>
+                              )}
+                            </TagIconWrap>
+                            {tag.name}
+                          </TagPill>
+                        );
+                      })}
                     </TagsRow>
                   )}
+                  <ReadingTime>{post.readingTime}</ReadingTime>
                   <Intro>{post.intro}</Intro>
                   <ReadMore to={`/blog/${post.navigate}`}>Read post →</ReadMore>
                 </Card>

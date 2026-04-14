@@ -444,7 +444,7 @@ const allPosts = [
     type: "Practical",
     date: "10/12/2025",
     tags: [
-      { name: "DevOps" },
+      { name: "DevOps", background: "#005F02", icon: <DevOpsSVG /> },
       { name: "GitHub", background: "#000", icon: <GitHubSVG /> },
     ],
     intro: `GitHub Actions has quietly become one of the most powerful tools in a modern developer's toolkit. It's where your tests run, your Docker images build, your infrastructure deploys, and
@@ -458,7 +458,7 @@ const allPosts = [
     type: "Practical",
     date: "10/12/2025",
     tags: [
-      { name: "DevOps" },
+      { name: "DevOps", background: "#005F02", icon: <DevOpsSVG /> },
       { name: "Docker", background: "#D3ECEC", icon: <DockerSVG /> },
       { name: "Kubernetes", background: "#326DE6", icon: <KubernetesSVG /> },
     ],
@@ -473,8 +473,8 @@ const allPosts = [
     type: "Practical",
     date: "03/01/2026",
     tags: [
+      { name: "DevOps", background: "#005F02", icon: <DevOpsSVG /> },
       { name: "Terraform", background: "#2E71E5", icon: <TerraformSVG /> },
-      { name: "DevOps" },
     ],
     intro: `In this post, we're going to build a Terraform template repo and work through the core workflow (init, plan, apply). We'll cover how to structure a project sensibly, and how to take the
       same setup from local development into CI and multiple environments...`,
@@ -487,12 +487,12 @@ const allPosts = [
     type: "Practical",
     date: "05/01/2026",
     tags: [
+      { name: "DevOps", background: "#005F02", icon: <DevOpsSVG /> },
       {
         name: "Commits",
         background: "#ffff",
         icon: <ConventionalCommitsSVG />,
       },
-      { name: "DevOps" },
       { name: "GitHub", background: "#000", icon: <GitHubSVG /> },
     ],
     intro: `I'm guilty of writing some pretty horrific commit messages in my own personal projects and that has now caught up to me! If your git history is the same as mine which is full of commits
@@ -507,7 +507,7 @@ const allPosts = [
     type: "Practical",
     date: "06/04/2026",
     tags: [
-      { name: "DevOps" },
+      { name: "DevOps", background: "#005F02", icon: <DevOpsSVG /> },
       { name: "Docker", background: "#D3ECEC", icon: <DockerSVG /> },
       { name: "Kubernetes", background: "#326DE6", icon: <KubernetesSVG /> },
     ],

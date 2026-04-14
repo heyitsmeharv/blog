@@ -226,6 +226,15 @@ const MobileLangRow = styled.div`
   border-top: 1px solid ${({ theme }) => theme.secondary}30;
 `;
 
+const MobileThemeRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid ${({ theme }) => theme.secondary}30;
+`;
+
 const THEMES = [
   { name: "light", label: "Light theme", colour: "#ffffff", border: "#999999" },
   { name: "dark", label: "Dark theme", colour: "#1b1c22", border: "#555555" },
@@ -386,6 +395,22 @@ const AccessibleNavbar = ({
             ES
           </LangButton>
         </MobileLangRow>
+        <MobileThemeRow>
+          {THEMES.map((themeOption) => (
+            <ThemeDot
+              key={themeOption.name}
+              $colour={themeOption.colour}
+              $border={themeOption.border}
+              onClick={() => {
+                toggleTheme(themeOption.name);
+                closeMenu();
+              }}
+              aria-label={`Switch to ${themeOption.label.toLowerCase()}`}
+              aria-pressed={currentTheme === themeOption.name}
+              title={themeOption.label}
+            />
+          ))}
+        </MobileThemeRow>
       </MobileMenu>
     </Nav>
   );

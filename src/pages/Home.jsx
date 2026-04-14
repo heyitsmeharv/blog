@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // context
 import { LanguageContext } from "../context/languageContext";
 
@@ -9,14 +10,11 @@ import { LanguageContext } from "../context/languageContext";
 import Introduction from "../components/Introduction/Introduction";
 import AboutMe from "../components/AboutMe/AboutMe";
 import ProfessionalExperience from "../components/ProfessionalExperience/ProfessionalExperience";
+import FeaturedProjects from "../components/FeaturedProjects/FeaturedProjects";
+import FeaturedBlogPosts from "../components/FeaturedBlogPosts/FeaturedBlogPosts";
 import ContactMe from "../components/ContactMe/ContactMe";
 import Skills from "../components/Skills/Skills";
-import Comments from "../components/Comments/Comments";
-import LikeCounter from "../components/LikeCounter/LikeCounter";
-
-const Margin = styled.div`
-  margin: 5rem;
-`;
+import GitHubActivity from "../components/GitHubActivity/GitHubActivity";
 
 const Container = styled.div``;
 
@@ -26,17 +24,16 @@ const Home = () => {
 
   return (
     <Container>
-      <ToastContainer  />
-      <Margin>
-        <Introduction language={language} open={open} setOpen={setOpen} />
-      </Margin>
+      <ToastContainer />
+      <Introduction language={language} open={open} setOpen={setOpen} />
       <ContactMe language={language} open={open} />
       <AboutMe language={language} />
       <ProfessionalExperience language={language} />
+      <FeaturedBlogPosts language={language} />
+      <FeaturedProjects language={language} />
       <Skills language={language} />
-      {/* <Comments language={language} /> */}
-      {/* <LikeCounter /> */}
-    </Container >
+      <GitHubActivity language={language} />
+    </Container>
   );
 };
 

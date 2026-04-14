@@ -281,3 +281,55 @@ export const submit = (language) => {
   }
   return text;
 };
+
+export const featuredProjectsText = (language) => {
+  let text;
+  switch (language) {
+    case "EN":
+      text = "Featured Projects";
+      break;
+    case "ES":
+      text = "Proyectos Destacados";
+      break;
+  }
+  return text;
+};
+
+export const viewAllProjectsText = (language) => {
+  let text;
+  switch (language) {
+    case "EN":
+      text = "View all projects";
+      break;
+    case "ES":
+      text = "Ver todos los proyectos";
+      break;
+  }
+  return text;
+};
+
+export const latestPostsText = (language) => {
+  let text;
+  switch (language) {
+    case "EN":
+      text = "Latest Posts";
+      break;
+    case "ES":
+      text = "Últimas Publicaciones";
+      break;
+  }
+  return text;
+};
+
+export const viewAllPostsText = (language) => {
+  let text;
+  switch (language) {
+    case "EN":
+      text = "View all posts";
+      break;
+    case "ES":
+      text = "Ver todas las publicaciones";
+      break;
+  }
+  return text;
+};

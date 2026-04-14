@@ -1,166 +1,245 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
-import { Handshake, Cogs } from "@styled-icons/fa-solid";
-import { PeopleCommunity } from "@styled-icons/fluentui-system-filled/PeopleCommunity";
-import { ListCheck } from "@styled-icons/bootstrap/ListCheck";
-
-// helpers
-import { experienceText } from "../../helpers/text";
-
-// animations
 import SlideInBottom from "../../animations/SlideInBottom";
-
-// components
-import Card from "./Card";
+import { experienceText } from "../../helpers/text";
 
 const Container = styled.section`
   width: 100%;
-  max-height: 100%;
-  padding: 4rem 0;
-  background: ${({ theme }) => theme.background};
+  padding: 6rem 0;
   animation: ${SlideInBottom} 0.5s forwards;
+
+  @media only screen and (max-width: 900px) {
+    padding: 5rem 0;
+  }
+
+  @media only screen and (max-width: 600px) {
+    padding: 4rem 0;
+  }
 `;
 
-const FlexWrapper = styled.div`
+const Inner = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 5rem);
+`;
+
+const Header = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: wrap;
-  margin: 30px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 `;
 
-const Title = styled.h1`
-  font-size: 4rem;
-  font-weight: bold;
-  text-align: center;
+const Title = styled.h2`
+  font-size: 3rem;
+  font-weight: 700;
 `;
 
-const Separator = styled.span`
-  width: 30px;
-  height: 2px;
-  display: block;
-  margin: 20px auto;
-  background-color: ${({ theme }) => theme.separator};
+const ViewCV = styled.a`
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.text};
+  text-decoration: none;
+  opacity: 0.65;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 `;
 
-const StyledHandShake = styled(Handshake)`
+const Separator = styled.div`
+  width: 4rem;
+  height: 3px;
   background: ${({ theme }) => theme.text};
-  color: ${({ theme }) => theme.secondary};
-  border-radius: 50%;
-  padding: 20px;
-  width: 80px;
-  height: 80px;
+  margin-bottom: 4rem;
+  border-radius: 2px;
 `;
-const StyledCogs = styled(Cogs)`
-  background: ${({ theme }) => theme.text};
-  color: ${({ theme }) => theme.secondary};
-  border-radius: 50%;
-  padding: 20px;
-  width: 80px;
-  height: 80px;
+
+const Timeline = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  border-left: 2px solid ${({ theme }) => theme.secondary}50;
+  padding-left: 3.25rem;
+  margin-left: 0.8rem;
 `;
-const StyledPeopleCommunity = styled(PeopleCommunity)`
-  background: ${({ theme }) => theme.text};
-  color: ${({ theme }) => theme.secondary};
-  border-radius: 50%;
-  padding: 20px;
-  width: 80px;
-  height: 80px;
+
+const TimelineItem = styled.div`
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: -4.25rem;
+    top: 0.5rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 50%;
+    background: ${({ theme }) => theme.text};
+    border: 3px solid ${({ theme }) => theme.primary};
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.secondary};
+  }
 `;
-const StyledListCheck = styled(ListCheck)`
-  background: ${({ theme }) => theme.text};
+
+const JobHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+`;
+
+const JobMeta = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+`;
+
+const CompanyName = styled.h3`
+  font-size: 2rem;
+  font-weight: 700;
+`;
+
+const RoleTitle = styled.p`
+  font-size: 1.6rem;
   color: ${({ theme }) => theme.secondary};
-  border-radius: 50%;
-  padding: 20px;
-  width: 80px;
-  height: 80px;
+  font-weight: 600;
+`;
+
+const SubMeta = styled.span`
+  font-size: 1.4rem;
+  color: ${({ theme }) => theme.secondary};
+`;
+
+const Period = styled.span`
+  font-size: 1.4rem;
+  color: ${({ theme }) => theme.secondary};
+  white-space: nowrap;
+  padding-top: 0.4rem;
+  font-weight: 500;
+`;
+
+const BulletList = styled.ul`
+  margin-top: 1.6rem;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+`;
+
+const BulletItem = styled.li`
+  font-size: 1.5rem;
+  line-height: 1.7;
+  padding-left: 1.8rem;
+  position: relative;
+  color: ${({ theme }) => theme.text};
+
+  &::before {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: ${({ theme }) => theme.secondary};
+  }
 `;
 
 const ProfessionalExperience = ({ language }) => {
   const items = {
     EN: [
       {
-        icon: <StyledHandShake />,
-        title: "Client Focus",
-        text: `Proactively communicated and collaborated with external and internal stakeholders.
-        Assisted with the delivery of customer solutions from conception through to implementation and beyond.
-        Elicited intelligence regarding clients’ strategy and future plans and leverage sales opportunities from
-        this knowledge.
-        Collaborated with the design, creation and delivery of reports on the various products and services
-        provided to clients.`,
+        company: "Davies Group",
+        role: "AWS Cloud Engineer (Full-Time)",
+        period: "Sep 2022 - Present",
+        location: "Oxford, UK",
+        bullets: [
+          "Built, developed and supported different CI/CD solutions including GitHub Workflows, AWS CodePipeline and CodeDeploy.",
+          "Architected and developed internal tools to automate application specific tasks using Terraform, AWS EventBridge and DynamoDB",
+          "Converted multiple applications and services from EC2 to ECS.",
+          "Implemented application monitoring for applications through AWS CloudWatch (Rum, Synthetics, X-Ray).",
+          "Standardised content delivery processes with semantic versioning.",
+        ],
       },
       {
-        icon: <StyledCogs />,
-        title: "Problem Solving",
-        text: `Built internal tools and applications to solve operational problems using AWS, including 
-        automated testing systems and end-to-end validation tooling. Experienced in designing practical 
-        solutions with React and AWS to improve reliability, visibility, and team efficiency.`,
-      },
-      {
-        icon: <StyledPeopleCommunity />,
-        title: "Team Work",
-        text: `Collaborated with dozens of cross-functional clients (policy/content, design, QA).
-        I have worked in large and small teams developing and maintaining multiple CRM solutions.`,
-      },
-      {
-        icon: <StyledListCheck />,
-        title: "Management",
-        text: `Managed JIRA Service Desks and Kanban Boards.
-        Led development of a new internal tool that encompasses chat functionality (Facebook
-        Messenger/ WhatsApp/SMS/Email/Phone). Held sprint ceremonies including reviews, refinements and planning meetings.`,
+        company: "ContactPartners",
+        role: "Senior Development Manager (Full-Time)",
+        period: "Jan 2021 - Sep 2022",
+        location: "Oxford, UK",
+        bullets: [
+          "Led the development of multiple solutions such as: Internal tool that encompasses chat functionality (Facebook Messenger/WhatsApp/SMS/Email/Phone). Client application which measures cross functional performance with the ability to compare against other teams/organisations",
+          "Managed JIRA Service Desks, Kanban Boards and Ceremonies.",
+          "Proactively communicate and collaborate with external and internal stakeholders.",
+          "Assisted with the delivery of customer solutions from conception through to implementation and beyond.",
+          "Assisted with the design, creation, and delivery of reports on the various products and services provided to clients.",
+          "Elicited intelligence regarding clients' strategy, future plans and leverage sales opportunities from this knowledge.",
+          "Collaborated with dozens of cross-functional clients (policy/content, design, QA)",
+        ],
       },
     ],
     ES: [
       {
-        icon: <StyledHandShake />,
-        title: "Enfoque En El Cliente",
-        text: `He comunicado y colaborado proactivamente con las partes interesadas externas e internas.
-        Asistido con la entrega de soluciones al cliente desde la concepción hasta la implementación y más allá.
-        Obtuvo inteligencia sobre la estrategia de los clientes y los planes futuros y aprovechó las oportunidades de ventas de
-        este conocimiento.
-        Colaboró ​​con el diseño, creación y entrega de informes sobre los diversos productos y servicios.
-        proporcionado a los clientes.`,
+        company: "Nombre de la Empresa",
+        role: "Ingeniero de Software Senior",
+        period: "Ene 2022 – Presente",
+        location: "Oxford, Reino Unido",
+        bullets: [
+          "Lideré el desarrollo de aplicaciones React de cara al cliente.",
+          "Diseñé herramientas internas usando AWS Lambda, DynamoDB y S3.",
+          "Mentoricé desarrolladores junior y facilité ceremonias de sprint.",
+        ],
       },
       {
-        icon: <StyledCogs />,
-        title: "Resolución De Problemas",
-        text: `Desarrollé herramientas y aplicaciones internas para resolver problemas operativos con AWS, incluyendo sistemas 
-        de pruebas automatizadas y herramientas de validación integral. Tengo experiencia en el diseño de soluciones prácticas 
-        con React y AWS para mejorar la confiabilidad, la visibilidad y la eficiencia del equipo.`,
-      },
-      {
-        icon: <StyledPeopleCommunity />,
-        title: "Trabajo En Equipo",
-        text: `He colaborado con decenas de clientes multidisciplinares (políticas/contenido, diseño, control de calidad). 
-        He trabajado en equipos grandes y pequeños desarrollando y manteniendo diversas soluciones CRM.`,
-      },
-      {
-        icon: <StyledListCheck />,
-        title: "Gestión",
-        text: `Manejo de Mesas de Servicio JIRA y Tableros Kanban.
-        Dirigió el desarrollo de una nueva herramienta interna que abarca la funcionalidad de chat (Facebook
-        Messenger/WhatsApp/SMS/Correo electrónico/Teléfono). Revisiones de sprint, refinamientos y reuniones de planificación.`,
+        company: "Nombre de la Empresa",
+        role: "Ingeniero de Software",
+        period: "Jun 2019 – Dic 2021",
+        location: "Oxford, Reino Unido",
+        bullets: [
+          "Desarrollé y mantuve soluciones CRM para clientes empresariales.",
+          "Integré canales de chat en tiempo real (WhatsApp, Facebook Messenger, SMS) mediante Twilio.",
+          "Colaboré con equipos multifuncionales en diseño, QA y producto.",
+        ],
       },
     ],
   };
 
   return (
-    <Container>
-      <Title>{experienceText(language)}</Title>
-      <Separator />
-      <FlexWrapper>
-        {items[language].map((item, i) => {
-          return (
-            <Card
-              key={i}
-              title={item.title}
-              icon={item.icon}
-              text={item.text}
-            />
-          );
-        })}
-      </FlexWrapper>
+    <Container id="experience">
+      <Inner>
+        <Header>
+          <Title>{experienceText(language)}</Title>
+          <ViewCV
+            href="https://heyitsmeharv.s3.eu-west-2.amazonaws.com/AH_CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {language === "ES" ? "Ver CV →" : "View CV →"}
+          </ViewCV>
+        </Header>
+        <Separator />
+        <Timeline>
+          {items[language].map((item, i) => (
+            <TimelineItem key={i}>
+              <JobHeader>
+                <JobMeta>
+                  <CompanyName>{item.company}</CompanyName>
+                  <RoleTitle>{item.role}</RoleTitle>
+                  <SubMeta>{item.location}</SubMeta>
+                </JobMeta>
+                <Period>{item.period}</Period>
+              </JobHeader>
+              <BulletList>
+                {item.bullets.map((bullet, j) => (
+                  <BulletItem key={j}>{bullet}</BulletItem>
+                ))}
+              </BulletList>
+            </TimelineItem>
+          ))}
+        </Timeline>
+      </Inner>
     </Container>
   );
 };

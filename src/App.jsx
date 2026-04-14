@@ -32,10 +32,7 @@ import NotFound from "./pages/NotFound";
 
 // components
 import ConsentGate from "./components/Consent/ConsentGate";
-import Themes from "./components/Theme/Theme";
 import Navbar from "./components/Navbar/Navbar";
-import SocialMediaBar from "./components/SocialMedia/SocialMediaBar";
-import Languages from "./components/Language/Language";
 
 // blog posts
 import TheStart from "./components/Posts/TheStart.jsx";
@@ -64,12 +61,6 @@ import DockerKubernetes from "./components/Posts/DockerKubernetes";
 import DockerKubernetesAdvanced from "./components/Posts/DockerKubernetesAdvanced";
 import IaCTerraform from "./components/Posts/IaCTerraform";
 import ConventionalCommits from "./components/Posts/ConventionalCommits.jsx";
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
 
 const slugFromPath = (p) => {
   const m = (p || "").match(/^\/blog\/([^/?#]+)/);
@@ -134,26 +125,16 @@ const App = () => {
       <LanguageContext.Provider value={language}>
         <ThemeProvider theme={themeMode}>
           <GlobalStyles />
-          <Wrapper>
-            <Themes theme={theme} toggleTheme={toggleTheme} />
-            <SocialMediaBar />
-          </Wrapper>
           <ConsentGate>
             <Router>
               <Route
                 render={({ location }) => {
                   return (
                     <TrackingGate location={location}>
-                      <Navbar />
-                      {!(
-                        window.location.href.indexOf("projects") > 1 ||
-                        window.location.href.indexOf("blog") > 1
-                      ) && (
-                        <Languages
-                          language={language}
-                          toggleLanguage={toggleLanguage}
-                        />
-                      )}
+                      <Navbar
+                        toggleTheme={toggleTheme}
+                        toggleLanguage={toggleLanguage}
+                      />
                       <Switch location={location}>
                         <Route exact path="/" component={Home} />
                         <Route exact path="/projects" component={Projects} />

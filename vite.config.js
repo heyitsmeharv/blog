@@ -8,4 +8,7 @@ export default defineConfig({
     loader: "jsx",
     include: /src\/.*\.(js|jsx)$/,
   },
+  optimizeDeps: {
+    include: ["react-github-calendar"],
+  },
 });

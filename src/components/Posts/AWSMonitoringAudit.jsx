@@ -77,7 +77,8 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSMonitoringAudit = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "aws-monitoring-auditing" });
+    Analytics.pageview("/blog/aws-monitoring-audit");
+    Analytics.track("blog_page_viewed", { slug: "aws-monitoring-audit" });
   }, []);
 
   const cloudWatchFeaturesColumns = ["Feature", "Description"];

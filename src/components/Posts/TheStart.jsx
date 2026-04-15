@@ -25,7 +25,8 @@ const AnimatedPostContainer = styled(BasePostContainer)`
 
 const TheStart = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "the-start" });
+    Analytics.pageview("/blog/the-start");
+    Analytics.track("blog_page_viewed", { slug: "the-start" });
   }, []);
 
   return (

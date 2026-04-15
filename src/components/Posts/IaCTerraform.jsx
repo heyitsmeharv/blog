@@ -1106,7 +1106,10 @@ Template note: single-account bootstrap + naming
 
 const IaCTerraform = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "infrastructure-as-code-with-terraform" });
+    Analytics.pageview("/blog/infrastructure-as-code-with-terraform");
+    Analytics.track("blog_page_viewed", {
+      slug: "infrastructure-as-code-with-terraform",
+    });
   }, []);
 
   return (

@@ -77,7 +77,8 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSSecurityEncryption = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "aws-encryption" });
+    Analytics.pageview("/blog/aws-security-encryption");
+    Analytics.track("blog_page_viewed", { slug: "aws-security-encryption" });
   }, []);
 
   const compareSecretsColumns = [

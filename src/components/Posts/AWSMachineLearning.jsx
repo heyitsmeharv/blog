@@ -63,7 +63,8 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSMachineLearning = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "aws-machine-learning" });
+    Analytics.pageview("/blog/aws-machine-learning");
+    Analytics.track("blog_page_viewed", { slug: "aws-machine-learning" });
   }, []);
 
   const comprehendColumns = ["Capability", "Description"];

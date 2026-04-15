@@ -26,23 +26,30 @@ const Container = styled.div`
 const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 1rem 0px;
+  padding: 0 1.6rem 2rem;
 `;
 
 const PaginationButton = styled(motion.button)`
   font-family: "Raleway", sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
+  line-height: 1;
   background: none;
-  padding: 6px 0px;
-  margin: 0 10px;
-  width: 50px;
-  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.2rem;
+  min-width: 4.4rem;
+  min-height: 4rem;
   text-align: center;
   color: ${({ theme }) => theme.text};
   text-decoration: ${(props) => (props.$isActive ? "underline" : "none")};
   transition: border-color 0.5s ease;
   border: 2px solid transparent;
+  border-radius: 999px;
   :hover {
     cursor: pointer;
     border-color: ${({ theme }) => theme.text};
@@ -59,6 +66,7 @@ const PaginationButton = styled(motion.button)`
 const PaginationNav = styled.nav`
   display: flex;
   justify-content: center;
+  width: 100%;
 `;
 
 const Pagination = ({ currentPage, setCurrentPage, itemsPerPage, items }) => {

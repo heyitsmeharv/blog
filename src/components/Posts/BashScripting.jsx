@@ -153,7 +153,10 @@ const TocColumns = styled.div`
 
 const BashScripting = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "getting-started-with-bash-scripting" });
+    Analytics.pageview("/blog/getting-started-with-bash-scripting");
+    Analytics.track("blog_page_viewed", {
+      slug: "getting-started-with-bash-scripting",
+    });
   }, []);
 
   const columns = ["Command", "Description", "Example"];

@@ -56,7 +56,8 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSServerless = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "aws-serverless" });
+    Analytics.pageview("/blog/aws-serverless");
+    Analytics.track("blog_page_viewed", { slug: "aws-serverless" });
   }, []);
 
   const columns = ["Execution", "Deployment"];

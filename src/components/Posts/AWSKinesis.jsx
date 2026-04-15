@@ -53,7 +53,8 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSKinesis = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "aws-kinesis" });
+    Analytics.pageview("/blog/aws-kinesis");
+    Analytics.track("blog_page_viewed", { slug: "aws-kinesis" });
   }, []);
 
   const columns = ["Feature", "Provisioned Mode", "On-Demand Mode"];

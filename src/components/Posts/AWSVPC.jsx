@@ -86,7 +86,8 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSVPC = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "aws-vpc" });
+    Analytics.pageview("/blog/aws-vpc");
+    Analytics.track("blog_page_viewed", { slug: "aws-vpc" });
   }, []);
 
   const natColumns = ["", "NAT Gateway", "NAT Instance"];

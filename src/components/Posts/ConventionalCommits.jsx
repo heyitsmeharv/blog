@@ -93,7 +93,8 @@ BREAKING CHANGE: tokens are now rotated on refresh`;
 
 const ConventionalCommits = () => {
   useEffect(() => {
-    Analytics.pageview({
+    Analytics.pageview("/blog/semantic-versioning-with-conventional-commits");
+    Analytics.track("blog_page_viewed", {
       slug: "semantic-versioning-with-conventional-commits",
     });
   }, []);

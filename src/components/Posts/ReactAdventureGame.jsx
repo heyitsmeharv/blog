@@ -128,7 +128,10 @@ const Spacer = styled.br``;
 
 const ReactAdventureGame = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "react-adventure-game" });
+    Analytics.pageview("/blog/react-text-based-adventure");
+    Analytics.track("blog_page_viewed", {
+      slug: "react-text-based-adventure",
+    });
   }, []);
 
   const [isCopied, setIsCopied] = useState([

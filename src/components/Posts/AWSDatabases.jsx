@@ -110,7 +110,8 @@ const data2 = [
 
 const AWSDatabases = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "aws-databases" });
+    Analytics.pageview("/blog/aws-databases");
+    Analytics.track("blog_page_viewed", { slug: "aws-databases" });
   }, []);
 
   return (

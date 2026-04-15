@@ -55,7 +55,8 @@ const AnimatedPostContainer = styled(BasePostContainer)`
 
 const JavaScriptObjects = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "javascript-objects" });
+    Analytics.pageview("/blog/javascript-objects");
+    Analytics.track("blog_page_viewed", { slug: "javascript-objects" });
   }, []);
 
   return (

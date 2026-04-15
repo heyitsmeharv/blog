@@ -22,12 +22,13 @@ export const Analytics = {
     _analyticsInstance.track(name, params);
   },
 
+  /** Track a custom event */
+  track(name: string, params: EventParams = {}) {
+    _analyticsInstance.track(name, params);
+  },
+
   /** Track a page view (called from App-level route handler) */
-  pageview({ path, slug }: { path?: string; slug?: string | null } = {}) {
-    const resolvedPath = path ?? window.location.pathname;
-    _analyticsInstance.track("page_view", {
-      path: resolvedPath,
-      ...(slug ? { slug } : {}),
-    });
+  pageview(path?: string) {
+    _analyticsInstance.pageview(path ?? window.location.pathname);
   },
 };

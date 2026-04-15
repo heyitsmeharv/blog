@@ -147,7 +147,7 @@ const PageTracker = () => {
       lastPath.current = location.pathname;
       // Individual blog posts track themselves with slug enrichment
       if (!/^\/blog\/.+/.test(location.pathname)) {
-        Analytics.pageview({ path: location.pathname });
+        Analytics.pageview(location.pathname);
       }
     }
   }, [location.pathname]);

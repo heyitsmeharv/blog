@@ -50,7 +50,8 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSSNS = () => {
   useEffect(() => {
-    Analytics.pageview({ slug: "aws-sns" });
+    Analytics.pageview("/blog/aws-sns");
+    Analytics.track("blog_page_viewed", { slug: "aws-sns" });
   }, []);
 
   return (

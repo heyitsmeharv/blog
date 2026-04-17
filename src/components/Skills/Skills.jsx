@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import SlideInBottom from "../../animations/SlideInBottom";
-import { skillsText, skillsListText } from "../../helpers/i18nText";
+import { skillsText, skillsListText, certsText } from "../../helpers/i18nText";
 import awscp from "../../resources/images/aws-certified-cloud-practitioner.png";
+import awssaa from "../../resources/images/aws-certified-solutions-architect-associate.png";
 
 import {
   AWSWhiteBackgroundSVG,
@@ -39,6 +40,7 @@ import {
   CypressSVG,
   ESLintSVG,
   PrettierSVG,
+  BashSVG,
 } from "../../resources/styles/icons";
 
 const Container = styled.section`
@@ -80,60 +82,49 @@ const Subtitle = styled.p`
   font-size: 1.6rem;
   color: ${({ theme }) => theme.mutedText || theme.secondary};
   font-weight: 600;
-  margin-bottom: 2.5rem;
-`;
-
-const FilterRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-bottom: 3rem;
-`;
-
-const FilterButton = styled.button`
-  font-family: "Raleway", sans-serif;
-  font-size: 1.3rem;
-  font-weight: 600;
-  padding: 0.6rem 1.6rem;
-  border-radius: 999px;
-  border: 1.5px solid
-    ${({ theme, $active }) => ($active ? theme.text : `${theme.secondary}80`)};
-  background: ${({ theme, $active }) => ($active ? theme.text : "transparent")};
-  color: ${({ theme, $active }) => ($active ? theme.primary : theme.text)};
-  cursor: pointer;
-  transition: all 0.15s;
-
-  &:hover {
-    border-color: ${({ theme }) => theme.text};
-    background: ${({ theme }) => theme.text};
-    color: ${({ theme }) => theme.primary};
-  }
-`;
-
-const TagsGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
   margin-bottom: 3.5rem;
 `;
 
-const Tag = styled.span`
+const LevelSection = styled.div`
+  margin-bottom: 3.2rem;
+`;
+
+const LevelHeader = styled.div`
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid ${({ theme }) => `${theme.secondary}30`};
+`;
+
+const LevelLabel = styled.h3`
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text};
+  margin: 0 0 0.3rem;
+`;
+
+const LevelDesc = styled.p`
+  font-size: 1.25rem;
+  margin: 0;
+  color: ${({ theme }) => theme.mutedText || theme.text};
+  opacity: 0.85;
+`;
+
+const SkillGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 2.4rem;
+`;
+
+const SkillItem = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.6rem 1.4rem;
-  border-radius: 999px;
-  border: 1.5px solid ${({ theme }) => `${theme.secondary}60`};
+  gap: 0.65rem;
   font-size: 1.4rem;
-  font-weight: 600;
-  background: ${({ theme }) => theme.primary};
+  font-weight: 500;
   color: ${({ theme }) => theme.text};
-  transition: border-color 0.15s;
-  cursor: default;
-
-  &:hover {
-    border-color: ${({ theme }) => theme.text};
-  }
+  padding: 0.5rem 0;
 `;
 
 const IconWrapper = styled.span`
@@ -155,6 +146,7 @@ const CertRow = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
+  margin-top: 1rem;
 `;
 
 const CertImage = styled.img`
@@ -166,119 +158,111 @@ const CertImage = styled.img`
   }
 `;
 
+const levels = [
+  {
+    key: "proficient",
+    label: { EN: "Proficient", ES: "Dominio" },
+    desc: {
+      EN: "Confident taking production work",
+      ES: "Confianza en proyectos nuevos o en producción",
+    },
+  },
+  {
+    key: "comfortable",
+    label: { EN: "Comfortable", ES: "Cómodo" },
+    desc: {
+      EN: "Have shipped it - familiar enough to be productive quickly",
+      ES: "Lo he usado en producción - lo retomo rápido",
+    },
+  },
+  {
+    key: "familiar",
+    label: { EN: "Familiar", ES: "Familiarizado" },
+    desc: {
+      EN: "Learned and explored - understand the concepts, not my primary stack",
+      ES: "Explorado y aprendido - entiendo los conceptos, no es mi stack principal",
+    },
+  },
+];
+
 const skillList = [
-  { icon: <HtmlSVG />, title: "HTML", tag: ["all", "webDev"] },
-  { icon: <CssSVG />, title: "CSS", tag: ["all", "webDev"] },
-  {
-    icon: <JavascriptSVG />,
-    title: "JavaScript",
-    tag: ["all", "language", "webDev"],
-  },
-  { icon: <SassSVG />, title: "Sass", tag: ["all", "webDev"] },
-  {
-    icon: <StyledComponentsSVG />,
-    title: "Styled Components",
-    tag: ["all", "webDev"],
-  },
-  { icon: <ReactjsSVG />, title: "React", tag: ["all", "webDev"] },
-  { icon: <MaterialUISVG />, title: "Material UI", tag: ["all", "webDev"] },
-  { icon: <NodejsSVG />, title: "Node", tag: ["all", "language"] },
-  {
-    icon: <CypressSVG />,
-    title: "Cypress",
-    tag: ["all", "language", "webDev"],
-  },
-  { icon: <ESLintSVG />, title: "ESLint", tag: ["all", "webDev"] },
-  { icon: <PrettierSVG />, title: "Prettier", tag: ["all", "webDev"] },
-  {
-    icon: <ElectronJSSVG />,
-    title: "Electron",
-    tag: ["all", "language", "webDev"],
-  },
-  { icon: <ExpressSVG />, title: "Express", tag: ["all", "webDev"] },
-  { icon: <CPlusPlusSVG />, title: "C++", tag: ["all", "language"] },
-  { icon: <CSharpSVG />, title: "C#", tag: ["all", "language"] },
-  { icon: <AWSWhiteBackgroundSVG />, title: "AWS", tag: ["all", "misc"] },
-  { icon: <ServerlessSVG />, title: "Serverless", tag: ["all", "misc"] },
-  { icon: <TerraformSVG />, title: "Terraform", tag: ["all", "misc"] },
-  { icon: <HerokuSVG />, title: "Heroku", tag: ["all", "misc"] },
-  { icon: <NetlifySVG />, title: "Netlify", tag: ["all", "misc"] },
-  { icon: <TwilioSVG />, title: "Twilio", tag: ["all", "misc"] },
-  { icon: <SocketIOSVG />, title: "Socket IO", tag: ["all", "webDev"] },
-  { icon: <MongoDBSVG />, title: "Mongo DB", tag: ["all", "database"] },
-  { icon: <RaspberryPiSVG />, title: "Raspberry Pi", tag: ["all", "misc"] },
-  { icon: <GraphqlSVG />, title: "GraphQL", tag: ["all", "database"] },
-  { icon: <WebpackSVG />, title: "Webpack", tag: ["all", "webDev"] },
-  { icon: <DockerSVG />, title: "Docker", tag: ["all", "webDev"] },
-  { icon: <MySQLSVG />, title: "MySQL", tag: ["all", "database"] },
-  { icon: <GitSVG />, title: "Git", tag: ["all", "misc"] },
-  { icon: <GitHubSVG />, title: "GitHub", tag: ["all", "misc"] },
-  { icon: <BitBucketSVG />, title: "BitBucket", tag: ["all", "misc"] },
-  { icon: <JIRASVG />, title: "JIRA", tag: ["all", "misc"] },
-  { icon: <ConfluenceSVG />, title: "Confluence", tag: ["all", "misc"] },
+  { icon: <AWSWhiteBackgroundSVG />, title: "AWS", level: "proficient" },
+  { icon: <TerraformSVG />, title: "Terraform", level: "proficient" },
+  { icon: <JavascriptSVG />, title: "JavaScript", level: "proficient" },
+  { icon: <NodejsSVG />, title: "Node.js", level: "proficient" },
+  { icon: <ReactjsSVG />, title: "React.js", level: "proficient" },
+  { icon: <GitHubSVG />, title: "GitHub", level: "proficient" },
+  { icon: <BitBucketSVG />, title: "BitBucket", level: "proficient" },
+  { icon: <JIRASVG />, title: "JIRA", level: "proficient" },
+  { icon: <ConfluenceSVG />, title: "Confluence", level: "proficient" },
+  { icon: <GitSVG />, title: "Git", level: "proficient" },
+
+  { icon: <DockerSVG />, title: "Docker", level: "comfortable" },
+  { icon: <BashSVG />, title: "Bash", level: "comfortable" },
+  { icon: <ServerlessSVG />, title: "Serverless", level: "comfortable" },
+  { icon: <MySQLSVG />, title: "MySQL", level: "comfortable" },
+
+  { icon: <CPlusPlusSVG />, title: "C++", level: "familiar" },
+  { icon: <CSharpSVG />, title: "C#", level: "familiar" },
+  { icon: <GraphqlSVG />, title: "GraphQL", level: "familiar" },
+  { icon: <MongoDBSVG />, title: "MongoDB", level: "familiar" },
+  { icon: <WebpackSVG />, title: "Webpack", level: "familiar" },
+  { icon: <SocketIOSVG />, title: "Socket IO", level: "familiar" },
+  { icon: <TwilioSVG />, title: "Twilio", level: "familiar" },
 ];
 
 const Skills = ({ language }) => {
-  const [filter, setFilter] = useState("all");
-  const [list, setList] = useState(skillList);
-
-  const buttons = {
-    EN: [
-      { label: "All", value: "all" },
-      { label: "Programming languages", value: "language" },
-      { label: "Web / App Dev", value: "webDev" },
-      { label: "Databases", value: "database" },
-      { label: "Misc", value: "misc" },
-    ],
-    ES: [
-      { label: "Toda", value: "all" },
-      { label: "Lenguajes de programación", value: "language" },
-      { label: "Desarrollo Web / App", value: "webDev" },
-      { label: "Bases de datos", value: "database" },
-      { label: "Varios", value: "misc" },
-    ],
-  };
-
-  useEffect(() => {
-    setList(skillList.filter((s) => s.tag.includes(filter)));
-  }, [filter]);
-
   return (
     <Container id="skills">
       <Inner>
         <Title>{skillsText(language)}</Title>
         <Separator />
         <Subtitle>{skillsListText(language)}</Subtitle>
-        <FilterRow>
-          {buttons[language].map((btn) => (
-            <FilterButton
-              key={btn.value}
-              $active={filter === btn.value}
-              onClick={() => setFilter(btn.value)}
-            >
-              {btn.label}
-            </FilterButton>
-          ))}
-        </FilterRow>
-        <TagsGrid>
-          {list.map((skill) => (
-            <Tag key={skill.title}>
-              <IconWrapper>{skill.icon}</IconWrapper>
-              {skill.title}
-            </Tag>
-          ))}
-        </TagsGrid>
+
+        {levels.map((level) => (
+          <LevelSection key={level.key}>
+            <LevelHeader>
+              <LevelLabel>{level.label[language]}</LevelLabel>
+              <LevelDesc>{level.desc[language]}</LevelDesc>
+            </LevelHeader>
+            <SkillGrid>
+              {skillList
+                .filter((s) => s.level === level.key)
+                .map((skill) => (
+                  <SkillItem key={skill.title}>
+                    <IconWrapper>{skill.icon}</IconWrapper>
+                    {skill.title}
+                  </SkillItem>
+                ))}
+            </SkillGrid>
+          </LevelSection>
+        ))}
+
+        <Subtitle>{certsText(language)}</Subtitle>
+
         <CertRow>
           <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.credly.com/badges/445bcb6b-31b2-4c23-8ca4-adf17e871e42"
+          // target="_blank"
+          // rel="noopener noreferrer"
+          // href="https://www.credly.com/badges/445bcb6b-31b2-4c23-8ca4-adf17e871e42"
           >
             <CertImage
               width="120px"
               height="120px"
               src={awscp}
               alt="AWS Certified Cloud Practitioner"
+            />
+          </a>
+          <a
+          // target="_blank"
+          // rel="noopener noreferrer"
+          // href="https://www.credly.com/badges/445bcb6b-31b2-4c23-8ca4-adf17e871e42"
+          >
+            <CertImage
+              width="120px"
+              height="120px"
+              src={awssaa}
+              alt="AWS Certified Solutions Architect - Associate"
             />
           </a>
         </CertRow>

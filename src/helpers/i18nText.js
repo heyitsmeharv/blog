@@ -19,6 +19,7 @@ I would describe myself as a fun, friendly, and enthusiastic problem solver with
     experienceText: "Experience",
     skillsText: "Tech Stack",
     skillsListText: "Here's a list of technologies I've used:",
+    certsText: "Here's a list of certifications I've obtained:",
     comment: "Comment",
     commentText: "Feel free to leave me a comment below.",
     commentPrompt: "What are your thoughts?",
@@ -114,6 +115,7 @@ Me describir\u00eda como una persona cercana, curiosa y entusiasta.`,
     skillsText: "Tech Stack",
     skillsListText:
       "Aqu\u00ed tienes una lista de tecnolog\u00edas que he utilizado:",
+    certsText: "Aqu\u00ed tienes una lista de certificaciones que he obtenido:",
     comment: "Comentario",
     commentText: "Puedes dejarme un comentario aqu\u00ed abajo.",
     commentPrompt: "\u00bfQu\u00e9 opinas?",
@@ -240,6 +242,7 @@ export const aboutMeText = (language) => t(language, "aboutMeText");
 export const experienceText = (language) => t(language, "experienceText");
 export const skillsText = (language) => t(language, "skillsText");
 export const skillsListText = (language) => t(language, "skillsListText");
+export const certsText = (language) => t(language, "certsText");
 export const comment = (language) => t(language, "comment");
 export const commentText = (language) => t(language, "commentText");
 export const commentPrompt = (language) => t(language, "commentPrompt");

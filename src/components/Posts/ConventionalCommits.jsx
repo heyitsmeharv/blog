@@ -309,7 +309,7 @@ const ConventionalCommits = () => {
 
         <Paragraph>
           The best "quality of life" move is to only check the files you're
-          committing — not the entire repo. That's what{" "}
+          committing - not the entire repo. That's what{" "}
           <Strong>lint-staged</Strong> does.
         </Paragraph>
 
@@ -343,7 +343,7 @@ const ConventionalCommits = () => {
           Now that commit messages are predictable, we can safely automate
           version bumps and changelogs. <Strong>commit-and-tag-version</Strong>{" "}
           gives you a clean local workflow: bump the version, generate/update
-          the changelog, and tag the release — without needing to integrate
+          the changelog, and tag the release - without needing to integrate
           anything into CI/CD.
         </Paragraph>
 

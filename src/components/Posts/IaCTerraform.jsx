@@ -1930,7 +1930,7 @@ const IaCTerraform = () => {
           <InlineHighlight>
             aws-actions/configure-aws-credentials
           </InlineHighlight>{" "}
-          has nothing to send to AWS — and the role assumption fails with
+          has nothing to send to AWS - and the role assumption fails with
           "Credentials could not be loaded".
         </Paragraph>
 

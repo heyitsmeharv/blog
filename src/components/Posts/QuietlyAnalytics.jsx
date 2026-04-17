@@ -42,7 +42,11 @@ import {
 } from "../Typography/Typography";
 
 // icons
-import { TerraformSVG, AWSLambdaSVG } from "../../resources/styles/icons";
+import {
+  TerraformSVG,
+  AWSSVG,
+  AWSLambdaSVG,
+} from "../../resources/styles/icons";
 
 const terraformRepo = "https://github.com/heyitsmeharv/terraform-aws-quiet-ly";
 const npmRepo = "https://github.com/heyitsmeharv/quiet-ly-npm";
@@ -226,24 +230,29 @@ const QuietlyAnalytics = () => {
               <TerraformSVG />
             </HeaderIcon>
             <HeaderIcon>
+              <AWSSVG />
+            </HeaderIcon>
+            <HeaderIcon>
               <AWSLambdaSVG />
             </HeaderIcon>
           </IconWrapper>
         </HeaderRow>
 
         <Paragraph>
-          At some point every developer gets tired of sending their users' data
-          to a third party just to see a page view count. This post walks
-          through <Strong>quiet-ly</Strong> - a self-hosted analytics stack I
-          built for this portfolio. It's split across two public repos: a
-          Terraform module that provisions the AWS backend, and an npm package
-          that provides the browser SDK, React bindings, and a dashboard
-          component.
+          I was using Google Analytics on this portfolio and it bothered me more
+          than it should have. Not for any deep privacy reason - more that I was
+          sending every visitor's data to Google just to see which blog posts
+          people actually read. It felt lazy. So I built{" "}
+          <Strong>quiet-ly</Strong> instead: a self-hosted analytics stack that
+          lives entirely in my own AWS account and costs nothing to run at
+          portfolio traffic levels.
         </Paragraph>
 
         <Paragraph>
-          The whole thing runs within the AWS free tier at portfolio-scale
-          traffic. No cookies. No data leaving your AWS account.
+          It's split across two repos: a Terraform module that provisions the
+          AWS backend, and an npm package that provides the browser SDK, React
+          bindings, and a dashboard component. No cookies. No third-party
+          requests on page load.
         </Paragraph>
 
         <SectionHeading>The Stack</SectionHeading>
@@ -322,10 +331,11 @@ const QuietlyAnalytics = () => {
 
         <Banner title="Why no API Gateway?" variant="info">
           <Paragraph>
-            API Gateway adds cost and latency for something this simple. Lambda
-            Function URLs give you a direct HTTPS endpoint at no extra charge.
-            CloudFront sits in front of it to add country enrichment and enforce
-            HTTPS.
+            My first draft used API Gateway and it added cost and configuration
+            for literally nothing. Lambda Function URLs give you a free HTTPS
+            endpoint with built-in CORS. The only reason to add CloudFront on
+            top is the country header injection - if I didn't want location data
+            I'd just expose the Function URL directly.
           </Paragraph>
         </Banner>
 
@@ -357,9 +367,11 @@ const QuietlyAnalytics = () => {
 
         <Banner title="Single-table design" variant="info">
           <Paragraph>
-            Putting all access patterns into one table avoids cross-table joins
-            and keeps provisioned capacity simple. If you've read Alex DeBrie's
-            work on DynamoDB modelling, this pattern will look familiar.
+            I originally had separate tables for events, sessions, and visitors.
+            Joining them for the dashboard meant multiple round trips and
+            awkward client-side merging. Collapsing everything into one table
+            with GSIs fixed that - one query per date gets everything the
+            dashboard needs.
           </Paragraph>
         </Banner>
 
@@ -381,18 +393,20 @@ const QuietlyAnalytics = () => {
         <SubSectionHeading>Country enrichment</SubSectionHeading>
 
         <Paragraph>
-          When CloudFront is enabled (the default), it automatically injects a
-          two-letter ISO country code into the{" "}
-          <InlineHighlight>CloudFront-Viewer-Country</InlineHighlight> header
-          before the request reaches Lambda. The handler reads it and stores it
-          on the event - no IP geolocation library required.
+          This was the thing I was most pleased to discover. CloudFront
+          automatically injects a{" "}
+          <InlineHighlight>CloudFront-Viewer-Country</InlineHighlight> header on
+          every request - a two-letter ISO country code based on the origin IP.
+          The Lambda just reads it. No MaxMind database, no geolocation API, no
+          extra cost.
         </Paragraph>
 
         <Paragraph>
-          If you deploy without CloudFront (
+          If you skip CloudFront (
           <InlineHighlight>enable_cloudfront = false</InlineHighlight>), the
-          header is absent and <InlineHighlight>country</InlineHighlight> is
-          stored as an empty string.
+          header isn't there and <InlineHighlight>country</InlineHighlight>{" "}
+          stores as an empty string. The dashboard falls back to timezone for
+          location display in that case.
         </Paragraph>
 
         <SectionHeading>The NPM Package</SectionHeading>
@@ -429,14 +443,15 @@ const QuietlyAnalytics = () => {
 
         <CodeBlockWithCopy code={analyticsClass} />
 
-        <Banner title="Visitor and session IDs" variant="info">
+        <Banner title="Visitor and session IDs without cookies" variant="info">
           <Paragraph>
-            The SDK generates a stable visitor ID stored in{" "}
-            <InlineHighlight>localStorage</InlineHighlight> and a session ID
-            stored in <InlineHighlight>sessionStorage</InlineHighlight> that
-            resets when the tab closes. No cookies - just browser-native
-            storage. Calling <InlineHighlight>reset()</InlineHighlight> clears
-            both.
+            I didn't want to set cookies just to track sessions - that triggers
+            consent banners and I wanted to avoid the whole thing. The SDK uses{" "}
+            <InlineHighlight>localStorage</InlineHighlight> for a stable visitor
+            ID and <InlineHighlight>sessionStorage</InlineHighlight> for a
+            session ID that resets when the tab closes. It's not perfect
+            fingerprinting but it's good enough for a portfolio dashboard, and
+            it requires no consent prompt.
           </Paragraph>
         </Banner>
 
@@ -575,18 +590,25 @@ const QuietlyAnalytics = () => {
         <SectionHeading>Wrapping Up</SectionHeading>
 
         <Paragraph>
-          The quiet-ly stack covers the full picture from infrastructure to SDK
-          to dashboard without taking any dependency on a third-party analytics
-          provider. The Terraform module handles the AWS side in a single apply.
-          The npm package handles the browser side with three focused entry
-          points.
+          Building this taught me more about DynamoDB access patterns than any
+          tutorial I've read. There's something about designing for your own
+          real data - knowing exactly what queries the dashboard needs - that
+          makes the single-table tradeoffs click in a way they don't when you're
+          following a contrived example.
         </Paragraph>
 
         <Paragraph>
-          At portfolio scale it costs nothing to run. If you want to plug it
-          into your own project the Terraform module is published to the public
-          registry and the npm package is on npm. Both repos are open source if
-          you want to dig into the implementation.
+          If I were to change one thing it'd be the dashboard query approach.
+          Fanning out one DynamoDB query per day works fine for 30 days but
+          starts to feel clunky at longer ranges. A proper time-series index or
+          aggregation layer would fix that, but it'd also make the Lambda
+          considerably more complicated for a portfolio project. Good enough won
+          for now.
+        </Paragraph>
+
+        <Paragraph>
+          Both repos are open source if you want to use the stack or dig into
+          the implementation.
         </Paragraph>
 
         <TextList>

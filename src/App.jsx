@@ -65,6 +65,7 @@ import DockerKubernetesAdvanced from "./components/Posts/DockerKubernetesAdvance
 import IaCTerraform from "./components/Posts/IaCTerraform";
 import ConventionalCommits from "./components/Posts/ConventionalCommits.jsx";
 import QuietlyAnalytics from "./components/Posts/QuietlyAnalytics.jsx";
+import AWSObservabilityDashboard from "./components/Posts/AWSObservabilityDashboard.jsx";
 import { posts } from "./data/posts";
 import {
   blogText,
@@ -345,6 +346,11 @@ const App = () => {
                           exact
                           path="/blog/building-your-own-analytics"
                           component={QuietlyAnalytics}
+                        />
+                        <Route
+                          exact
+                          path="/blog/aws-observability-dashboard"
+                          component={AWSObservabilityDashboard}
                         />
                         <Route component={NotFound} />
                       </Switch>

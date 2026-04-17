@@ -3,7 +3,7 @@ import React from "react";
 import {
   JavascriptSVG,
   ReactjsSVG,
-  AWSWhiteBackgroundSVG,
+  AWSSVG,
   AWSIAMSVG,
   AWSOrganisationsSVG,
   AWSControlTowerSVG,
@@ -110,7 +110,7 @@ const allPosts = [
     type: "Study",
     date: "26/10/2023",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "IAM", background: "#FF9900", icon: <AWSIAMSVG /> },
       {
         name: "Organisations",
@@ -134,7 +134,7 @@ const allPosts = [
     type: "Study",
     date: "02/11/2023",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "EC2", background: "#FF9900", icon: <AWSEC2SVG /> },
     ],
     intro: `In this blog post we'll be going through the Elastic Compute Cloud service, also known as EC2 which can be defined as an infrastructure as a Service (IaaS).
@@ -148,7 +148,7 @@ const allPosts = [
     type: "Study",
     date: "20/12/2023",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "RDS", background: "#FF9900", icon: <AWSRDSSVG /> },
     ],
     intro: `This service allows you to create a database in the cloud. You can choose from the following: Microsoft SQL Server, MySQL, Postgres, MariaDB, Oracle,
@@ -162,7 +162,7 @@ const allPosts = [
     type: "Study",
     date: "24/05/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "Route53", background: "#FF9900", icon: <AWSRoute53SVG /> },
     ],
     intro: `Amazon Route 53 is a scalable and highly available Domain Name System (DNS). It is designed to route end-user requests to internet applications hosted on AWS infrastructure,
@@ -176,7 +176,7 @@ const allPosts = [
     type: "Study",
     date: "28/05/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "S3", background: "#FF9900", icon: <AWSS3SVG /> },
       { name: "Snow", background: "#FF9900", icon: <AWSSnowSVG /> },
       { name: "FSX", background: "#FF9900", icon: <AWSFSXSVG /> },
@@ -203,7 +203,7 @@ const allPosts = [
     type: "Study",
     date: "24/07/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "CloudFront", background: "#FF9900", icon: <AWSCloudfrontSVG /> },
     ],
     intro: `Amazon CloudFront is a content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency and high transfer speeds.
@@ -217,7 +217,7 @@ const allPosts = [
     type: "Study",
     date: "05/08/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       {
         name: "Simple Queue Service",
         background: "#FF9900",
@@ -235,7 +235,7 @@ const allPosts = [
     type: "Study",
     date: "06/08/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       {
         name: "Simple Notification Service",
         background: "#FF9900",
@@ -253,7 +253,7 @@ const allPosts = [
     type: "Study",
     date: "06/08/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       {
         name: "Elastic Container Service",
         background: "#FF9900",
@@ -277,7 +277,7 @@ const allPosts = [
     type: "Study",
     date: "11/08/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       {
         name: "Virtual Private Cloud",
         background: "#FF9900",
@@ -295,7 +295,7 @@ const allPosts = [
     type: "Study",
     date: "28/08/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "Kinesis", background: "#FF9900", icon: <AWSKinesisSVG /> },
     ],
     intro: `Amazon Kinesis is designed to handle real-time data streaming and processing. It allows you to collect, process, and analyze large streams of data in real-time, making it ideal for use cases that require
@@ -309,7 +309,7 @@ const allPosts = [
     type: "Study",
     date: "04/09/2024",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "Athena", background: "#FF9900", icon: <AWSAthenaSVG /> },
       { name: "Redshift", background: "#FF9900", icon: <AWSRedshiftSVG /> },
       {
@@ -338,7 +338,7 @@ const allPosts = [
     type: "Study",
     date: "12/01/2025",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "Lambda", background: "#FF9900", icon: <AWSLambdaSVG /> },
       {
         name: "API Gateway",
@@ -362,7 +362,7 @@ const allPosts = [
     type: "Study",
     date: "15/01/2025",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       {
         name: "Rekognition",
         background: "#FF9900",
@@ -384,7 +384,7 @@ const allPosts = [
     type: "Study",
     date: "17/01/2025",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "CloudWatch", background: "#FF9900", icon: <AWSCloudWatchSVG /> },
       { name: "CloudTrail", background: "#FF9900", icon: <AWSCloudTrailSVG /> },
       { name: "Config", background: "#FF9900", icon: <AWSConfigSVG /> },
@@ -400,7 +400,7 @@ const allPosts = [
     type: "Study",
     date: "03/02/2025",
     tags: [
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "KMS", background: "#FF9900", icon: <AWSKMSSVG /> },
       { name: "SSM", background: "#FF9900", icon: <AWSSSMSVG /> },
       {
@@ -512,7 +512,7 @@ const allPosts = [
     date: "16/04/2026",
     tags: [
       { name: "Terraform", background: "#2E71E5", icon: <TerraformSVG /> },
-      { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
       { name: "React", background: "#64CBF6", icon: <ReactjsSVG /> },
     ],
     intro: `At some point every developer gets tired of sending their users' data to a third party just to see a page view count. This post walks through quiet-ly - a self-hosted analytics stack built for this portfolio.
@@ -520,7 +520,22 @@ const allPosts = [
     navigate: "building-your-own-analytics",
     published: true,
   },
+  {
+    title: "AWS Observability Dashboard",
+    readingTime: "approx 15 mins",
+    type: "Practical",
+    date: "17/04/2026",
+    tags: [
+      { name: "Terraform", background: "#2E71E5", icon: <TerraformSVG /> },
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
+      { name: "CloudWatch", background: "#FF9900", icon: <AWSCloudWatchSVG /> },
+    ],
+    intro: `A reusable Terraform module set that attaches standardised CloudWatch observability to an existing ECS workload. Point it at your ALB, ECS service, and log groups and it creates a composed
+      CloudWatch dashboard, seven alarms, ten Logs Insights saved queries, and optional Synthetics canaries...`,
+    navigate: "aws-observability-dashboard",
+    published: true,
+  },
 ];
 
-// Newest first — matches Blog.jsx's .reverse() behaviour
+// Newest first - matches Blog.jsx's .reverse() behaviour
 export const posts = [...allPosts].reverse();

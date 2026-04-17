@@ -25,7 +25,7 @@ module "analytics" {
 }
 
 output "analytics_endpoint" {
-  description = "Analytics endpoint URL — pass this to the SDK config."
+  description = "Analytics endpoint URL - pass this to the SDK config."
   value       = module.analytics.endpoint_url
 }
 

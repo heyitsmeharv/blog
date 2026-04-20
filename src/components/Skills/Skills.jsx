@@ -242,9 +242,9 @@ const Skills = ({ language }) => {
 
         <CertRow>
           <a
-          // target="_blank"
-          // rel="noopener noreferrer"
-          // href="https://www.credly.com/badges/445bcb6b-31b2-4c23-8ca4-adf17e871e42"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.credly.com/badges/445bcb6b-31b2-4c23-8ca4-adf17e871e42"
           >
             <CertImage
               width="120px"
@@ -253,7 +253,7 @@ const Skills = ({ language }) => {
               alt="AWS Certified Cloud Practitioner"
             />
           </a>
-          <a
+          {/* <a
           // target="_blank"
           // rel="noopener noreferrer"
           // href="https://www.credly.com/badges/445bcb6b-31b2-4c23-8ca4-adf17e871e42"
@@ -264,7 +264,7 @@ const Skills = ({ language }) => {
               src={awssaa}
               alt="AWS Certified Solutions Architect - Associate"
             />
-          </a>
+          </a> */}
         </CertRow>
       </Inner>
     </Container>

@@ -41,6 +41,7 @@ import {
   ESLintSVG,
   PrettierSVG,
   BashSVG,
+  AzureDevOpsSVG,
 } from "../../resources/styles/icons";
 
 const Container = styled.section`
@@ -192,6 +193,7 @@ const skillList = [
   { icon: <NodejsSVG />, title: "Node.js", level: "proficient" },
   { icon: <ReactjsSVG />, title: "React.js", level: "proficient" },
   { icon: <GitHubSVG />, title: "GitHub", level: "proficient" },
+  { icon: <AzureDevOpsSVG />, title: "Azure DevOps", level: "proficient" },
   { icon: <BitBucketSVG />, title: "BitBucket", level: "proficient" },
   { icon: <JIRASVG />, title: "JIRA", level: "proficient" },
   { icon: <ConfluenceSVG />, title: "Confluence", level: "proficient" },
@@ -199,6 +201,7 @@ const skillList = [
 
   { icon: <DockerSVG />, title: "Docker", level: "comfortable" },
   { icon: <BashSVG />, title: "Bash", level: "comfortable" },
+  { icon: <WebpackSVG />, title: "Webpack", level: "comfortable" },
   { icon: <ServerlessSVG />, title: "Serverless", level: "comfortable" },
   { icon: <MySQLSVG />, title: "MySQL", level: "comfortable" },
 
@@ -206,7 +209,6 @@ const skillList = [
   { icon: <CSharpSVG />, title: "C#", level: "familiar" },
   { icon: <GraphqlSVG />, title: "GraphQL", level: "familiar" },
   { icon: <MongoDBSVG />, title: "MongoDB", level: "familiar" },
-  { icon: <WebpackSVG />, title: "Webpack", level: "familiar" },
   { icon: <SocketIOSVG />, title: "Socket IO", level: "familiar" },
   { icon: <TwilioSVG />, title: "Twilio", level: "familiar" },
 ];

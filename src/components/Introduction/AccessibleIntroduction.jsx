@@ -12,6 +12,7 @@ import {
   linkedinProfileLabel,
   locationText,
   openToWorkText,
+  notOpenToWorkText,
   roleTitleText,
 } from "../../helpers/i18nText";
 import { ContactMeButton } from "../Button/Button";
@@ -66,7 +67,7 @@ const InfoWrapper = styled.div`
   gap: 1.4rem;
 `;
 
-const pulse = keyframes`
+const pulseGreen = keyframes`
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
   }
@@ -76,25 +77,36 @@ const pulse = keyframes`
   }
 `;
 
+const pulseRed = keyframes`
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 0 16px rgba(220, 38, 38, 0);
+  }
+`;
+
 const OpenToWorkBadge = styled.span`
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  background: #d1fae5;
-  color: #065f46;
+  background: ${(props) => (props.openToWork ? "#d1fae5" : "#fee2e2")};
+  color: ${(props) => (props.openToWork ? "#065f46" : "#991b1b")};
   border-radius: 999px;
   padding: 0.5rem 1.4rem;
   font-size: 1.3rem;
   font-weight: 700;
   width: fit-content;
   letter-spacing: 0.2px;
-  animation: ${pulse} 2s ease-in-out infinite;
+  animation: ${(props) => (props.openToWork ? pulseGreen : pulseRed)} 2s
+    ease-in-out infinite;
 
   &::before {
     content: "";
     width: 7px;
     height: 7px;
-    background: #10b981;
+    background: ${(props) => (props.openToWork ? "#10b981" : "#dc2626")};
     border-radius: 50%;
     display: inline-block;
     flex-shrink: 0;
@@ -204,12 +216,18 @@ const HeroContactButton = styled(ContactMeButton)`
 `;
 
 const AccessibleIntroduction = ({ language, open, setOpen }) => {
+  const openToWork = true;
+
   return (
     <HeroSection id="home">
       <Inner>
         <ProfileImage src={ProfileImg} alt="Adam Harvey" />
         <InfoWrapper>
-          <OpenToWorkBadge>{openToWorkText(language)}</OpenToWorkBadge>
+          <OpenToWorkBadge openToWork={openToWork}>
+            {openToWork
+              ? openToWorkText(language)
+              : notOpenToWorkText(language)}
+          </OpenToWorkBadge>
           <Name>Adam Harvey</Name>
           <RoleTitle>{roleTitleText(language)}</RoleTitle>
           <Location>{locationText(language)}</Location>

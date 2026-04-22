@@ -40,6 +40,7 @@ I would describe myself as a fun, friendly, and enthusiastic problem solver with
     openNavigationMenuText: "Open navigation menu",
     closeNavigationMenuText: "Close navigation menu",
     openToWorkText: "Open to work",
+    notOpenToWorkText: "Not open to work",
     roleTitleText: "Software Engineer",
     locationText: "Oxford, England",
     githubProfileLabel: "Visit Adam Harvey's GitHub profile",
@@ -136,6 +137,7 @@ Me describir\u00eda como una persona cercana, curiosa y entusiasta.`,
     openNavigationMenuText: "Abrir men\u00fa de navegaci\u00f3n",
     closeNavigationMenuText: "Cerrar men\u00fa de navegaci\u00f3n",
     openToWorkText: "Disponible para trabajar",
+    notOpenToWorkText: "No disponible para trabajar",
     roleTitleText: "Ingeniero de software",
     locationText: "Oxford, Inglaterra",
     githubProfileLabel: "Visitar el perfil de GitHub de Adam Harvey",
@@ -270,6 +272,7 @@ export const openNavigationMenuText = (language) =>
 export const closeNavigationMenuText = (language) =>
   t(language, "closeNavigationMenuText");
 export const openToWorkText = (language) => t(language, "openToWorkText");
+export const notOpenToWorkText = (language) => t(language, "notOpenToWorkText");
 export const roleTitleText = (language) => t(language, "roleTitleText");
 export const locationText = (language) => t(language, "locationText");
 export const githubProfileLabel = (language) =>

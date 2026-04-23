@@ -419,7 +419,7 @@ const AWSSecAudit = () => {
           the README, not to widen it until the error goes away.
         </Paragraph>
 
-        <SectionHeading>Honest Limitations</SectionHeading>
+        <SectionHeading>Limitations</SectionHeading>
 
         <TextList>
           <TextListItem>
@@ -455,15 +455,6 @@ const AWSSecAudit = () => {
           revisited. None of those are embarrassing findings individually, but
           seeing them all together with a score made the drift tangible in a way
           that reading theory posts never does.
-        </Paragraph>
-
-        <Paragraph>
-          I also came out of it with a much cleaner understanding of how the CIS
-          Benchmark is structured - what "Level 1" versus "Level 2" actually
-          means, why some controls are scored Critical despite being relatively
-          easy to fix (because the blast radius if exploited is enormous), and
-          where the gaps in the AWS study posts are. That's probably worth as
-          much as the tool itself.
         </Paragraph>
 
         <Paragraph>Full source on GitHub:</Paragraph>

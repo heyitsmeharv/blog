@@ -21,13 +21,19 @@ import {
   IconWrapper,
   HeaderIcon,
 } from "../BlogLayout/BlogLayout";
+import {
+  ProjectArchitecture,
+  EngineeringDecisions,
+  ProjectChallenges,
+  ProjectCritique,
+  ProjectNextSteps,
+} from "../BlogLayout/ProjectExplanation";
 
 // typography
 import {
   PageTitle,
   SectionHeading,
   SubSectionHeading,
-  TertiaryHeading,
   Paragraph,
   Strong,
   TextLink,
@@ -40,6 +46,33 @@ import {
 import { AWSSVG, AWSIAMSVG, BashSVG } from "../../resources/styles/icons";
 
 const repoUrl = "https://github.com/heyitsmeharv/aws-sec-audit";
+
+const architectureFlow = `Operator or CI runner
+    |
+    | aws-sec-audit --profile my-profile --region eu-west-2
+    v
+CLI entrypoint
+    |
+    +-- resolve AWS credentials and target region
+    +-- load CIS control metadata and scoring weights
+    +-- run service checks concurrently
+    |
+    v
+Service check modules
+    +-- IAM
+    +-- S3
+    +-- CloudTrail
+    +-- KMS
+    +-- VPC
+    +-- Secrets Manager
+    |
+    v
+Normalised findings
+    |
+    +-- terminal report
+    +-- JSON report
+    +-- HTML report
+    +-- optional safe remediations`;
 
 const sampleOutput = `AWS Security Scorecard  v1.0.0
 Account: 123456789012  |  Region: eu-west-2
@@ -189,6 +222,77 @@ jobs:
           name: scorecard
           path: scorecard.json`;
 
+const designDecisions = [
+  {
+    title: "Framework first, implementation second",
+    body: `I chose the CIS Benchmark before writing the checks. That stopped
+the project becoming a subjective linter full of my personal opinions about
+what "secure" looks like. The implementation then became a translation layer:
+take a documented control, inspect the relevant AWS state, and produce a
+finding that explains the result.`,
+  },
+  {
+    title: "Resilient by default",
+    body: `All six service checks run concurrently rather than sequentially.
+The important consequence of that choice is failure isolation - if one service
+check hits a permission error or a transient timeout, it produces an UNKNOWN
+finding for that control and the rest of the audit continues unaffected. You
+shouldn't lose visibility on 25 controls because a single IAM call timed out.`,
+  },
+  {
+    title: "Consistent finding shape",
+    body: `Every check, regardless of which service it targets, produces the
+same finding structure: a control ID, a pass/fail result, the resource it
+applies to, and a message. Severity and CIS metadata live in one central place
+rather than being repeated across each check. That means the scoring and
+reporting logic doesn't need to know anything about individual checks - it just
+processes a flat list of findings in a known shape.`,
+  },
+  {
+    title: "Automatic fixes are intentionally narrow",
+    body: (
+      <>
+        I treated <InlineHighlight>--fix</InlineHighlight> as a convenience
+        feature, not as the main product. The audit should be trustworthy even
+        if you never let it change anything. For that reason, automatic fixes
+        are limited to reversible, low-risk configuration toggles. Anything that
+        could break access, remove connectivity, or change ownership is reported
+        for a human to review.
+      </>
+    ),
+  },
+  {
+    title: "Least-privilege by design",
+    body: `The bundled IAM policy covers exactly the read calls the checks
+make - nothing broader. A security tool that demands wide permissions to audit
+your permissions would be missing the point. If the audit fails on a permission
+error, the answer is to compare against the policy in the README, not to widen
+it until the error goes away.`,
+  },
+];
+
+const projectChallenges = [
+  {
+    title: "AWS services do not behave uniformly",
+    body: `IAM, CloudTrail, S3, KMS, VPC, and Secrets Manager all expose
+different APIs and different ideas of what a resource looks like. Normalising
+every result into one finding shape made the rest of the tool much easier to
+reason about.`,
+  },
+  {
+    title: "Some bad states are not safe to auto-fix",
+    body: `A public bucket or open security group might be intentional, even
+if it deserves attention. The tool needed to distinguish between "detect this"
+and "change this".`,
+  },
+  {
+    title: "Partial failure is normal in cloud tooling",
+    body: `A missing IAM permission, throttled API call, or unsupported account
+setup should reduce confidence in one control, not make the entire audit
+useless.`,
+  },
+];
+
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
 `;
@@ -243,6 +347,18 @@ const AWSSecAudit = () => {
           v2.0 - so the findings map to something meaningful rather than being
           an arbitrary checklist which most likely people would not follow.
         </Paragraph>
+
+        <ProjectArchitecture
+          diagram={architectureFlow}
+          summary="At a high level, the tool is a thin CLI orchestration layer around small AWS service check modules. The CLI owns arguments, credentials, concurrency, scoring, and output formatting. Each service module owns one thing: inspect a service and return findings in the same shape as every other module."
+        >
+          <Paragraph>
+            That separation matters because it keeps the security rules, AWS API
+            calls, scoring logic, and report rendering from bleeding into each
+            other. Adding a new control should mostly mean adding a new check
+            and metadata entry, not rewriting how the whole report works.
+          </Paragraph>
+        </ProjectArchitecture>
 
         <SectionHeading>What Is the CIS Benchmark?</SectionHeading>
 
@@ -385,40 +501,27 @@ const AWSSecAudit = () => {
           weekly run catches that drift before it accumulates.
         </Paragraph>
 
-        <SectionHeading>Notable Design Decisions</SectionHeading>
+        <EngineeringDecisions decisions={designDecisions} />
 
-        <TertiaryHeading>Resilient by default</TertiaryHeading>
+        <ProjectChallenges challenges={projectChallenges} />
 
-        <Paragraph>
-          All six service checks run concurrently rather than sequentially. The
-          important consequence of that choice is failure isolation - if one
-          service check hits a permission error or a transient timeout, it
-          produces an UNKNOWN finding for that control and the rest of the audit
-          continues unaffected. You shouldn't lose visibility on 25 controls
-          because a single IAM call timed out.
-        </Paragraph>
+        <ProjectCritique>
+          <Paragraph>
+            What I cared about most was false confidence. A security scanner
+            that silently skips checks is worse than no scanner because it
+            teaches you to trust an incomplete result. That is why permission
+            errors and unexpected AWS responses are surfaced as UNKNOWN findings
+            instead of being swallowed.
+          </Paragraph>
 
-        <TertiaryHeading>Consistent finding shape</TertiaryHeading>
-
-        <Paragraph>
-          Every check, regardless of which service it targets, produces the same
-          finding structure: a control ID, a pass/fail result, the resource it
-          applies to, and a message. Severity and CIS metadata live in one
-          central place rather than being repeated across each check. That means
-          the scoring and reporting logic doesn't need to know anything about
-          individual checks - it just processes a flat list of findings in a
-          known shape.
-        </Paragraph>
-
-        <TertiaryHeading>Least-privilege by design</TertiaryHeading>
-
-        <Paragraph>
-          The bundled IAM policy covers exactly the read calls the checks make -
-          nothing broader. A security tool that demands wide permissions to
-          audit your permissions would be missing the point. If the audit fails
-          on a permission error, the answer is to compare against the policy in
-          the README, not to widen it until the error goes away.
-        </Paragraph>
+          <Paragraph>
+            The other production-style concern was blast radius. The CLI can run
+            from a developer laptop or a scheduled CI job, so it has to be
+            useful with read-only credentials. When remediation is enabled,
+            dry-run output shows the exact planned changes before any write
+            calls happen.
+          </Paragraph>
+        </ProjectCritique>
 
         <SectionHeading>Limitations</SectionHeading>
 
@@ -445,6 +548,24 @@ const AWSSecAudit = () => {
             is a natural next step but isn't built in yet.
           </TextListItem>
         </TextList>
+
+        <ProjectNextSteps>
+          <Paragraph>
+            The next version I would build is less about adding more individual
+            checks and more about making the audit useful across time and across
+            accounts. Multi-region aggregation, AWS Organizations role fan-out,
+            and historical score tracking would turn this from a point-in-time
+            CLI into something closer to a lightweight security posture report.
+          </Paragraph>
+
+          <Paragraph>
+            I would also add a stronger test harness around remediation logic.
+            The risky part of a tool like this is not reading AWS state; it is
+            proving that a suggested fix is scoped, predictable, and safe to run
+            repeatedly. That is where I would spend effort before expanding the
+            <InlineHighlight>--fix</InlineHighlight> surface area.
+          </Paragraph>
+        </ProjectNextSteps>
 
         <SectionHeading>Wrapping Up</SectionHeading>
 

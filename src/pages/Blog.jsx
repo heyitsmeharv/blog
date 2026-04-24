@@ -234,18 +234,18 @@ export default function Blog() {
   ]);
   const [blogPosts, setBlogPosts] = useState(
     [
-      // {
-      //   title: 'The Start',
-      //   readingTime: 'less than 1 minute',
-      //   type: '',
-      //   date: '05/04/2023',
-      //   tags: [{ name: 'Misc', background: '#23262E' }],
-      //   intro: `For a long time I've wanted to write a blog about technologies I'm interested in.
-      //         The purpose of this blog is just to document my personal journey learning cool tech,
-      //         if only to cement my own understanding and potentially help people with similar interests...`,
-      //   navigate: 'the-start',
-      //   published: true
-      // },
+      {
+        title: "The Start",
+        readingTime: "less than 1 minute",
+        type: "Reflection",
+        date: "05/04/2023",
+        tags: [{ name: "Misc", background: "#23262E" }],
+        intro: `For a long time I"ve wanted to write a blog about technologies I'm interested in.
+            The purpose of this blog is just to document my personal journey learning cool tech,
+            if only to cement my own understanding and potentially help people with similar interests...`,
+        navigate: "the-start",
+        published: true,
+      },
       {
         title: "JavaScript Arrays",
         readingTime: "approx 10 minutes",
@@ -862,7 +862,7 @@ export default function Blog() {
       },
       {
         title: "AWS Security Scorecard CLI",
-        readingTime: "approx 10 mins",
+        readingTime: "approx 12 mins",
         type: "Practical",
         date: "19/04/2026",
         tags: [
@@ -883,18 +883,18 @@ export default function Blog() {
   );
 
   const defaultArr = [
-    // {
-    //   title: 'The Start',
-    //   readingTime: 'less than 1 minute',
-    //   type: '',
-    //   date: '05/04/2023',
-    //   tags: [{ name: 'Misc', background: '#23262E' }],
-    //   intro: `For a long time I've wanted to write a blog about technologies I'm interested in.
-    //         The purpose of this blog is just to document my personal journey learning cool tech,
-    //         if only to cement my own understanding and potentially help people with similar interests...`,
-    //   navigate: 'the-start',
-    //   published: true
-    // },
+    {
+      title: "The Start",
+      readingTime: "less than 1 minute",
+      type: "Reflection",
+      date: "05/04/2023",
+      tags: [{ name: "Misc", background: "#23262E" }],
+      intro: `For a long time I"ve wanted to write a blog about technologies I'm interested in.
+            The purpose of this blog is just to document my personal journey learning cool tech,
+            if only to cement my own understanding and potentially help people with similar interests...`,
+      navigate: "the-start",
+      published: true,
+    },
     {
       title: "JavaScript Arrays",
       readingTime: "approx 10 minutes",
@@ -1407,7 +1407,7 @@ export default function Blog() {
     },
     {
       title: "AWS Security Scorecard CLI",
-      readingTime: "approx 10 mins",
+      readingTime: "approx 12 mins",
       type: "Practical",
       date: "19/04/2026",
       tags: [

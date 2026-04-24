@@ -537,7 +537,7 @@ const allPosts = [
   },
   {
     title: "AWS Security Scorecard CLI",
-    readingTime: "approx 10 mins",
+    readingTime: "approx 12 mins",
     type: "Practical",
     date: "19/04/2026",
     tags: [

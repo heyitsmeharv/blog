@@ -19,6 +19,7 @@ const TYPE_COLORS = {
   Practical: { bg: "#dbeafe", text: "#1e40af" },
   Study: { bg: "#fef3c7", text: "#92400e" },
   Theory: { bg: "#ede9fe", text: "#5b21b6" },
+  Reflection: { bg: "#ccfbf1", text: "#115e59" },
 };
 
 const normalizeHex = (value) => {

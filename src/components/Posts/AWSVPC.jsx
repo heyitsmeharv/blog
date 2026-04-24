@@ -86,6 +86,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSVPC = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-vpc");
     Analytics.track("blog_page_viewed", { slug: "aws-vpc" });
   }, []);

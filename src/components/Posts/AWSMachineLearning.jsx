@@ -63,6 +63,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSMachineLearning = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-machine-learning");
     Analytics.track("blog_page_viewed", { slug: "aws-machine-learning" });
   }, []);

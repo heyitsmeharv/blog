@@ -195,6 +195,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSSecAudit = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-sec-audit");
     Analytics.track("blog_page_viewed", {
       slug: "aws-sec-audit",

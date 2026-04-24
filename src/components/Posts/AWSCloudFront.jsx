@@ -50,6 +50,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSCloudFront = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-cloudfront");
     Analytics.track("blog_page_viewed", { slug: "aws-cloudfront" });
   }, []);

@@ -663,6 +663,7 @@ const pitfalls = `- If you deploy from develop, GitHub can reject the deployment
 
 const GitHubCICD = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/github-ci-cd");
     Analytics.track("blog_page_viewed", { slug: "github-ci-cd" });
   }, []);

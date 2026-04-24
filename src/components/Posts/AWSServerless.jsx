@@ -56,6 +56,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSServerless = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-serverless");
     Analytics.track("blog_page_viewed", { slug: "aws-serverless" });
   }, []);

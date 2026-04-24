@@ -1891,6 +1891,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const DockerKubernetes = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/intro-to-docker-kubernetes");
     Analytics.track("blog_page_viewed", {
       slug: "intro-to-docker-kubernetes",

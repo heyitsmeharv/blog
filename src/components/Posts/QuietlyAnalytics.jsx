@@ -210,6 +210,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const QuietlyAnalytics = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/building-your-own-analytics");
     Analytics.track("blog_page_viewed", {
       slug: "building-your-own-analytics",

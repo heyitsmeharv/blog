@@ -77,6 +77,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSMonitoringAudit = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-monitoring-audit");
     Analytics.track("blog_page_viewed", { slug: "aws-monitoring-audit" });
   }, []);

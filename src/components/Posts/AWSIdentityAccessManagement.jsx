@@ -75,6 +75,7 @@ const AnimatedPostContainer = styled(BasePostContainer)`
 
 const AWSIdentityAccessManagement = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-identity-access-management");
     Analytics.track("blog_page_viewed", {
       slug: "aws-identity-access-management",

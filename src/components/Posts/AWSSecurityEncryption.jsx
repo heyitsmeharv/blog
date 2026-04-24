@@ -77,6 +77,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSSecurityEncryption = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-security-encryption");
     Analytics.track("blog_page_viewed", { slug: "aws-security-encryption" });
   }, []);

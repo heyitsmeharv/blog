@@ -49,6 +49,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSSQS = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-sqs");
     Analytics.track("blog_page_viewed", { slug: "aws-sqs" });
   }, []);

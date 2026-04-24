@@ -171,6 +171,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSObservabilityDashboard = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-observability-dashboard");
     Analytics.track("blog_page_viewed", {
       slug: "aws-observability-dashboard",

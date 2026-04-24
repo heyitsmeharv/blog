@@ -248,6 +248,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const DockerKubernetesAdvanced = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/docker-kubernetes-advanced");
     Analytics.track("blog_page_viewed", { slug: "docker-kubernetes-advanced" });
   }, []);

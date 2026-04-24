@@ -79,6 +79,7 @@ const PostContainer = BasePostContainer;
 
 const AWS3 = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-s3");
     Analytics.track("blog_page_viewed", { slug: "aws-s3" });
   }, []);

@@ -72,6 +72,7 @@ const AnimatedPostContainer = styled(BasePostContainer)`
 
 const AWSElasticComputeCloud = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-elastic-compute-cloud");
     Analytics.track("blog_page_viewed", {
       slug: "aws-elastic-compute-cloud",

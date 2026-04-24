@@ -71,6 +71,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSDataAnalytics = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-data-analytics");
     Analytics.track("blog_page_viewed", { slug: "aws-data-analytics" });
   }, []);

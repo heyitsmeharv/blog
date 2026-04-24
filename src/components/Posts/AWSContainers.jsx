@@ -61,6 +61,7 @@ const PostContainer = styled(BasePostContainer)`
 
 const AWSContainers = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-containers");
     Analytics.track("blog_page_viewed", { slug: "aws-containers" });
   }, []);

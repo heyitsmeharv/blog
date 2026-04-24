@@ -60,6 +60,7 @@ const AnimatedPostContainer = styled(BasePostContainer)`
 
 const AWSRoute53 = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/aws-route53");
     Analytics.track("blog_page_viewed", { slug: "aws-route53" });
   }, []);

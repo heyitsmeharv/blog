@@ -65,6 +65,7 @@ console.log(starWarsCharacters[starWarsCharacters.length - 1]); // "Han"`;
 
 const JavaScriptArray = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/javascript-arrays");
     Analytics.track("blog_page_viewed", { slug: "javascript-arrays" });
   }, []);

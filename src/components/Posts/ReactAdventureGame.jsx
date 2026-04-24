@@ -128,6 +128,7 @@ const Spacer = styled.br``;
 
 const ReactAdventureGame = () => {
   useEffect(() => {
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/react-text-based-adventure");
     Analytics.track("blog_page_viewed", {
       slug: "react-text-based-adventure",

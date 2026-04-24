@@ -123,6 +123,10 @@ const SkipLink = styled.a`
 
 const AppMain = styled.main`
   min-height: calc(100vh - 6.5rem);
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 /** Syncs document title and focus on route change */

@@ -240,12 +240,13 @@ const QuietlyAnalytics = () => {
 
         <Paragraph>
           I was using Google Analytics on this portfolio and it bothered me more
-          than it should have. Not for any deep privacy reason - more that I was
-          sending every visitor's data to Google just to see which blog posts
-          people actually read. It felt lazy. So I built{" "}
-          <Strong>quiet-ly</Strong> instead: a self-hosted analytics stack that
-          lives entirely in my own AWS account and costs nothing to run at
-          portfolio traffic levels.
+          than it should have. Not for any deep privacy reason, not that I was
+          sending every visitor's data to Google, just because it feels a little
+          clunky and I could never find an implementation I was happy with. That
+          lead me to asking my self the question - how hard is it to build my
+          own? So I built <Strong>quiet-ly</Strong> instead: a self-hosted
+          analytics stack that lives entirely in my own AWS account and costs
+          nothing to run at portfolio traffic levels.
         </Paragraph>
 
         <Paragraph>
@@ -602,8 +603,7 @@ const QuietlyAnalytics = () => {
           Fanning out one DynamoDB query per day works fine for 30 days but
           starts to feel clunky at longer ranges. A proper time-series index or
           aggregation layer would fix that, but it'd also make the Lambda
-          considerably more complicated for a portfolio project. Good enough won
-          for now.
+          considerably more complicated for a portfolio project.
         </Paragraph>
 
         <Paragraph>

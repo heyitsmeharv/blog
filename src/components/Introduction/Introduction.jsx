@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 
 import { Github } from "@styled-icons/boxicons-logos/Github";
@@ -40,13 +40,78 @@ const Inner = styled.div`
   }
 `;
 
+const shimmer = keyframes`
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+`;
+
+const ProfileImageFrame = styled.div`
+  position: relative;
+  width: 30rem;
+  height: 30rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  background: ${({ theme }) => theme.surface || theme.secondary};
+
+  @media only screen and (max-width: 768px) {
+    width: 16rem;
+    height: 16rem;
+  }
+`;
+
+const ProfileImageLoader = styled.div`
+  position: absolute;
+  inset: 0;
+  display: ${({ $loaded }) => ($loaded ? "none" : "block")};
+  background: ${({ theme }) => theme.surface || theme.secondary};
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.28),
+      transparent
+    );
+    animation: ${shimmer} 1.2s ease-in-out infinite;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    width: 3.6rem;
+    height: 3.6rem;
+    margin: -1.8rem 0 0 -1.8rem;
+    border: 3px solid rgba(255, 255, 255, 0.38);
+    border-top-color: ${({ theme }) => theme.text};
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 const ProfileImage = styled.img`
   width: 30rem;
   height: 30rem;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  opacity: ${({ $loaded }) => ($loaded ? 1 : 0)};
+  transition: opacity 0.25s ease;
 
   @media only screen and (max-width: 768px) {
     width: 16rem;
@@ -203,10 +268,23 @@ const HeroCVButton = styled(DownloadCVButton)`
 `;
 
 const Introduction = ({ language, open, setOpen }) => {
+  const [profileLoaded, setProfileLoaded] = useState(false);
+
   return (
     <HeroSection id="home">
       <Inner>
-        <ProfileImage src={ProfileImg} alt="Adam Harvey" />
+        <ProfileImageFrame aria-busy={!profileLoaded}>
+          <ProfileImageLoader $loaded={profileLoaded} aria-hidden="true" />
+          <ProfileImage
+            src={ProfileImg}
+            alt="Adam Harvey"
+            $loaded={profileLoaded}
+            onLoad={() => setProfileLoaded(true)}
+            onError={() => setProfileLoaded(true)}
+            decoding="async"
+            fetchPriority="high"
+          />
+        </ProfileImageFrame>
         <InfoWrapper>
           <OpenToWorkBadge>Open to work</OpenToWorkBadge>
           <Name>Adam Harvey</Name>

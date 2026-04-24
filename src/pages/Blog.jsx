@@ -838,7 +838,7 @@ export default function Blog() {
       },
       {
         title: "AWS Observability Dashboard",
-        readingTime: "approx 15 mins",
+        readingTime: "approx 8 mins",
         type: "Practical",
         date: "17/04/2026",
         tags: [
@@ -1387,7 +1387,7 @@ export default function Blog() {
     },
     {
       title: "AWS Observability Dashboard",
-      readingTime: "approx 15 mins",
+      readingTime: "approx 8 mins",
       type: "Practical",
       date: "17/04/2026",
       tags: [

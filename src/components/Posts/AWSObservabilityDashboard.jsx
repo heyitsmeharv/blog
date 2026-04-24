@@ -510,7 +510,7 @@ const AWSObservabilityDashboard = () => {
           identify problem endpoints.
         </Paragraph>
 
-        <SectionHeading>Honest Limitations</SectionHeading>
+        <SectionHeading>Limitations</SectionHeading>
 
         <Paragraph>
           v1 only handles ECS behind an ALB - EC2 and Fargate both work, but
@@ -544,19 +544,9 @@ const AWSObservabilityDashboard = () => {
         <SectionHeading>Wrapping Up</SectionHeading>
 
         <Paragraph>
-          The thing I got most out of building this was understanding how
-          CloudWatch's data model actually works - the relationship between
-          metrics, dimensions, and namespaces isn't obvious until you've had to
-          wire them together manually a few times. Writing the Terraform that
-          derives the right metric dimensions from an ECS service ARN forced me
-          to understand what CloudWatch Container Insights actually emits and
-          why the dimension names look the way they do.
-        </Paragraph>
-
-        <Paragraph>
-          It's also genuinely useful day-to-day. Having a consistent alarm set
-          that I can attach to any new ECS service in under five minutes is the
-          kind of thing that makes the time investment worth it.
+          I hope this is genuinely useful day-to-day. Having a consistent alarm
+          set that I can attach to any new ECS service in under five minutes is
+          the kind of thing that makes the time investment worth it.
         </Paragraph>
 
         <Paragraph>Full source on GitHub:</Paragraph>

@@ -26,6 +26,13 @@ import {
   IconWrapper,
   HeaderIcon,
 } from "../BlogLayout/BlogLayout";
+import {
+  ProjectArchitecture,
+  EngineeringDecisions,
+  ProjectChallenges,
+  ProjectCritique,
+  ProjectNextSteps,
+} from "../BlogLayout/ProjectExplanation";
 
 // typography
 import {
@@ -204,6 +211,74 @@ const dashboardUsage = `import { AnalyticsDashboard } from '@quiet-ly/analytics/
   dateRange={30}
 />`;
 
+const analyticsDecisions = [
+  {
+    title: "Two repos, two responsibilities",
+    body: (
+      <>
+        The Terraform module owns the AWS backend and{" "}
+        <InlineHighlight>@quiet-ly/analytics</InlineHighlight> owns the browser
+        experience. Keeping those separate means the infrastructure can be used
+        by any frontend, and the SDK only needs an endpoint URL rather than
+        knowledge of how the backend was provisioned.
+      </>
+    ),
+  },
+  {
+    title: "CloudFront plus Function URL instead of API Gateway",
+    body: `API Gateway added cost and configuration that this project did not
+need. Lambda Function URLs cover the simple ingest/query surface, while
+CloudFront adds HTTPS edge routing and the country header that makes lightweight
+location enrichment possible.`,
+  },
+  {
+    title: "DynamoDB keys follow the dashboard reads",
+    body: `The table is shaped around the actual questions the dashboard asks:
+events by app and date, by type and date, and by path and date. That made the
+single-table design much easier to justify than starting from abstract
+entities like events, sessions, and visitors.`,
+  },
+  {
+    title: "Cookie-free identity",
+    body: (
+      <>
+        I used <InlineHighlight>localStorage</InlineHighlight> for a stable
+        visitor ID and <InlineHighlight>sessionStorage</InlineHighlight> for a
+        tab-scoped session ID. It is deliberately less invasive than cookie or
+        fingerprint-based analytics, which fits the goal of a small portfolio
+        analytics stack.
+      </>
+    ),
+  },
+  {
+    title: "Aggregation stays in the dashboard for v1",
+    body: `The Lambda returns raw event lists and the dashboard performs the
+summary calculations client-side. That keeps the backend simple and cheap, but
+it also creates the main scaling limit of the first version.`,
+  },
+];
+
+const analyticsChallenges = [
+  {
+    title: "The dashboard forced the data model",
+    body: `Designing the table became much easier once I stopped thinking in
+entities and started listing the dashboard queries. The access patterns came
+first; the keys followed from them.`,
+  },
+  {
+    title: "Location data without an IP database",
+    body: `CloudFront's viewer country header solved the location problem
+without adding MaxMind, a paid geolocation API, or storing raw IP addresses in
+the event payload.`,
+  },
+  {
+    title: "Session tracking without cookies",
+    body: `Avoiding cookies meant the SDK needed its own lightweight visitor
+and session helpers, plus behaviour for reset, tab boundaries, and repeated
+page views.`,
+  },
+];
+
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
 `;
@@ -257,36 +332,39 @@ const QuietlyAnalytics = () => {
           requests on page load.
         </Paragraph>
 
-        <SectionHeading>The Stack</SectionHeading>
+        <ProjectArchitecture
+          diagram={architecture}
+          summary="At a high level, quiet-ly is a small event pipeline: browser SDK to CloudFront, CloudFront to Lambda, Lambda to DynamoDB, and the dashboard reading the same endpoint back for reporting."
+        >
+          <Paragraph>
+            There are two repos and they map cleanly onto two concerns:
+          </Paragraph>
 
-        <Paragraph>
-          There are two repos and they map cleanly onto two concerns:
-        </Paragraph>
+          <TextList>
+            <TextListItem>
+              <TextLink href={terraformRepo} target="_blank" rel="noreferrer">
+                terraform-aws-quiet-ly
+              </TextLink>{" "}
+              - the AWS infrastructure. One Terraform module that provisions
+              everything the backend needs: CloudFront, Lambda, DynamoDB, IAM,
+              and CloudWatch.
+            </TextListItem>
+            <TextListItem>
+              <TextLink href={npmRepo} target="_blank" rel="noreferrer">
+                @quiet-ly/analytics
+              </TextLink>{" "}
+              - the browser SDK. An npm package with three entry points: the
+              core SDK, React bindings, and a ready-made dashboard component.
+            </TextListItem>
+          </TextList>
 
-        <TextList>
-          <TextListItem>
-            <TextLink href={terraformRepo} target="_blank" rel="noreferrer">
-              terraform-aws-quiet-ly
-            </TextLink>{" "}
-            - the AWS infrastructure. One Terraform module that provisions
-            everything the backend needs: CloudFront, Lambda, DynamoDB, IAM, and
-            CloudWatch.
-          </TextListItem>
-          <TextListItem>
-            <TextLink href={npmRepo} target="_blank" rel="noreferrer">
-              @quiet-ly/analytics
-            </TextLink>{" "}
-            - the browser SDK. An npm package with three entry points: the core
-            SDK, React bindings, and a ready-made dashboard component.
-          </TextListItem>
-        </TextList>
-
-        <Paragraph>
-          The two repos are intentionally decoupled. The Terraform module
-          doesn't care what framework your frontend uses. The SDK doesn't know
-          anything about how the backend is provisioned - it just sends a POST
-          to a URL you give it.
-        </Paragraph>
+          <Paragraph>
+            The two repos are intentionally decoupled. The Terraform module
+            doesn't care what framework your frontend uses. The SDK doesn't know
+            anything about how the backend is provisioned - it just sends a POST
+            to a URL you give it.
+          </Paragraph>
+        </ProjectArchitecture>
 
         <SectionHeading>The Infrastructure</SectionHeading>
 
@@ -328,8 +406,6 @@ const QuietlyAnalytics = () => {
             configurable retention. Defaults to 30 days.
           </TextListItem>
         </TextList>
-
-        <CodeBlockWithCopy code={architecture} />
 
         <Banner title="Why no API Gateway?" variant="info">
           <Paragraph>
@@ -589,6 +665,51 @@ const QuietlyAnalytics = () => {
           </Paragraph>
         </Banner>
 
+        <EngineeringDecisions decisions={analyticsDecisions} />
+
+        <ProjectChallenges challenges={analyticsChallenges} />
+
+        <ProjectCritique>
+          <Paragraph>
+            The weakest part of v1 is the dashboard query approach. Fanning out
+            one DynamoDB query per day works fine for 30 days but starts to feel
+            clunky at longer ranges. A proper time-series index or aggregation
+            layer would fix that, but it would also make the Lambda considerably
+            more complicated for a portfolio project.
+          </Paragraph>
+
+          <Paragraph>
+            The read endpoint is also intentionally simple. That is fine for a
+            personal analytics stack where the endpoint is scoped to one app,
+            but a shared or commercial version would need a stronger admin read
+            boundary than "know the app ID and hit the query endpoint".
+          </Paragraph>
+        </ProjectCritique>
+
+        <ProjectNextSteps>
+          <Paragraph>
+            The next version I would build would keep the lightweight ingest
+            path, but add a better reporting layer for longer date ranges and
+            more deliberate control over who can read analytics data.
+          </Paragraph>
+
+          <TextList>
+            <TextListItem>
+              <Strong>Daily rollups</Strong> - store pre-aggregated page view,
+              visitor, referrer, and country summaries instead of calculating
+              everything from raw events every time.
+            </TextListItem>
+            <TextListItem>
+              <Strong>Signed dashboard reads</Strong> - keep public ingest
+              simple while making admin reporting less dependent on obscurity.
+            </TextListItem>
+            <TextListItem>
+              <Strong>Retention controls</Strong> - expose clearer defaults for
+              raw event expiry and long-term summary storage.
+            </TextListItem>
+          </TextList>
+        </ProjectNextSteps>
+
         <SectionHeading>Wrapping Up</SectionHeading>
 
         <Paragraph>
@@ -597,14 +718,6 @@ const QuietlyAnalytics = () => {
           real data - knowing exactly what queries the dashboard needs - that
           makes the single-table tradeoffs click in a way they don't when you're
           following a contrived example.
-        </Paragraph>
-
-        <Paragraph>
-          If I were to change one thing it'd be the dashboard query approach.
-          Fanning out one DynamoDB query per day works fine for 30 days but
-          starts to feel clunky at longer ranges. A proper time-series index or
-          aggregation layer would fix that, but it'd also make the Lambda
-          considerably more complicated for a portfolio project.
         </Paragraph>
 
         <Paragraph>

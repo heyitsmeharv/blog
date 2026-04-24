@@ -22,6 +22,13 @@ import {
   IconWrapper,
   HeaderIcon,
 } from "../BlogLayout/BlogLayout";
+import {
+  ProjectArchitecture,
+  EngineeringDecisions,
+  ProjectChallenges,
+  ProjectCritique,
+  ProjectNextSteps,
+} from "../BlogLayout/ProjectExplanation";
 
 // typography
 import {
@@ -165,6 +172,61 @@ GET /api/dependency    - flaky downstream with configurable fail rate
 GET /api/items         - clean read endpoint with structured logging
 GET /api/metrics       - rolling 60s window used by the React UI`;
 
+const observabilityDecisions = [
+  {
+    title: "ARN-first adoption",
+    body: `The module accepts existing ECS, ALB, target group, and log group
+ARNs instead of trying to own the workload. That makes it safer to introduce
+to a running service because Terraform only creates CloudWatch resources; it
+doesn't risk replacing the service it is meant to observe.`,
+  },
+  {
+    title: "Native CloudWatch over a separate platform",
+    body: `I deliberately kept the first version inside CloudWatch rather than
+adding another observability tool to deploy and maintain. The tradeoff is that
+the dashboard is AWS-specific, but the adoption path is much lighter for teams
+already running ECS and ALB.`,
+  },
+  {
+    title: "Composable core modules",
+    body: `The core modules each own one concern: alarms, dashboards, canaries,
+and saved Logs Insights queries. The adapters compose those building blocks
+for a particular workload shape, so the public interface can stay simple
+without making every internal module know about ECS service inputs.`,
+  },
+  {
+    title: "Instrumentation is explicit",
+    body: `The module can wire CloudWatch resources together, but it cannot
+invent useful application signals. Structured logs, route names, duration
+fields, and trace data still have to come from the service. Keeping that
+boundary explicit makes the module honest about what it does and does not
+solve.`,
+  },
+];
+
+const observabilityChallenges = [
+  {
+    title: "Logs had to become queryable",
+    body: `Unstructured log lines made the saved Logs Insights queries almost
+worthless. Moving the demo backend to structured JSON turned logging from text
+search into something the dashboard could understand.`,
+  },
+  {
+    title: "Different signals mature at different speeds",
+    body: `ALB and ECS metrics are available immediately, canaries need
+configuration, and tracing needs application instrumentation. The module had
+to support useful Level 1 observability without pretending Level 2 tracing is
+automatic.`,
+  },
+  {
+    title: "The demo needed to prove real failure paths",
+    body: `A static example would not prove much. The React and Node demo had
+to generate slow requests, 5xx responses, and flaky dependencies on demand so
+I could check that alarms, dashboards, and saved queries all reacted as
+expected.`,
+  },
+];
+
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
 `;
@@ -249,22 +311,17 @@ const AWSObservabilityDashboard = () => {
           </TextListItem>
         </TextList>
 
-        <SectionHeading>Data Flow</SectionHeading>
-
-        <Paragraph>
-          The package observes signals that already exist in CloudWatch. It
-          doesn't instrument your application - it reads from the metrics and
-          logs your AWS infrastructure already produces.
-        </Paragraph>
-
-        <CodeBlockWithCopy code={dataFlow} />
-
-        <Paragraph>
-          The only thing you supply is the signal - structured JSON logs to
-          CloudWatch Logs, and the standard CloudWatch metrics that ECS and ALB
-          emit by default. The module wires those signals into the dashboard and
-          alarm definitions for you.
-        </Paragraph>
+        <ProjectArchitecture
+          diagram={dataFlow}
+          summary="The package observes signals that already exist in CloudWatch. It does not instrument your application by itself; it reads from the metrics and logs your AWS infrastructure already produces."
+        >
+          <Paragraph>
+            The only thing you supply is the signal - structured JSON logs to
+            CloudWatch Logs, and the standard CloudWatch metrics that ECS and
+            ALB emit by default. The module wires those signals into the
+            dashboard and alarm definitions for you.
+          </Paragraph>
+        </ProjectArchitecture>
 
         <SectionHeading>Module Structure</SectionHeading>
 
@@ -511,36 +568,55 @@ const AWSObservabilityDashboard = () => {
           identify problem endpoints.
         </Paragraph>
 
-        <SectionHeading>Limitations</SectionHeading>
+        <EngineeringDecisions decisions={observabilityDecisions} />
 
-        <Paragraph>
-          v1 only handles ECS behind an ALB - EC2 and Fargate both work, but
-          Lambda and API Gateway adapters aren't there yet. I drew the line
-          there deliberately because I wanted to ship something complete rather
-          than something half-finished across five compute types.
-        </Paragraph>
+        <ProjectChallenges challenges={observabilityChallenges} />
 
-        <Paragraph>
-          The Application Signals setup is also more involved than I'd like. You
-          have to run a CloudWatch agent sidecar and instrument with ADOT, and
-          AWS's Node ESM support is still limited enough that the demo backend
-          uses CommonJS. That's an AWS constraint, not a module one, but it's
-          worth knowing going in.
-        </Paragraph>
+        <ProjectCritique>
+          <Paragraph>
+            v1 only handles ECS behind an ALB - EC2 and Fargate both work, but
+            Lambda and API Gateway adapters aren't there yet. I drew the line
+            there deliberately because I wanted to ship something complete
+            rather than something half-finished across five compute types.
+          </Paragraph>
 
-        <TextList>
-          <TextListItem>
-            Lambda and API Gateway adapters - not yet implemented
-          </TextListItem>
-          <TextListItem>
-            Cross-account observability via CloudWatch OAM - explicitly out of
-            scope for v1
-          </TextListItem>
-          <TextListItem>Anomaly detection alarms - planned for v2</TextListItem>
-          <TextListItem>
-            Daemon-mode OTEL collectors - sidecar pattern only for now
-          </TextListItem>
-        </TextList>
+          <Paragraph>
+            The Application Signals setup is also more involved than I'd like.
+            You have to run a CloudWatch agent sidecar and instrument with ADOT,
+            and AWS's Node ESM support is still limited enough that the demo
+            backend uses CommonJS. That's an AWS constraint, not a module one,
+            but it's worth knowing going in.
+          </Paragraph>
+        </ProjectCritique>
+
+        <ProjectNextSteps>
+          <Paragraph>
+            The next useful version would extend the adapter model rather than
+            just adding more dashboard widgets. Lambda and API Gateway support,
+            cross-account observability through CloudWatch OAM, anomaly
+            detection alarms, and daemon-mode OTEL collectors would all make the
+            module useful across more real AWS environments.
+          </Paragraph>
+
+          <TextList>
+            <TextListItem>
+              <Strong>Lambda and API Gateway adapters</Strong> - support
+              serverless workloads with the same dashboard and alarm language.
+            </TextListItem>
+            <TextListItem>
+              <Strong>Cross-account observability</Strong> - make CloudWatch OAM
+              an explicit path instead of keeping it out of scope.
+            </TextListItem>
+            <TextListItem>
+              <Strong>Anomaly detection alarms</Strong> - move beyond static
+              thresholds for workloads with uneven traffic.
+            </TextListItem>
+            <TextListItem>
+              <Strong>Collector deployment modes</Strong> - support daemon-mode
+              OTEL collectors as well as the current sidecar pattern.
+            </TextListItem>
+          </TextList>
+        </ProjectNextSteps>
 
         <SectionHeading>Wrapping Up</SectionHeading>
 

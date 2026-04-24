@@ -818,7 +818,7 @@ export default function Blog() {
       },
       {
         title: "Building Your Own Analytics Stack",
-        readingTime: "approx 15 mins",
+        readingTime: "approx 18 mins",
         type: "Practical",
         date: "16/04/2026",
         tags: [
@@ -838,7 +838,7 @@ export default function Blog() {
       },
       {
         title: "AWS Observability Dashboard",
-        readingTime: "approx 8 mins",
+        readingTime: "approx 12 mins",
         type: "Practical",
         date: "17/04/2026",
         tags: [
@@ -1371,7 +1371,7 @@ export default function Blog() {
     },
     {
       title: "Building Your Own Analytics Stack",
-      readingTime: "approx 15 mins",
+      readingTime: "approx 18 mins",
       type: "Practical",
       date: "16/04/2026",
       tags: [
@@ -1387,7 +1387,7 @@ export default function Blog() {
     },
     {
       title: "AWS Observability Dashboard",
-      readingTime: "approx 8 mins",
+      readingTime: "approx 12 mins",
       type: "Practical",
       date: "17/04/2026",
       tags: [

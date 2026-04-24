@@ -277,7 +277,7 @@ const projectChallenges = [
     body: `IAM, CloudTrail, S3, KMS, VPC, and Secrets Manager all expose
 different APIs and different ideas of what a resource looks like. Normalising
 every result into one finding shape made the rest of the tool much easier to
-reason about.`,
+reason with.`,
   },
   {
     title: "Some bad states are not safe to auto-fix",

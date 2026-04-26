@@ -75,7 +75,7 @@ const OutputUnderstanding = () => {
         <Paragraph>
           Not too long after I had made my first of many cups of coffee, getting
           ready for the morning standup, I was shown what was described by a
-          colleague the 'future'. He handed me his phone, and said not many
+          colleague as the 'future'. He handed me his phone, and said not many
           people know about this 'chatgpt'. At first glance I was relatively
           impressed as he had shown it's ability to instruct on how to solve an
           issue he had been struggling with.

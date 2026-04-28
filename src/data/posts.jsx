@@ -553,13 +553,13 @@ const allPosts = [
     published: true,
   },
   {
-    title: "When Imagination Outruns Understanding",
+    title: "When Output Outruns Understanding",
     readingTime: "approx 8 mins",
     type: "Reflection",
     date: "25/04/2026",
     tags: [{ name: "Misc", background: "#23262E", icon: <Journal /> }],
     intro: `AI has made me faster, but it has also made me question whether my comprehension is keeping up with my output. This is a reflection on feeling more efficient and less certain at the same time, and the changes I am making so my project posts prove understanding as well as delivery...`,
-    navigate: "when-imagination-outruns-understanding",
+    navigate: "when-output-outruns-understanding",
     published: true,
   },
 ];

@@ -38,7 +38,7 @@ const PostContainer = styled(BasePostContainer)`
 const OutputUnderstanding = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-    Analytics.pageview("/blog/when-imagination-outruns-understanding");
+    Analytics.pageview("/blog/when-output-outruns-understanding");
     Analytics.track("blog_page_viewed", {
       slug: "when-imagination-outruns-understanding",
     });
@@ -51,7 +51,7 @@ const OutputUnderstanding = () => {
       </PostTopBar>
 
       <PostContainer>
-        <PageTitle>When Imagination Outruns Understanding</PageTitle>
+        <PageTitle>When Output Outruns Understanding</PageTitle>
 
         <Paragraph>
           I think it's fair to say that 'AI' has been the latest significant

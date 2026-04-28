@@ -365,7 +365,7 @@ const App = () => {
                         />
                         <Route
                           exact
-                          path="/blog/when-imagination-outruns-understanding"
+                          path="/blog/when-output-outruns-understanding"
                           component={OutputUnderstanding}
                         />
                         <Route component={NotFound} />

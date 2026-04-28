@@ -77,7 +77,7 @@ const TimelineItem = styled.div`
     content: "";
     position: absolute;
     left: -4.25rem;
-    top: 0.5rem;
+    top: 1rem;
     width: 1.3rem;
     height: 1.3rem;
     border-radius: 50%;

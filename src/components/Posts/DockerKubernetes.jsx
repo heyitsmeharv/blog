@@ -5024,7 +5024,7 @@ kubectl rollout status deployment/node-api`}
           </Paragraph>
         </Banner>
 
-        <SectionHeading>Wrap up</SectionHeading>
+        <SectionHeading>Wrapping up</SectionHeading>
 
         <Paragraph>
           The point of this post was never to memorise every command. It was to

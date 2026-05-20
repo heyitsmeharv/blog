@@ -590,7 +590,7 @@ const allPosts = [
     ],
     intro: `Lambda functions are easy to get wrong in production. Without a shared approach to logging, tracing, and metrics, you end up with a dozen functions all handling observability differently. This post covers AWS Lambda Powertools for TypeScript and Middy — how each works, why they pair, and what a fully wired handler looks like.`,
     navigate: "lambda-powertools",
-    published: false,
+    published: true,
   },
 ];
 

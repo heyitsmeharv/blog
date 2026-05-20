@@ -58,10 +58,14 @@ const logger = new Logger({
   },
 });`;
 
-const logLevels = `logger.debug('Checking cache before hitting DynamoDB'); // dev only
+const logLevels = `logger.trace('Entering fetchOrder function');          // extremely verbose
+logger.debug('Checking cache before hitting DynamoDB'); // dev only
 logger.info('Order received', { orderId });             // normal flow
 logger.warn('Retry attempt 2 of 3', { attempt: 2 });   // worth noting
-logger.error('Payment gateway timed out', { error });   // something broke`;
+logger.error('Payment gateway timed out', { error });   // something broke
+
+// Set logLevel: 'SILENT' to suppress all output (useful in tests)
+const logger = new Logger({ serviceName: 'order-service', logLevel: 'SILENT' });`;
 
 const appendKeys = `// adds orderId to every log line for the rest of this invocation
 logger.appendKeys({ orderId: event.pathParameters?.id });
@@ -134,7 +138,7 @@ metrics.addMetric('PayloadSizeBytes', MetricUnit.Bytes, payloadSize);
 // Business metrics (use None for custom units like currency amounts)
 metrics.addMetric('OrderValueGBP', MetricUnit.None, orderTotal);`;
 
-const emfOutput = `// What Powertools writes to stdout when metrics are flushed:
+const emfOutput = `// What Powertools prints to the logs when metrics are flushed:
 {
   "_aws": {
     "Timestamp": 1714305600000,
@@ -326,12 +330,14 @@ const LambdaPowertools = () => {
         </HeaderRow>
 
         <Paragraph>
-          Lambda functions are easy to get wrong in production. Without a
-          consistent approach to logging, tracing, and metrics, you end up with
-          a dozen functions all handling observability differently - some
-          logging plain strings, some not capturing cold starts, none emitting
-          structured metrics you can actually query. Every function becomes its
-          own slightly different snowflake.{" "}
+          I've always been a stickler for consistency and convention and I've
+          experienced throughout my professional career that when it comes to
+          lambda functions, there's often a lack of coherency with handling the
+          basics such as logging, tracing, and metrics.
+        </Paragraph>
+
+        <Paragraph>
+          Well that's what powertools helps with -{" "}
           <TextLink
             href="https://docs.aws.amazon.com/powertools/typescript/latest/"
             target="_blank"
@@ -339,8 +345,8 @@ const LambdaPowertools = () => {
           >
             AWS Lambda Powertools for TypeScript
           </TextLink>{" "}
-          is an open-source library maintained by AWS that gives you a
-          production-ready observability baseline. Paired with{" "}
+          is an open-source library maintained by AWS that gives you a toolset
+          with a baseline for being able to solve these issues. Paired with{" "}
           <TextLink
             href="https://middy.js.org/"
             target="_blank"
@@ -350,7 +356,7 @@ const LambdaPowertools = () => {
           </TextLink>
           , a middleware engine for Lambda, the setup becomes clean enough that
           your handler functions contain only business logic. This post walks
-          through both in detail.
+          through both.
         </Paragraph>
 
         <SectionHeading>The Observability Problem in Lambda</SectionHeading>
@@ -401,7 +407,9 @@ const LambdaPowertools = () => {
 
         <Paragraph>
           A plain{" "}
-          <InlineHighlight>console.log('Order processed')</InlineHighlight>{" "}
+          <InlineHighlight>
+            console.log('order successfully processed')
+          </InlineHighlight>{" "}
           produces an unstructured string. That's fine when you're reading logs
           manually in development, but in production you're querying across
           thousands of log lines from dozens of concurrent invocations. You need
@@ -411,6 +419,21 @@ const LambdaPowertools = () => {
           machine-readable format - which is what structured JSON logging gives
           you.
         </Paragraph>
+
+        <Banner title="Cold start vs Warm start" variant="info">
+          <Paragraph>
+            The <InlineHighlight>cold start</InlineHighlight> is the first
+            invocation of a Lambda function after it's deployed or after a
+            period of inactivity. During a cold start, Lambda needs to provision
+            a new execution environment, which adds latency. Subsequent
+            invocations on the same environment are called{" "}
+            <InlineHighlight>warm starts</InlineHighlight> and are much faster.
+            Powertools automatically injects a{" "}
+            <InlineHighlight>cold_start</InlineHighlight> flag into your logs so
+            you can track how often cold starts happen and how much latency they
+            add.
+          </Paragraph>
+        </Banner>
 
         <SubSectionHeading>Initialisation</SubSectionHeading>
 
@@ -434,10 +457,16 @@ const LambdaPowertools = () => {
         <SubSectionHeading>Log levels</SubSectionHeading>
 
         <Paragraph>
-          The Logger exposes four log levels. The configured{" "}
-          <InlineHighlight>logLevel</InlineHighlight> acts as a threshold - any
-          log below that level is silently dropped. Set it to{" "}
-          <InlineHighlight>DEBUG</InlineHighlight> locally and{" "}
+          The Logger exposes several log levels -{" "}
+          <InlineHighlight>DEBUG</InlineHighlight>,{" "}
+          <InlineHighlight>INFO</InlineHighlight>,{" "}
+          <InlineHighlight>WARN</InlineHighlight>, and{" "}
+          <InlineHighlight>ERROR</InlineHighlight> are the ones you'll use
+          day-to-day, plus <InlineHighlight>TRACE</InlineHighlight> for verbose
+          output and <InlineHighlight>SILENT</InlineHighlight> to suppress
+          everything. The configured <InlineHighlight>logLevel</InlineHighlight>{" "}
+          acts as a threshold - any log below that level is silently dropped.
+          Set it to <InlineHighlight>DEBUG</InlineHighlight> locally and{" "}
           <InlineHighlight>INFO</InlineHighlight> (or higher) in production to
           avoid flooding CloudWatch with noise.
         </Paragraph>
@@ -609,44 +638,47 @@ const LambdaPowertools = () => {
 
         <CodeBlockWithCopy code={metricsUsage} />
 
-        <SubSectionHeading>What gets written to stdout</SubSectionHeading>
+        <SubSectionHeading>
+          What actually gets sent to CloudWatch
+        </SubSectionHeading>
 
         <Paragraph>
-          When the Middy middleware flushes the metrics buffer at the end of the
-          invocation, it writes a JSON object like this to stdout:
+          When the Middy middleware runs at the end of your Lambda invocation,
+          it prints a JSON object to the function's logs. Lambda automatically
+          forwards everything your function prints to CloudWatch Logs, so no
+          extra configuration is needed. That output looks like this:
         </Paragraph>
 
         <CodeBlockWithCopy code={emfOutput} />
 
         <Paragraph>
-          CloudWatch Logs picks up the <InlineHighlight>_aws</InlineHighlight>{" "}
-          key, recognises the EMF schema, and converts the metric values into
-          CloudWatch data points. The rest of the object becomes a regular log
-          line. This means you get both a structured log record and proper
-          metric data from a single stdout write.
+          CloudWatch Logs spots the <InlineHighlight>_aws</InlineHighlight> key,
+          recognises it as the EMF (Embedded Metric Format) schema, and turns
+          the values into proper CloudWatch metric data points you can graph and
+          alert on. The rest of the object is stored as a regular log line. One
+          write, two things: a searchable log record and a metric - no separate
+          API call required.
         </Paragraph>
 
-        <Banner title="Metrics must be flushed" variant="warning">
+        <Banner title="Metrics are only saved when flushed" variant="warning">
           <Paragraph>
-            EMF metrics are buffered in memory during the invocation. They only
-            become CloudWatch data points when the buffer is written to stdout
-            at the end of execution. If you call{" "}
-            <InlineHighlight>addMetric</InlineHighlight> but never flush, the
-            metrics for that invocation are silently dropped - no error, no
+            Your metrics are held in memory while the Lambda runs. They only
+            reach CloudWatch when that in-memory buffer is printed to the logs
+            at the end of the invocation. If you call{" "}
+            <InlineHighlight>addMetric</InlineHighlight> but the buffer never
+            gets flushed, those metrics are silently dropped - no error, no
             warning. The Middy <InlineHighlight>logMetrics</InlineHighlight>{" "}
-            middleware handles the flush automatically, including on error
-            paths. If you're not using Middy, you must call{" "}
+            middleware handles this automatically, even when your handler
+            throws. If you're not using Middy, you must call{" "}
             <InlineHighlight>metrics.publishStoredMetrics()</InlineHighlight>{" "}
-            manually at the end of every code path.
+            yourself at the end of every code path.
           </Paragraph>
         </Banner>
 
         <SectionHeading>Beyond the Core Three</SectionHeading>
 
         <Paragraph>
-          Powertools ships more than just Logger, Tracer, and Metrics. Two
-          others are worth knowing about even if you don't reach for them
-          immediately.
+          Powertools ships more than just Logger, Tracer, and Metrics.
         </Paragraph>
 
         <SubSectionHeading>Parameters</SubSectionHeading>
@@ -707,7 +739,7 @@ const LambdaPowertools = () => {
           <InlineHighlight>before</InlineHighlight>,{" "}
           <InlineHighlight>after</InlineHighlight>, and{" "}
           <InlineHighlight>onError</InlineHighlight>. The execution order
-          matters and trips people up the first time:
+          matters and can trip you up if you don't understand it.
         </Paragraph>
 
         <CodeBlockWithCopy code={middyOrder} />
@@ -761,34 +793,27 @@ const LambdaPowertools = () => {
           Powertools ships official Middy middleware for each of its three core
           utilities. This is why the two libraries are almost always used
           together - Middy is the mechanism that makes Powertools
-          zero-boilerplate in practice. Without Middy, you'd need to manually
-          call <InlineHighlight>logger.addContext(context)</InlineHighlight> at
-          the top of every handler, wrap the entire handler in a tracer
-          subsegment, and call{" "}
-          <InlineHighlight>metrics.publishStoredMetrics()</InlineHighlight> at
-          the end of every code path including error paths.
+          zero-boilerplate in practice.
         </Paragraph>
 
         <TextList>
           <TextListItem>
-            <InlineHighlight>injectLambdaContext(logger)</InlineHighlight> -
-            runs in the <Strong>before</Strong> hook. Injects the Lambda context
-            (request ID, function ARN, cold start flag) into the logger so every
+            <Strong>injectLambdaContext(logger)</Strong> - runs in the{" "}
+            <Strong>before</Strong> hook. Injects the Lambda context (request
+            ID, function ARN, cold start flag) into the logger so every
             subsequent log line carries it automatically.
           </TextListItem>
           <TextListItem>
-            <InlineHighlight>captureLambdaHandler(tracer)</InlineHighlight> -
-            wraps the entire handler in an X-Ray subsegment. Captures the
-            response as metadata (disable with{" "}
-            <InlineHighlight>captureResponse: false</InlineHighlight> for large
-            or sensitive payloads). Closes the segment cleanly on both success
-            and error paths.
+            <Strong>captureLambdaHandler(tracer)</Strong> - wraps the entire
+            handler in an X-Ray subsegment. Captures the response as metadata
+            (disable with <Strong>captureResponse: false</Strong> for large or
+            sensitive payloads). Closes the segment cleanly on both success and
+            error paths.
           </TextListItem>
           <TextListItem>
-            <InlineHighlight>logMetrics(metrics)</InlineHighlight> - flushes the
-            metrics buffer via both <Strong>after</Strong> and{" "}
-            <Strong>onError</Strong> hooks, so metrics are never silently
-            dropped. Pass{" "}
+            <Strong>logMetrics(metrics)</Strong> - flushes the metrics buffer
+            via both <Strong>after</Strong> and <Strong>onError</Strong> hooks,
+            so metrics are never silently dropped. Pass{" "}
             <InlineHighlight>captureColdStartMetric: true</InlineHighlight> to
             automatically emit a <InlineHighlight>ColdStart</InlineHighlight>{" "}
             metric for every cold invocation - useful for tracking cold start
@@ -839,13 +864,22 @@ const LambdaPowertools = () => {
         <CodeBlockWithCopy code={clearStateGotcha} />
 
         <Paragraph>
-          The <InlineHighlight>clearState: true</InlineHighlight> option on{" "}
-          <InlineHighlight>injectLambdaContext</InlineHighlight> resets all keys
-          added with <InlineHighlight>appendKeys</InlineHighlight> after each
-          invocation. Always pass it.{" "}
-          <InlineHighlight>persistentLogAttributes</InlineHighlight> (set at
-          construction time) are intentionally not cleared - that's the
-          distinction between the two APIs.
+          The fix is to pass <InlineHighlight>clearState: true</InlineHighlight>{" "}
+          to the <InlineHighlight>injectLambdaContext</InlineHighlight>{" "}
+          middleware. This tells Powertools to wipe any keys you added with{" "}
+          <InlineHighlight>appendKeys</InlineHighlight> once the invocation
+          finishes, so they can't bleed into the next one. It's worth making
+          this the default - there's no reason not to.
+        </Paragraph>
+
+        <Paragraph>
+          The one thing it does <Strong>not</Strong> clear is{" "}
+          <InlineHighlight>persistentLogAttributes</InlineHighlight> - the
+          attributes you set when you first created the logger. Those are meant
+          to stay forever (things like{" "}
+          <InlineHighlight>service</InlineHighlight> or{" "}
+          <InlineHighlight>environment</InlineHighlight>), so the two APIs have
+          different lifetimes by design.
         </Paragraph>
 
         <SubSectionHeading>
@@ -887,6 +921,8 @@ const LambdaPowertools = () => {
           and your observability setup is something you configure once and
           inherit everywhere.
         </Paragraph>
+
+        <SectionHeading>References</SectionHeading>
 
         <TextList>
           <TextListItem>

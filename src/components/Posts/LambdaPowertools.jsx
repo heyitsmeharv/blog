@@ -919,7 +919,15 @@ const LambdaPowertools = () => {
           copy-pasted into every handler. Together they let you write Lambda
           functions where the handler body is almost entirely business logic,
           and your observability setup is something you configure once and
-          inherit everywhere.
+          inherit everywhere. If you want a ready-to-clone starting point, the{" "}
+          <TextLink
+            href="https://github.com/heyitsmeharv/template-aws-lambda"
+            target="_blank"
+            rel="noreferrer"
+          >
+            template-aws-lambda
+          </TextLink>{" "}
+          repo has everything from this post wired up and ready to go.
         </Paragraph>
 
         <SectionHeading>References</SectionHeading>
@@ -941,6 +949,15 @@ const LambdaPowertools = () => {
               rel="noreferrer"
             >
               middy.js.org
+            </TextLink>
+          </TextListItem>
+          <TextListItem>
+            <TextLink
+              href="https://github.com/heyitsmeharv/template-aws-lambda"
+              target="_blank"
+              rel="noreferrer"
+            >
+              github.com/heyitsmeharv/template-aws-lambda
             </TextLink>
           </TextListItem>
         </TextList>

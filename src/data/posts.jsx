@@ -588,14 +588,14 @@ const allPosts = [
       { name: "Lambda", background: "#FF9900", icon: <AWSLambdaSVG /> },
       { name: "TypeScript", background: "#3178C6", icon: <TypeScriptSVG /> },
     ],
-    intro: `Lambda functions are easy to get wrong in production. Without a shared approach to logging, tracing, and metrics, you end up with a dozen functions all handling observability differently. This post covers AWS Lambda Powertools for TypeScript and Middy — how each works, why they pair, and what a fully wired handler looks like.`,
+    intro: `I've always been a stickler for consistency and convention and I've experienced throughout my professional career that when it comes to lambda functions, there's often a lack of coherency with handling the basics such as logging, tracing, and metrics...`,
     navigate: "lambda-powertools",
     published: true,
   },
   {
     title: "AWS Multi-Account Setup",
     readingTime: "approx 20 minutes",
-    type: "Study",
+    type: "Theory",
     date: "19/05/2026",
     tags: [
       { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
@@ -611,9 +611,9 @@ const allPosts = [
         icon: <AWSControlTowerSVG />,
       },
     ],
-    intro: `A comprehensive guide to the conventional AWS multi-account architecture — management, dev, stage and prod — including cross-account IAM trust chains, SCPs, IAM Identity Center, and Terraform orchestration from a single management account.`,
+    intro: `A comprehensive guide to the conventional AWS multi-account architecture - management, dev, stage and prod - including cross-account IAM trust chains, SCPs, IAM Identity Center, and Terraform orchestration from a single management account.`,
     navigate: "aws-multi-account-setup",
-    published: true,
+    published: false,
   },
 ];
 

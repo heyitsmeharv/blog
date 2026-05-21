@@ -929,7 +929,7 @@ export default function Blog() {
           },
           { name: "Lambda", background: "#FF9900", icon: <AWSLambdaSVG /> },
           {
-            name: "TypeScript",
+            name: "JavaScript",
             background: "#3178C6",
             icon: <TypeScriptSVG />,
           },
@@ -1538,7 +1538,7 @@ export default function Blog() {
       tags: [
         { name: "AWS", background: "#FF9900", icon: <AWSWhiteBackgroundSVG /> },
         { name: "Lambda", background: "#FF9900", icon: <AWSLambdaSVG /> },
-        { name: "TypeScript", background: "#3178C6", icon: <TypeScriptSVG /> },
+        { name: "JavaScript", background: "#3178C6", icon: <TypeScriptSVG /> },
       ],
       intro: `I've always been a stickler for consistency and convention and I've experienced throughout my professional career that when it comes to lambda functions, there's often a lack of coherency with handling the basics such as logging, tracing, and metrics...`,
       navigate: "lambda-powertools",

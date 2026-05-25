@@ -611,9 +611,9 @@ const allPosts = [
         icon: <AWSControlTowerSVG />,
       },
     ],
-    intro: `A comprehensive guide to the conventional AWS multi-account architecture - management, dev, stage and prod - including cross-account IAM trust chains, SCPs, IAM Identity Center, and Terraform orchestration from a single management account.`,
+    intro: `This post is a blueprint for the conventional AWS multi-account architecture: a Management account acting as both the organisation root and the platform hub, alongside separate Dev, Stage, and Prod workload accounts. It covers why you would structure things this way, how each piece fits together, and the supporting services that make the setup complete...`,
     navigate: "aws-multi-account-setup",
-    published: false,
+    published: true,
   },
 ];
 

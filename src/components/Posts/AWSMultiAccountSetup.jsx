@@ -42,9 +42,13 @@ import {
   AWSCloudTrailSVG,
 } from "../../resources/styles/icons";
 
+// images
+import aws_organisations from "../../resources/images/blog/AWSMultiAccountSetup/aws_organisations.png";
+
 // components
 import BackButton from "../Button/BackButton";
 import { CodeBlockWithCopy } from "../Code/Code";
+import Carousel from "../Carousel/Carousel";
 
 // code blocks
 import {
@@ -66,8 +70,9 @@ const accountHierarchy = `[root] Root
     [mgmt] Management Account
   [ou] Dev OU
     [dev] Dev Account
-  [ou] Prod OU
+  [ou] Stage OU
     [stage] Stage Account
+  [ou] Prod OU
     [prod] Prod Account`;
 
 const iamIdentityCenterFlow = `[user] Engineer
@@ -76,7 +81,7 @@ const iamIdentityCenterFlow = `[user] Engineer
     > assumes permission set into
     [dev] Dev Account
     [stage] Stage Account
-    [prod] Prod Account`;
+    [prod] Prod Account (break-glass only)`;
 
 const terraformDeployFlow = `[gh] GitHub Actions
   > authenticates via OIDC
@@ -161,7 +166,7 @@ const AWSMultiAccountSetup = () => {
             </TextLink>
           </TextListItem>
           <TextListItem>
-            <TextLink href="#day-zero">Bootstrapping: Day Zero</TextLink>
+            <TextLink href="#initial-setup">Initial Setup</TextLink>
           </TextListItem>
           <TextListItem>
             <TextLink href="#terraform-state">Terraform State Backend</TextLink>
@@ -186,7 +191,7 @@ const AWSMultiAccountSetup = () => {
             <TextLink href="#cloudtrail">Org-Level CloudTrail</TextLink>
           </TextListItem>
           <TextListItem>
-            <TextLink href="#evolve">When to Evolve the Architecture</TextLink>
+            <TextLink href="#control-tower">AWS Control Tower</TextLink>
           </TextListItem>
         </TextList>
 
@@ -195,39 +200,26 @@ const AWSMultiAccountSetup = () => {
         </SectionHeading>
 
         <Paragraph>
-          Running all your environments — dev, stage, and production — inside a
-          single AWS account is the path of least resistance when you are
-          starting out. There is only one login, one billing page, and one set
-          of IAM policies to think about. But as infrastructure grows, that
-          convenience becomes a liability.
+          This isn't anything trivial - Running all your environments dev,
+          stage, and production inside a single AWS account is simply a
+          liability especially when infrastructure grows. Having a single login,
+          one billing page, and one set of IAM policies sounds like an ideal
+          scenario but not if you're building scalable and secure
+          infrastructure.
         </Paragraph>
 
         <Paragraph>
-          The core problem is that AWS accounts share namespaces. IAM policies,
-          S3 bucket names, security groups, and CloudWatch log groups all live
-          in the same space. A misconfigured IAM policy, an overly permissive
-          resource, or a missing guardrail can affect every environment at once.
-          There is no fence between experimenting in dev and breaking
-          production. This is called <Strong>blast radius</Strong> — and in a
-          single-account setup, the blast radius of any mistake is the entire
-          account.
+          More importantly there is no fence between experimenting in dev and
+          breaking production. In a single-account setup, the blast radius of
+          any mistake is exposed to the entire account.
         </Paragraph>
 
         <Paragraph>
           Multi-account architecture solves this by making the boundary
           explicit. Each environment lives in its own account with its own IAM
           namespace, its own billing, and its own set of guardrails. A mistake
-          in dev stays in dev — it cannot cross account boundaries to touch
-          stage or prod.
-        </Paragraph>
-
-        <Paragraph>
-          Beyond isolation, separate accounts give you cost visibility. With{" "}
-          <Strong>Cost Explorer</Strong> filtered by Linked Account, you can see
-          exactly how much each environment spends every month without relying
-          on complex tagging strategies. Compliance requirements also tend to
-          demand hard account-level separation — auditors want to see
-          environments divided at the account level, not just by tag.
+          in dev stays in dev it cannot cross account boundaries to touch stage
+          or prod.
         </Paragraph>
 
         <SectionHeading id="aws-organisations">
@@ -237,9 +229,24 @@ const AWSMultiAccountSetup = () => {
         <Paragraph>
           AWS Organizations is the service that ties multiple accounts together
           under a single management structure. Without it, each account is
-          entirely standalone — separate billing, separate logins, no shared
+          entirely standalone - separate billing, separate logins, no shared
           policies.
         </Paragraph>
+
+        <Carousel
+          items={[
+            {
+              title: "AWS Organizations Example",
+              description: `Obviously my setup does not replicate what we're going through in 
+                this post, mainly because I'm not deploying any serious infrastructure 
+                where I would need multiple accounts to deploy into. The management and 
+                worker account relationship still exists which I would highly recommend 
+                not deviating away from. It also gives you a sense of how the accounts 
+                and OUs are represented in the console.`,
+              src: aws_organisations,
+            },
+          ]}
+        />
 
         <Paragraph>
           When you enable Organizations, you nominate one account as the{" "}
@@ -252,19 +259,19 @@ const AWSMultiAccountSetup = () => {
 
         <TextList>
           <TextListItem>
-            <Strong>Consolidated billing</Strong> — all accounts roll up into
+            <Strong>Consolidated billing</Strong> - all accounts roll up into
             one invoice; volume discounts apply across the total spend
           </TextListItem>
           <TextListItem>
-            <Strong>Org-level CloudTrail</Strong> — captures API calls from
+            <Strong>Org-level CloudTrail</Strong> - captures API calls from
             every account in one immutable trail
           </TextListItem>
           <TextListItem>
-            <Strong>Config Aggregator</Strong> — a compliance view across all
+            <Strong>Config Aggregator</Strong> - a compliance view across all
             accounts from a single dashboard
           </TextListItem>
           <TextListItem>
-            <Strong>IAM Identity Center</Strong> — one login portal that grants
+            <Strong>IAM Identity Center</Strong> - one login portal that grants
             access to every account
           </TextListItem>
         </TextList>
@@ -285,8 +292,8 @@ const AWSMultiAccountSetup = () => {
         </SectionHeading>
 
         <Paragraph>
-          The conventional starting structure for most teams is four accounts:
-          one management account and three workload accounts.
+          A conventional structure is four accounts: one management account and
+          three workload accounts.
         </Paragraph>
 
         <SubSectionHeading>
@@ -295,7 +302,7 @@ const AWSMultiAccountSetup = () => {
 
         <Paragraph>
           The management account owns the Organisation. It is the billing root
-          and the control plane for everything that spans accounts — SCPs, OUs,
+          and the control plane for everything that spans accounts - SCPs, OUs,
           IAM Identity Center, and org-level CloudTrail. It also doubles as the{" "}
           <Strong>platform account</Strong>, hosting the Terraform remote state
           and the CI/CD execution roles that deploy into the workload accounts.
@@ -333,11 +340,10 @@ const AWSMultiAccountSetup = () => {
         <SubSectionHeading>Stage Account</SubSectionHeading>
 
         <Paragraph>
-          Stage mirrors production constraints exactly — it lives in the same OU
-          as production and shares the same Service Control Policies. The
-          purpose is to catch issues that would only surface under prod-like
-          conditions before they affect real users. Human write access is
-          limited; all deployments go through CI/CD.
+          Stage mirrors production constraints with potentially some minor
+          exceptions - The purpose is to catch issues that would only surface
+          under prod-like conditions before they affect real users. Human write
+          access is limited; all deployments go through CI/CD.
         </Paragraph>
 
         <SubSectionHeading>Prod Account</SubSectionHeading>
@@ -355,32 +361,37 @@ const AWSMultiAccountSetup = () => {
         <Paragraph>
           Organisational Units are the grouping mechanism inside AWS
           Organizations. They let you attach a Service Control Policy once at
-          the OU level and have it apply to every account in that group — rather
+          the OU level and have it apply to every account in that group - rather
           than attaching the same policy to each account individually.
         </Paragraph>
 
         <Paragraph>
-          The recommended structure for this setup is three OUs:
+          The recommended structure for this setup is four OUs:
         </Paragraph>
 
         <TextList>
           <TextListItem>
-            <Strong>Management OU</Strong> — contains only the management
+            <Strong>Management OU</Strong> - contains only the management
             account. This OU exists so you can apply policies specifically to
             the management account, or deliberately exempt it from policies that
             apply to workload accounts.
           </TextListItem>
           <TextListItem>
-            <Strong>Dev OU</Strong> — contains the dev account. SCPs here are
+            <Strong>Dev OU</Strong> - contains the dev account. SCPs here are
             relaxed, allowing the experimentation that development workflows
             require.
           </TextListItem>
           <TextListItem>
-            <Strong>Prod OU</Strong> — contains both stage and prod. This is the
-            key structural decision: stage lives alongside production in the
-            strictest OU. If stage has different guardrails than prod, it is not
-            genuinely testing under prod conditions. By sharing an OU, you
-            guarantee they share the same ceiling.
+            <Strong>Stage OU</Strong> - contains the stage account. SCPs here
+            tighten up from dev - human write access is restricted and
+            unencrypted storage is denied - but stage has its own OU so you can
+            tune its guardrails independently rather than coupling them to prod.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Prod OU</Strong> - contains the prod account with the
+            strictest policies. Giving prod its own OU means you can apply
+            prod-only restrictions without affecting stage, and promotes prod to
+            its own clearly labelled boundary in the console.
           </TextListItem>
         </TextList>
 
@@ -391,7 +402,7 @@ const AWSMultiAccountSetup = () => {
         <Paragraph>
           A Service Control Policy is a JSON document that you attach to an OU
           or account. It sets the{" "}
-          <Strong>maximum permissions available within that scope</Strong> — it
+          <Strong>maximum permissions available within that scope</Strong> - it
           does not grant anything, it constrains. Even an IAM user with{" "}
           <InlineHighlight>AdministratorAccess</InlineHighlight> cannot perform
           an action that an SCP denies. SCPs are guardrails, not permission
@@ -413,11 +424,14 @@ const AWSMultiAccountSetup = () => {
             Making API calls outside approved AWS regions
           </TextListItem>
           <TextListItem>Leaving the Organisation</TextListItem>
+          <TextListItem>
+            Spinning up huge instances in regions that would never be
+            appropriate
+          </TextListItem>
         </TextList>
 
         <Paragraph>
-          For accounts in the Prod OU (stage and prod), additional restrictions
-          apply:
+          For accounts in the Stage and Prod OUs, additional restrictions apply:
         </Paragraph>
 
         <TextList>
@@ -433,7 +447,7 @@ const AWSMultiAccountSetup = () => {
 
         <Paragraph>
           The <InlineHighlight>NotAction</InlineHighlight> pattern is important
-          here — global services like IAM, Route 53, and CloudFront are region-
+          here - global services like IAM, Route 53, and CloudFront are region-
           agnostic and must be excluded from the region restriction, otherwise
           they stop working entirely.
         </Paragraph>
@@ -465,7 +479,7 @@ const AWSMultiAccountSetup = () => {
           </InlineHighlight>
           . No third-party service is required. If you already have an external
           identity provider such as Okta, Azure AD, or Google Workspace, you can
-          connect it via SAML or OIDC — but it is optional, not a prerequisite.
+          connect it via SAML or OIDC - but it is optional, not a prerequisite.
         </Paragraph>
 
         <Paragraph>
@@ -480,19 +494,19 @@ const AWSMultiAccountSetup = () => {
 
         <TextList>
           <TextListItem>
-            <InlineHighlight>AdministratorAccess</InlineHighlight> — full
+            <InlineHighlight>AdministratorAccess</InlineHighlight> - full
             access; break-glass only for prod
           </TextListItem>
           <TextListItem>
-            <InlineHighlight>DeveloperAccess</InlineHighlight> — broad
+            <InlineHighlight>DeveloperAccess</InlineHighlight> - broad
             read/write across services; deny IAM and billing changes
           </TextListItem>
           <TextListItem>
-            <InlineHighlight>ReadOnly</InlineHighlight> — for auditors and
+            <InlineHighlight>ReadOnly</InlineHighlight> - for auditors and
             stakeholders
           </TextListItem>
           <TextListItem>
-            <InlineHighlight>BillingReadOnly</InlineHighlight> — management
+            <InlineHighlight>BillingReadOnly</InlineHighlight> - management
             account only, for finance teams
           </TextListItem>
         </TextList>
@@ -507,8 +521,8 @@ const AWSMultiAccountSetup = () => {
         </SectionHeading>
 
         <Paragraph>
-          Humans access accounts through IAM Identity Center. Automation —
-          specifically Terraform running in CI/CD — uses a different mechanism:{" "}
+          Humans access accounts through IAM Identity Center. Automation -
+          specifically Terraform running in CI/CD - uses a different mechanism:{" "}
           <Strong>IAM role assumption</Strong>.
         </Paragraph>
 
@@ -516,7 +530,7 @@ const AWSMultiAccountSetup = () => {
 
         <TextList>
           <TextListItem>
-            GitHub Actions authenticates to the management account using OIDC —
+            GitHub Actions authenticates to the management account using OIDC -
             no long-lived credentials
           </TextListItem>
           <TextListItem>
@@ -551,9 +565,8 @@ const AWSMultiAccountSetup = () => {
         <SubSectionHeading>TerraformDeployRole Trust Policy</SubSectionHeading>
 
         <Paragraph>
-          This policy lives in each workload account. Replace{" "}
-          <InlineHighlight>MANAGEMENT_ACCOUNT_ID</InlineHighlight> with the
-          account ID of your management account.
+          This policy lives in each workload account courtesy of the management
+          account.
         </Paragraph>
 
         <CodeBlockWithCopy code={awsMultiAccountTerraformDeployRoleTrust} />
@@ -573,50 +586,59 @@ const AWSMultiAccountSetup = () => {
 
         <CodeBlockWithCopy code={awsMultiAccountTerraformProviderAssumeRole} />
 
-        <SectionHeading id="day-zero">Bootstrapping: Day Zero</SectionHeading>
+        <SectionHeading id="initial-setup">Initial Setup</SectionHeading>
 
         <Paragraph>
           There is a chicken-and-egg problem with Terraform and remote state:
           Terraform needs an S3 bucket to store its state, but that S3 bucket
-          does not exist until something creates it. If you try to use Terraform
-          to create its own state backend, you are managing state for the thing
-          that manages state.
+          does not exist until something creates it. The solution is not to
+          reach for the console - it is to use a tool that does not share the
+          same constraint.
         </Paragraph>
 
         <Paragraph>
-          The management account solves this. You create the state backend once,{" "}
-          <Strong>manually</Strong>, before Terraform is involved at all. Two
-          resources: an S3 bucket with versioning and server-side encryption
-          enabled, and a DynamoDB table for state locking. From that point
-          forward, Terraform uses those resources as its backend and manages
-          everything else.
+          <Strong>CloudFormation</Strong> is the cleanest option for this. It
+          manages its own state internally, so you can deploy the S3 bucket and
+          DynamoDB lock table with a CloudFormation stack and never touch the
+          console. From that point, Terraform takes over and manages everything
+          else - including the member accounts, OUs, SCPs, and all workload
+          resources.
         </Paragraph>
 
-        <Paragraph>The bootstrap sequence:</Paragraph>
+        <Paragraph>
+          If you want everything in Terraform, the standard approach is to
+          initialize with a <InlineHighlight>local</InlineHighlight> backend
+          first, apply the state bucket and lock table, then reconfigure the
+          backend to S3 and run{" "}
+          <InlineHighlight>terraform init -migrate-state</InlineHighlight> to
+          move the state file into the bucket.
+        </Paragraph>
+
+        <Paragraph>The sequence:</Paragraph>
 
         <TextList>
           <TextListItem>
             Create the management account and enable AWS Organizations
           </TextListItem>
           <TextListItem>
-            Create the S3 state bucket and DynamoDB lock table manually via the
-            console or AWS CLI
+            Deploy the S3 state bucket and DynamoDB lock table via
+            CloudFormation or Terraform with a local backend
           </TextListItem>
           <TextListItem>
-            Write the Terraform backend configuration pointing at those
-            resources
+            Configure the Terraform backend to point at those resources (and
+            migrate state if using the local-first approach)
           </TextListItem>
           <TextListItem>
-            All subsequent infrastructure — member accounts, OUs, SCPs, IAM
+            All subsequent infrastructure - member accounts, OUs, SCPs, IAM
             Identity Center configuration, and workload resources in every
-            account — is managed by Terraform from that point forward
+            account - is managed by Terraform from that point forward
           </TextListItem>
         </TextList>
 
         <Paragraph>
           This is the reason the management account doubles as the platform: it
-          provides the stable, manually bootstrapped foundation that everything
-          else is built on top of.
+          provides the bootstrapped foundation that everything else is built on
+          top of, and that foundation should be in code from day one.
         </Paragraph>
 
         <SectionHeading id="terraform-state">
@@ -649,7 +671,7 @@ const AWSMultiAccountSetup = () => {
           the management account's CI/CD role for pipeline deployments, and the
           IAM Identity Center{" "}
           <InlineHighlight>AdministratorAccess</InlineHighlight> role for
-          break-glass manual operations. S3 versioning is mandatory — it allows
+          break-glass manual operations. S3 versioning is mandatory - it allows
           rolling back to any previous state if an apply leaves things in an
           inconsistent state. Server-side encryption should be enabled on all
           buckets.
@@ -662,7 +684,7 @@ const AWSMultiAccountSetup = () => {
         <Paragraph>
           When AWS Organizations creates a member account, it also creates a
           root user for that account. Each root user has its own email address,
-          its own password, and its own MFA device — separate from the
+          its own password, and its own MFA device - separate from the
           management account's root user. Four accounts means four root users.
         </Paragraph>
 
@@ -710,7 +732,7 @@ const AWSMultiAccountSetup = () => {
         </Paragraph>
 
         <Paragraph>
-          <Strong>GuardDuty</Strong> monitors for threats across all accounts —
+          <Strong>GuardDuty</Strong> monitors for threats across all accounts -
           unusual API calls, signs of credential compromise, known malware
           signatures, crypto mining patterns, and network anomalies. When
           enabled at the organisation level, no member account can opt out.
@@ -728,7 +750,7 @@ const AWSMultiAccountSetup = () => {
           administrator for both services, then enable auto-enrol for new
           accounts. Any account that subsequently joins the Organisation will
           have both services enabled automatically. Both services charge
-          per-account per-region — with four accounts across two regions, costs
+          per-account per-region - with four accounts across two regions, costs
           add up quickly, so budget for this from the start.
         </Paragraph>
 
@@ -759,7 +781,7 @@ const AWSMultiAccountSetup = () => {
         <Paragraph>
           Cost Explorer's filter by Linked Account makes per-environment spend
           visible without relying on resource tags. This is one of the practical
-          benefits of the account-per-environment model — cost reporting is a
+          benefits of the account-per-environment model - cost reporting is a
           side effect of the Organisation structure rather than something you
           have to engineer separately.
         </Paragraph>
@@ -800,18 +822,18 @@ const AWSMultiAccountSetup = () => {
 
         <TextList>
           <TextListItem>
-            <InlineHighlight>env</InlineHighlight> — the environment (dev /
+            <InlineHighlight>env</InlineHighlight> - the environment (dev /
             stage / prod)
           </TextListItem>
           <TextListItem>
-            <InlineHighlight>team</InlineHighlight> — the owning team
+            <InlineHighlight>team</InlineHighlight> - the owning team
           </TextListItem>
           <TextListItem>
-            <InlineHighlight>cost-center</InlineHighlight> — for finance
+            <InlineHighlight>cost-center</InlineHighlight> - for finance
             attribution
           </TextListItem>
           <TextListItem>
-            <InlineHighlight>managed-by</InlineHighlight> —{" "}
+            <InlineHighlight>managed-by</InlineHighlight> -{" "}
             <InlineHighlight>terraform</InlineHighlight> for infrastructure
             resources
           </TextListItem>
@@ -832,47 +854,111 @@ const AWSMultiAccountSetup = () => {
           The critical property of an org-level trail is that member accounts
           cannot disable or modify it. Even a user with{" "}
           <InlineHighlight>AdministratorAccess</InlineHighlight> in a workload
-          account cannot stop the trail — it is owned by the management account
+          account cannot stop the trail - it is owned by the management account
           and any attempt to interfere with it from a member account is
           rejected. Combined with the SCP that denies deleting CloudTrail, you
           get an immutable log of all API calls across the entire Organisation.
         </Paragraph>
 
         <Paragraph>
-          AWS Config's Organisation Aggregator works on the same principle — it
+          AWS Config's Organisation Aggregator works on the same principle - it
           pulls Config compliance findings from all accounts into a single view
           in the management account. One place to see whether any resource in
           any account is out of compliance with your Config rules, without
           logging into each account individually.
         </Paragraph>
 
-        <SectionHeading id="evolve">
-          When to Evolve the Architecture
-        </SectionHeading>
+        <SectionHeading id="control-tower">AWS Control Tower</SectionHeading>
 
         <Paragraph>
-          The 4-account structure is a solid foundation, but some teams will
-          outgrow it. The signal that it is time to evolve is usually that the
-          management account starts to do too much — hosting Terraform state and
-          CI/CD pipelines alongside billing and SCPs creates coupling that gets
-          uncomfortable as the number of workloads grows.
+          Everything covered so far - OUs, SCPs, IAM Identity Center,
+          CloudTrail, GuardDuty - can be packaged by AWS Control Tower. It
+          packages all of it into a managed landing zone that AWS sets up and
+          maintains on your behalf. It is worth understanding what it gives you
+          and when it makes sense to reach for it.
+        </Paragraph>
+
+        <SubSectionHeading>What Control Tower Provides</SubSectionHeading>
+
+        <TextList>
+          <TextListItem>
+            <Strong>Landing Zone</Strong> - a pre-configured multi-account
+            environment built on AWS best practices. Control Tower creates a
+            standard OU structure, an <InlineHighlight>Audit</InlineHighlight>{" "}
+            account for centralized security findings, and a{" "}
+            <InlineHighlight>Log Archive</InlineHighlight> account for immutable
+            CloudTrail and Config logs - both separate from the management
+            account.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Account Factory</Strong> - a self-service portal (or API)
+            for onboarding new accounts. Each account is created with the
+            baseline configuration already applied: correct OU placement, SCPs
+            attached, IAM Identity Center provisioned, and GuardDuty enrolled.
+            No per-account manual steps.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Controls (formerly Guardrails)</Strong> - a library of
+            preventive controls (SCPs) and detective controls (Config rules)
+            maintained by AWS. Mandatory controls are always on; optional
+            controls can be enabled per OU. You get the same protections covered
+            in the SCPs section above, plus a growing catalogue you can apply
+            without writing policy JSON yourself.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Control Tower Console</Strong> - a single dashboard showing
+            which accounts exist, which OUs they belong to, which controls are
+            enabled, and which accounts are non-compliant. Visibility that
+            otherwise requires navigating between Organizations, Config, and
+            Security Hub separately.
+          </TextListItem>
+        </TextList>
+
+        <SubSectionHeading>When to Use It</SubSectionHeading>
+
+        <Paragraph>
+          For a small setup - one management account and a handful of workload
+          accounts - the manual approach in this post gives you full visibility
+          into exactly what is configured and why.
         </Paragraph>
 
         <Paragraph>
-          The natural expansion is to split the management account's platform
-          role into a dedicated <Strong>Shared Services</Strong> account, moving
-          Terraform state, CI/CD pipelines, and shared infrastructure out of the
-          management account. The management account then returns to its pure
-          role: billing, SCPs, and IAM Identity Center.
+          The clearest signal that Control Tower is worth adopting:
         </Paragraph>
 
+        <TextList>
+          <TextListItem>
+            You are creating new accounts regularly and the manual baseline
+            steps are a bottleneck
+          </TextListItem>
+          <TextListItem>
+            You need to enforce a consistent baseline across a large number of
+            accounts and cannot rely on convention alone
+          </TextListItem>
+          <TextListItem>
+            You want AWS to own the maintenance of the standard controls rather
+            than tracking policy changes yourself
+          </TextListItem>
+        </TextList>
+
         <Paragraph>
-          For teams that want a more opinionated approach with automated account
-          vending, <Strong>AWS Control Tower</Strong> provides a pre-built
-          landing zone with account factory, pre-configured guardrails, and a
-          structured account hierarchy. It is worth considering once you need to
-          create accounts frequently or want to enforce a standard baseline
-          across a large number of accounts.
+          One important caveat: Control Tower takes ownership of the resources
+          it manages. The Log Archive and Audit accounts, the root-level SCPs,
+          and the IAM Identity Center configuration are all managed by Control
+          Tower and should not be modified directly. If you have an existing
+          Organization you want to bring under Control Tower, there is an
+          enrollment process - it is not purely additive, so plan for it.
+        </Paragraph>
+
+        <SectionHeading>Wrapping Up</SectionHeading>
+
+        <Paragraph>
+          Hopefully this post gives you a clear picture of how to set up a
+          secure, scalable AWS multi-account environment. This approach has been
+          largely shaped by my personal and professional experience with AWS,
+          I'm not claiming that this is the most optimal way to do it - I'm
+          definitely open to changing my mind and will always be interested to
+          see how others approach the same problem.
         </Paragraph>
       </PostContainer>
     </PageWrapper>

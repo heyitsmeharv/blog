@@ -13,6 +13,7 @@ import {
   readingTimeText,
   tagsForItemText,
 } from "../../helpers/i18nText";
+import LikeCount from "../LikeCount/LikeCount";
 
 const Container = styled(motion.article)`
   background: ${({ theme }) => theme.surface || theme.secondary};
@@ -63,8 +64,16 @@ const TopBarText = styled.div`
 `;
 
 const BottomBarText = styled.div`
-  width: max-content;
-  margin: 0 auto 30px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2rem 30px;
+`;
+
+const LikeCountPosition = styled.div`
+  position: absolute;
+  right: 0;
 `;
 
 const StyledTopBarText = styled.span`
@@ -190,6 +199,11 @@ const BlogPost = ({
           <StyledTopBarText as="span">
             {comingSoonText(language)}
           </StyledTopBarText>
+        )}
+        {published && (
+          <LikeCountPosition>
+            <LikeCount postId={navigate} />
+          </LikeCountPosition>
         )}
       </BottomBarText>
     </Container>

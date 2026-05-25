@@ -141,70 +141,78 @@ const BulletItem = styled.li`
   color: ${({ theme }) => theme.text};
 
   &::before {
-    content: "–";
+    content: "-";
     position: absolute;
     left: 0;
-    color: ${({ theme }) => theme.secondary};
+    color: ${({ theme }) => theme.mutedText || theme.secondary};
   }
 `;
 
+const ITEMS = {
+  EN: [
+    {
+      company: "Davies Group",
+      role: "AWS Cloud Engineer (Full-Time)",
+      period: "Sep 2022 - Present",
+      location: "Oxford, UK",
+      bullets: [
+        "Built, developed and supported different CI/CD solutions including GitHub Workflows, AWS CodePipeline and CodeDeploy.",
+        "Architected and developed internal tools to automate application specific tasks using Terraform, AWS EventBridge and DynamoDB.",
+        "Converted multiple applications and services from EC2 to ECS.",
+        "Implemented application monitoring for applications through AWS CloudWatch, including RUM, Synthetics and X-Ray.",
+        "Standardised content delivery processes with semantic versioning.",
+      ],
+    },
+    {
+      company: "ContactPartners",
+      role: "Senior Development Manager (Full-Time)",
+      period: "Jan 2021 - Sep 2022",
+      location: "Oxford, UK",
+      bullets: [
+        "Led the development of multiple solutions such as an internal tool with chat functionality across Facebook Messenger, WhatsApp, SMS, email and phone, plus a client application for measuring team and organisation performance.",
+        "Managed JIRA Service Desks, Kanban boards and ceremonies.",
+        "Communicated and collaborated proactively with external and internal stakeholders.",
+        "Supported the delivery of customer solutions from conception through implementation and beyond.",
+        "Assisted with the design, creation and delivery of reports across products and services provided to clients.",
+        "Gathered intelligence on client strategy and future plans to uncover sales opportunities.",
+        "Collaborated with dozens of cross-functional clients across policy, content, design and QA.",
+      ],
+    },
+  ],
+  ES: [
+    {
+      company: "Davies Group",
+      role: "Ingeniero Cloud de AWS (tiempo completo)",
+      period: "Sep 2022 - Actualidad",
+      location: "Oxford, Reino Unido",
+      bullets: [
+        "Disene, desarrolle y mantuve distintas soluciones de CI/CD con GitHub Workflows, AWS CodePipeline y CodeDeploy.",
+        "Arquitete y desarrolle herramientas internas para automatizar tareas especificas de aplicaciones usando Terraform, AWS EventBridge y DynamoDB.",
+        "Migre varias aplicaciones y servicios de EC2 a ECS.",
+        "Implemente monitorizacion de aplicaciones con AWS CloudWatch, incluyendo RUM, Synthetics y X-Ray.",
+        "Estandarice procesos de entrega de contenido mediante versionado semantico.",
+      ],
+    },
+    {
+      company: "ContactPartners",
+      role: "Senior Development Manager (tiempo completo)",
+      period: "Ene 2021 - Sep 2022",
+      location: "Oxford, Reino Unido",
+      bullets: [
+        "Lidere el desarrollo de varias soluciones, como una herramienta interna con funcionalidad de chat para Facebook Messenger, WhatsApp, SMS, correo y telefono, ademas de una aplicacion para medir el rendimiento de equipos y organizaciones.",
+        "Gestione Service Desks de JIRA, tableros Kanban y ceremonias de trabajo.",
+        "Me comunique y colabore de forma proactiva con stakeholders internos y externos.",
+        "Apoye la entrega de soluciones para clientes desde la concepcion hasta la implantacion y el soporte posterior.",
+        "Colabore en el diseno, la creacion y la entrega de informes sobre productos y servicios para clientes.",
+        "Obtuve informacion clave sobre la estrategia y los planes futuros de los clientes para detectar oportunidades comerciales.",
+        "Trabaje con decenas de equipos multidisciplinares, incluyendo contenido, diseno y QA.",
+      ],
+    },
+  ],
+};
+
 const ProfessionalExperience = ({ language }) => {
-  const items = {
-    EN: [
-      {
-        company: "Davies Group",
-        role: "AWS Cloud Engineer (Full-Time)",
-        period: "Sep 2022 - Present",
-        location: "Oxford, UK",
-        bullets: [
-          "Built, developed and supported different CI/CD solutions including GitHub Workflows, AWS CodePipeline and CodeDeploy.",
-          "Architected and developed internal tools to automate application specific tasks using Terraform, AWS EventBridge and DynamoDB",
-          "Converted multiple applications and services from EC2 to ECS.",
-          "Implemented application monitoring for applications through AWS CloudWatch (Rum, Synthetics, X-Ray).",
-          "Standardised content delivery processes with semantic versioning.",
-        ],
-      },
-      {
-        company: "ContactPartners",
-        role: "Senior Development Manager (Full-Time)",
-        period: "Jan 2021 - Sep 2022",
-        location: "Oxford, UK",
-        bullets: [
-          "Led the development of multiple solutions such as: Internal tool that encompasses chat functionality (Facebook Messenger/WhatsApp/SMS/Email/Phone). Client application which measures cross functional performance with the ability to compare against other teams/organisations",
-          "Managed JIRA Service Desks, Kanban Boards and Ceremonies.",
-          "Proactively communicate and collaborate with external and internal stakeholders.",
-          "Assisted with the delivery of customer solutions from conception through to implementation and beyond.",
-          "Assisted with the design, creation, and delivery of reports on the various products and services provided to clients.",
-          "Elicited intelligence regarding clients' strategy, future plans and leverage sales opportunities from this knowledge.",
-          "Collaborated with dozens of cross-functional clients (policy/content, design, QA)",
-        ],
-      },
-    ],
-    ES: [
-      {
-        company: "Nombre de la Empresa",
-        role: "Ingeniero de Software Senior",
-        period: "Ene 2022 – Presente",
-        location: "Oxford, Reino Unido",
-        bullets: [
-          "Lideré el desarrollo de aplicaciones React de cara al cliente.",
-          "Diseñé herramientas internas usando AWS Lambda, DynamoDB y S3.",
-          "Mentoricé desarrolladores junior y facilité ceremonias de sprint.",
-        ],
-      },
-      {
-        company: "Nombre de la Empresa",
-        role: "Ingeniero de Software",
-        period: "Jun 2019 – Dic 2021",
-        location: "Oxford, Reino Unido",
-        bullets: [
-          "Desarrollé y mantuve soluciones CRM para clientes empresariales.",
-          "Integré canales de chat en tiempo real (WhatsApp, Facebook Messenger, SMS) mediante Twilio.",
-          "Colaboré con equipos multifuncionales en diseño, QA y producto.",
-        ],
-      },
-    ],
-  };
+  const items = ITEMS[language] || ITEMS.EN;
 
   return (
     <Container id="experience">
@@ -216,13 +224,14 @@ const ProfessionalExperience = ({ language }) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            {language === "ES" ? "Ver CV →" : "View CV →"}
+            {viewCvText(language)}
+            {" ->"}
           </ViewCV>
         </Header>
         <Separator />
         <Timeline>
-          {items[language].map((item, i) => (
-            <TimelineItem key={i}>
+          {items.map((item, index) => (
+            <TimelineItem key={`${item.company}-${index}`}>
               <JobHeader>
                 <JobMeta>
                   <CompanyName>{item.company}</CompanyName>
@@ -232,8 +241,10 @@ const ProfessionalExperience = ({ language }) => {
                 <Period>{item.period}</Period>
               </JobHeader>
               <BulletList>
-                {item.bullets.map((bullet, j) => (
-                  <BulletItem key={j}>{bullet}</BulletItem>
+                {item.bullets.map((bullet, bulletIndex) => (
+                  <BulletItem key={`${item.company}-${bulletIndex}`}>
+                    {bullet}
+                  </BulletItem>
                 ))}
               </BulletList>
             </TimelineItem>

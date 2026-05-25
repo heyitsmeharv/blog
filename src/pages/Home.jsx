@@ -7,11 +7,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { LanguageContext } from "../context/languageContext";
 
 // components
-import Introduction from "../components/Introduction/AccessibleIntroduction";
+import Introduction from "../components/Introduction/Introduction";
 import AboutMe from "../components/AboutMe/AboutMe";
-import ProfessionalExperience from "../components/ProfessionalExperience/AccessibleProfessionalExperience";
-import FeaturedProjects from "../components/FeaturedProjects/LocalizedFeaturedProjects";
-import FeaturedBlogPosts from "../components/FeaturedBlogPosts/LocalizedFeaturedBlogPosts";
+import ProfessionalExperience from "../components/ProfessionalExperience/ProfessionalExperience";
+import FeaturedProjects from "../components/FeaturedProjects/FeaturedProjects";
+import FeaturedBlogPosts from "../components/FeaturedBlogPosts/FeaturedBlogPosts";
 import ContactMe from "../components/ContactMe/ContactMe";
 import Skills from "../components/Skills/Skills";
 import GitHubActivity from "../components/GitHubActivity/GitHubActivity";

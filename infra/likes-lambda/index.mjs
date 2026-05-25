@@ -6,14 +6,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { marshall } from "@aws-sdk/util-dynamodb";
 
-const TABLE_NAME     = process.env.TABLE_NAME;
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
-
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin":  ALLOWED_ORIGIN,
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Allow-Methods": "GET, POST, DELETE",
-};
+const TABLE_NAME = process.env.TABLE_NAME;
 
 export function createHandler(client = new DynamoDBClient({})) {
   return async (event) => {
@@ -110,7 +103,7 @@ async function handleDelete(event, client, TABLE_NAME) {
 function respond(statusCode, body) {
   return {
     statusCode,
-    headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   };
 }

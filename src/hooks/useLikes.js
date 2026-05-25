@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Analytics } from "../helpers/analytics";
 
 const LIKES_KEY = "portfolio_likes";
 export const endpoint = import.meta.env.VITE_LIKES_ENDPOINT;
@@ -59,6 +60,7 @@ export function useLikes(postId, visitorId) {
         body: JSON.stringify({ postId, visitorId }),
       });
       if (!res.ok && res.status !== 409) throw new Error("failed");
+      Analytics.track("post_liked", { postId });
     } catch {
       setLiked(false);
       setCount((c) => Math.max(0, (c ?? 1) - 1));
@@ -81,6 +83,7 @@ export function useLikes(postId, visitorId) {
         body: JSON.stringify({ postId, visitorId }),
       });
       if (!res.ok) throw new Error("failed");
+      Analytics.track("post_unliked", { postId });
     } catch {
       setLiked(true);
       setCount((c) => (c ?? 0) + 1);

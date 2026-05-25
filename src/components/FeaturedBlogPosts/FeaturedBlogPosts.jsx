@@ -12,6 +12,7 @@ import {
   viewAllPostsText,
 } from "../../helpers/i18nText";
 import { posts } from "../../data/posts";
+import LikeCount from "../LikeCount/LikeCount";
 
 const FEATURED_COUNT = 3;
 
@@ -234,7 +235,6 @@ const TagIconWrap = styled.span`
   height: 2rem;
   border-radius: 50%;
   flex-shrink: 0;
-  color: ${({ $dark }) => ($dark ? "#111827" : "inherit")};
   background: ${({ $dark }) =>
     $dark ? "rgba(255, 255, 255, 0.92)" : "rgba(255, 255, 255, 0.45)"};
   border: 1px solid
@@ -263,12 +263,18 @@ const TagFallback = styled.span`
   letter-spacing: 0.04em;
 `;
 
+const CardFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+`;
+
 const ReadMore = styled(NavLink)`
   font-size: 1.4rem;
   font-weight: 600;
   color: ${({ theme }) => theme.text};
   text-decoration: none;
-  margin-top: auto;
   opacity: 0.7;
   transition: opacity 0.15s;
 
@@ -279,32 +285,38 @@ const ReadMore = styled(NavLink)`
   }
 `;
 
-const FeaturedBlogPosts = ({ language }) => {
-  const featured = posts.filter((p) => p.published).slice(0, FEATURED_COUNT);
+const LocalizedFeaturedBlogPosts = ({ language }) => {
+  const featured = posts
+    .filter((post) => post.published)
+    .slice(0, FEATURED_COUNT);
 
   return (
     <Container id="blog">
       <Inner>
         <Header>
           <Title>{latestPostsText(language)}</Title>
-          <ViewAll to="/blog">{viewAllPostsText(language)} →</ViewAll>
+          <ViewAll to="/blog">
+            {viewAllPostsText(language)}
+            {" ->"}
+          </ViewAll>
         </Header>
         <Separator />
         <Grid>
-          {featured.map((post, i) => {
+          {featured.map((post, index) => {
             const typeStyle = TYPE_COLORS[post.type] || {};
+
             return (
               <motion.div
                 key={post.navigate}
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: i * 0.08 }}
+                transition={{ duration: 0.35, delay: index * 0.08 }}
                 style={{ display: "flex" }}
               >
                 <Card>
                   <CardTop>
                     <TypeBadge $bg={typeStyle.bg} $color={typeStyle.text}>
-                      {post.type}
+                      {postTypeText(language, post.type)}
                     </TypeBadge>
                     <DateText>{post.date}</DateText>
                   </CardTop>
@@ -334,9 +346,17 @@ const FeaturedBlogPosts = ({ language }) => {
                       })}
                     </TagsRow>
                   )}
-                  <ReadingTime>{post.readingTime}</ReadingTime>
+                  <ReadingTime>
+                    {readingTimeText(language, post.readingTime)}
+                  </ReadingTime>
                   <Intro>{post.intro}</Intro>
-                  <ReadMore to={`/blog/${post.navigate}`}>Read post →</ReadMore>
+                  <CardFooter>
+                    <ReadMore to={`/blog/${post.navigate}`}>
+                      {readPostText(language)}
+                      {" ->"}
+                    </ReadMore>
+                    <LikeCount postId={post.navigate} />
+                  </CardFooter>
                 </Card>
               </motion.div>
             );
@@ -347,4 +367,4 @@ const FeaturedBlogPosts = ({ language }) => {
   );
 };
 
-export default FeaturedBlogPosts;
+export default LocalizedFeaturedBlogPosts;

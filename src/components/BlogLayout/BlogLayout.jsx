@@ -1,23 +1,41 @@
+import React from "react";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
+import LikeButton from "../LikeButton/LikeButton";
+import { useVisitorId } from "../../hooks/useVisitorId";
 
 export const PageWrapper = styled.div`
   padding: 2.5rem 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center;      
+  align-items: center;
 
   @media only screen and (max-width: 1000px) {
     padding: 2rem 1.25rem;
   }
 `;
 
-export const PostTopBar = styled.div`
+const StyledPostTopBar = styled.div`
   width: 100%;
   max-width: 900px;
   margin: 0 auto 1.5rem;
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: space-between;
 `;
+
+export const PostTopBar = ({ children }) => {
+  const { pathname } = useLocation();
+  const visitorId = useVisitorId();
+  const postId = pathname.startsWith("/blog/") ? pathname.slice(6) : null;
+
+  return (
+    <StyledPostTopBar>
+      {children}
+      {postId && <LikeButton postId={postId} visitorId={visitorId} />}
+    </StyledPostTopBar>
+  );
+};
 
 export const PostContainer = styled.article`
   position: relative;

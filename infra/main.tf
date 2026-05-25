@@ -124,7 +124,8 @@ resource "aws_lambda_function" "likes" {
 
   environment {
     variables = {
-      TABLE_NAME = aws_dynamodb_table.likes.name
+      TABLE_NAME     = aws_dynamodb_table.likes.name
+      ALLOWED_ORIGIN = var.allowed_origin
     }
   }
 

@@ -6,24 +6,22 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { marshall } from "@aws-sdk/util-dynamodb";
 
+const TABLE_NAME     = process.env.TABLE_NAME;
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
+
 const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin":  ALLOWED_ORIGIN,
   "Access-Control-Allow-Headers": "Content-Type",
   "Access-Control-Allow-Methods": "GET, POST, DELETE",
 };
 
 export function createHandler(client = new DynamoDBClient({})) {
   return async (event) => {
-    const TABLE_NAME = process.env.TABLE_NAME;
     const method = event.requestContext?.http?.method ?? "GET";
 
-    if (method === "OPTIONS") {
-      return { statusCode: 204, headers: CORS_HEADERS, body: "" };
-    }
-
     try {
-      if (method === "GET") return await handleGet(event, client, TABLE_NAME);
-      if (method === "POST") return await handlePost(event, client, TABLE_NAME);
+      if (method === "GET")    return await handleGet(event, client, TABLE_NAME);
+      if (method === "POST")   return await handlePost(event, client, TABLE_NAME);
       if (method === "DELETE") return await handleDelete(event, client, TABLE_NAME);
       return respond(404, { error: "Not found" });
     } catch (err) {

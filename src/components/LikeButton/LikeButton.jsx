@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
+import { motion, useAnimation } from "motion/react";
 import { HandThumbsUpFill } from "@styled-icons/bootstrap/HandThumbsUpFill";
 import { HandThumbsUp } from "@styled-icons/bootstrap/HandThumbsUp";
 import { useLikes } from "../../hooks/useLikes";
 
-const Wrapper = styled.button`
+const Wrapper = styled(motion.button)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -51,13 +52,28 @@ const LikeButton = ({ postId, visitorId }) => {
     postId,
     visitorId,
   );
+  const iconControls = useAnimation();
+  const prevLiked = useRef(liked);
+
+  useEffect(() => {
+    if (prevLiked.current === liked) return;
+    prevLiked.current = liked;
+    if (liked) {
+      iconControls.start({
+        scale: [1, 1.5, 0.85, 1.1, 1],
+        transition: { duration: 0.4 },
+      });
+    } else {
+      iconControls.start({
+        scale: [1, 0.7, 1],
+        transition: { duration: 0.25 },
+      });
+    }
+  }, [liked, iconControls]);
 
   const handleClick = () => {
-    if (liked) {
-      handleUnlike();
-    } else {
-      handleLike();
-    }
+    if (liked) handleUnlike();
+    else handleLike();
   };
 
   return (
@@ -66,12 +82,18 @@ const LikeButton = ({ postId, visitorId }) => {
       $liked={liked}
       disabled={loading}
       onClick={handleClick}
+      whileTap={{ scale: 0.88 }}
       aria-label={liked ? "Remove like" : "Like this post"}
       aria-pressed={liked}
     >
-      <ThumbIcon aria-hidden="true">
-        {liked ? <HandThumbsUpFill /> : <HandThumbsUp />}
-      </ThumbIcon>
+      <motion.span
+        animate={iconControls}
+        style={{ display: "inline-flex", alignItems: "center" }}
+      >
+        <ThumbIcon aria-hidden="true">
+          {liked ? <HandThumbsUpFill /> : <HandThumbsUp />}
+        </ThumbIcon>
+      </motion.span>
       <Count>{count === null ? "—" : count}</Count>
     </Wrapper>
   );

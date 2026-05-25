@@ -60,7 +60,7 @@ export function useLikes(postId, visitorId) {
         body: JSON.stringify({ postId, visitorId }),
       });
       if (!res.ok && res.status !== 409) throw new Error("failed");
-      Analytics.track("post_liked", { postId });
+      Analytics.track("post_liked", { postId, new_count: (count ?? 0) + 1 });
     } catch {
       setLiked(false);
       setCount((c) => Math.max(0, (c ?? 1) - 1));
@@ -83,7 +83,10 @@ export function useLikes(postId, visitorId) {
         body: JSON.stringify({ postId, visitorId }),
       });
       if (!res.ok) throw new Error("failed");
-      Analytics.track("post_unliked", { postId });
+      Analytics.track("post_unliked", {
+        postId,
+        new_count: Math.max(0, (count ?? 1) - 1),
+      });
     } catch {
       setLiked(true);
       setCount((c) => (c ?? 0) + 1);

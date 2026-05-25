@@ -183,10 +183,21 @@ const ContactMe = ({ language, open, setOpen }) => {
   const [error, setError] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const openedAtRef = useRef(null);
+  const submittedRef = useRef(false);
+  const filledRef = useRef(false);
+
+  useEffect(() => {
+    filledRef.current = [name, email, company, telephone, message].some(
+      (v) => v.trim().length > 0,
+    );
+  }, [name, email, company, telephone, message]);
 
   /* Focus close button when dialog opens */
   useEffect(() => {
     if (open) {
+      openedAtRef.current = Date.now();
+      Analytics.track("contact_opened");
       const id = setTimeout(() => closeRef.current?.focus(), 320);
       return () => clearTimeout(id);
     }
@@ -203,6 +214,15 @@ const ContactMe = ({ language, open, setOpen }) => {
   }, [open]);
 
   const handleClose = () => {
+    if (!submittedRef.current) {
+      Analytics.track("contact_dismissed", {
+        time_open_ms: openedAtRef.current
+          ? Date.now() - openedAtRef.current
+          : null,
+        partially_filled: filledRef.current,
+      });
+    }
+    submittedRef.current = false;
     setOpen(false);
     setList([]);
     handleOnReset();
@@ -300,6 +320,7 @@ const ContactMe = ({ language, open, setOpen }) => {
       const responseDetail = payload?.error || payload?.message || "";
 
       if (response.ok) {
+        submittedRef.current = true;
         createToast("Success");
         handleOnReset();
         setStatusMessage(
@@ -309,7 +330,7 @@ const ContactMe = ({ language, open, setOpen }) => {
             "",
           ),
         );
-        Analytics.event("contact_me_success", {
+        Analytics.track("contact_me_success", {
           category: "contact_me",
           action: "Contact request accepted by backend",
           request_id: requestId,
@@ -333,7 +354,7 @@ const ContactMe = ({ language, open, setOpen }) => {
           responseDetail,
         ),
       );
-      Analytics.event("contact_me_failure", {
+      Analytics.track("contact_me_failure", {
         category: "contact_me",
         action: "Contact request rejected by backend",
         request_id: requestId,
@@ -355,7 +376,7 @@ const ContactMe = ({ language, open, setOpen }) => {
           sendError instanceof Error ? sendError.message : String(sendError),
         ),
       );
-      Analytics.event("contact_me_failure", {
+      Analytics.track("contact_me_failure", {
         category: "contact_me",
         action: "Failed to reach contact backend",
         backend_error:

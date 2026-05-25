@@ -47,6 +47,17 @@ const Count = styled.span`
   min-width: 1.5ch;
 `;
 
+const Spinner = styled(motion.span)`
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  opacity: 0.5;
+  flex-shrink: 0;
+`;
+
 const LikeButton = ({ postId, visitorId }) => {
   const { count, liked, loading, handleLike, handleUnlike } = useLikes(
     postId,
@@ -94,7 +105,15 @@ const LikeButton = ({ postId, visitorId }) => {
           {liked ? <HandThumbsUpFill /> : <HandThumbsUp />}
         </ThumbIcon>
       </motion.span>
-      <Count>{count === null ? "—" : count}</Count>
+      {count === null ? (
+        <Spinner
+          animate={{ rotate: 360 }}
+          transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+          aria-hidden="true"
+        />
+      ) : (
+        <Count>{count}</Count>
+      )}
     </Wrapper>
   );
 };

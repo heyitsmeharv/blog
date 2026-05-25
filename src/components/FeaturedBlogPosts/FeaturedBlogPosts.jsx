@@ -209,7 +209,8 @@ const TagsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
-  align-items: center;
+  align-items: flex-start;
+  min-height: 5rem;
 `;
 
 const TagPill = styled.span`

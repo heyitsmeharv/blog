@@ -929,7 +929,7 @@ export default function Blog() {
           },
           { name: "Lambda", background: "#FF9900", icon: <AWSLambdaSVG /> },
           {
-            name: "JavaScript",
+            name: "TypeScript",
             background: "#3178C6",
             icon: <TypeScriptSVG />,
           },

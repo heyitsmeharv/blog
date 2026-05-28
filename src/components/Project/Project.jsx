@@ -14,6 +14,7 @@ import {
   openLiveDemoText,
   viewSourceCodeText,
 } from "../../helpers/i18nText";
+import { Analytics } from "../../helpers/analytics";
 
 const Card = styled(motion.div)`
   background: ${({ theme }) => theme.surface || theme.secondary};
@@ -145,6 +146,11 @@ const Project = ({ name, description, image, github, link, tags }) => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={viewSourceCodeText(language, projectName)}
+            onClick={() =>
+              Analytics.track("project_github_clicked", {
+                project: projectName,
+              })
+            }
           >
             <StyledGithub />
             GitHub
@@ -155,6 +161,11 @@ const Project = ({ name, description, image, github, link, tags }) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={openLiveDemoText(language, projectName)}
+              onClick={() =>
+                Analytics.track("project_demo_clicked", {
+                  project: projectName,
+                })
+              }
             >
               <StyledExternalLink />
               {liveDemoText(language)}

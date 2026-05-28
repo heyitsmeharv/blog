@@ -139,25 +139,15 @@ const CommentBox = ({ setLoading, language }) => {
         if (response.ok) {
           createToast("Success");
           setLoading(true);
-          Analytics.event("comment_success", {
-            category: "comment",
-            action: "Successfully sent a comment",
-          });
+          Analytics.track("comment_success", { postId });
         } else {
           createToast("Fail");
-          Analytics.event("comment_failure", {
-            category: "comment",
-            action: "Failed to send a comment",
-          });
+          Analytics.track("comment_failure", { postId });
         }
       })
       .catch((error) => {
         console.log(`Unable to submit comment: ${error}`);
-        Analytics.event("Comment Failure", {
-          category: "Contact Me",
-          action: "Failed to send a comment",
-          label: "Submit",
-        });
+        Analytics.track("comment_failure", { postId, reason: "network_error" });
       });
     handleOnReset();
   };

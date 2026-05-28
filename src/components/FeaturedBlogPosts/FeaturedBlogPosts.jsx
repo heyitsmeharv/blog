@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { motion } from "motion/react";
 
 import SlideInBottom from "../../animations/SlideInBottom";
+import { Analytics } from "../../helpers/analytics";
 import {
   latestPostsText,
   postTypeText,
@@ -351,7 +352,15 @@ const LocalizedFeaturedBlogPosts = ({ language }) => {
                   </ReadingTime>
                   <Intro>{post.intro}</Intro>
                   <CardFooter>
-                    <ReadMore to={`/blog/${post.navigate}`}>
+                    <ReadMore
+                      to={`/blog/${post.navigate}`}
+                      onClick={() =>
+                        Analytics.track("blog_post_clicked", {
+                          slug: post.navigate,
+                          source: "featured",
+                        })
+                      }
+                    >
                       {readPostText(language)}
                       {" ->"}
                     </ReadMore>

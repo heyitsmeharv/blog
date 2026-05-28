@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 
 // animations
 import SlideInLeft from "../animations/SlideInLeft";
 import { LanguageContext } from "../context/languageContext";
 import { notFoundDescriptionText } from "../helpers/i18nText";
+import { Analytics } from "../helpers/analytics";
 
 const Container = styled.div`
   display: flex;
@@ -31,6 +32,10 @@ const Description = styled.p`
 
 const NotFoundPage = () => {
   const language = useContext(LanguageContext);
+
+  useEffect(() => {
+    Analytics.track("page_not_found", { path: window.location.pathname });
+  }, []);
 
   return (
     <Container>

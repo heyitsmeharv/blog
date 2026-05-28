@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { StyledNavLink } from "../Button/Button";
 import { Journal } from "@styled-icons/bootstrap/Journal";
 import { LanguageContext } from "../../context/languageContext";
+import { Analytics } from "../../helpers/analytics";
 import {
   comingSoonText,
   notPublishedText,
@@ -192,7 +193,13 @@ const BlogPost = ({
       <StyledIntro>{intro}</StyledIntro>
       <BottomBarText>
         {published ? (
-          <StyledBorderLink exact to={`/blog/${navigate}`}>
+          <StyledBorderLink
+            exact
+            to={`/blog/${navigate}`}
+            onClick={() =>
+              Analytics.track("blog_post_clicked", { slug: navigate })
+            }
+          >
             {readMoreText(language)}
           </StyledBorderLink>
         ) : (

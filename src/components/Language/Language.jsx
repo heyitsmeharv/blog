@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Analytics } from "../../helpers/analytics";
 
 const Wrapper = styled.div`
   padding: 1rem 2rem;
@@ -22,13 +23,23 @@ const LanguageButton = styled.button`
 
 const Language = ({ language, toggleLanguage }) => {
   const languages = [
-    { name: 'english', value: 'EN', flag: '🇬🇧' },
-    { name: 'castellano', value: 'ES', flag: '🇪🇸' },
-  ]
+    { name: "english", value: "EN", flag: "🇬🇧" },
+    { name: "castellano", value: "ES", flag: "🇪🇸" },
+  ];
   return (
     <Wrapper>
-      {languages.map(language => {
-        return <LanguageButton key={language.name} onClick={() => toggleLanguage(language.value)}>{language.flag}</LanguageButton>
+      {languages.map((lang) => {
+        return (
+          <LanguageButton
+            key={lang.name}
+            onClick={() => {
+              toggleLanguage(lang.value);
+              Analytics.track("language_changed", { language: lang.value });
+            }}
+          >
+            {lang.flag}
+          </LanguageButton>
+        );
       })}
     </Wrapper>
   );

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 // helpers
@@ -1587,9 +1587,32 @@ export default function Blog() {
     setBlogPosts(filteredPosts);
   }, [search, activeFilter]);
 
+  const searchDebounceRef = useRef(null);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    clearTimeout(searchDebounceRef.current);
+    if (value.trim().length >= 2) {
+      searchDebounceRef.current = setTimeout(() => {
+        Analytics.track("blog_searched", { query: value.trim() });
+      }, 600);
+    }
+  };
+
   const handlePillButtonClick = (button) => {
     setCurrentPage(1);
     setActiveFilter(button.name);
+    if (button.name !== "All") {
+      Analytics.track("blog_filter_applied", { filter: button.name });
+    }
+  };
+
+  const handlePageChange = (page) => {
+    if (page > 1) {
+      Analytics.track("blog_page_changed", { page, filter: activeFilter });
+    }
+    setCurrentPage(page);
   };
 
   return (
@@ -1600,7 +1623,7 @@ export default function Blog() {
           aria-label={searchBlogPostsText(language)}
           placeholder={searchPlaceholderText(language)}
           type="text"
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={handleSearchChange}
           value={search}
         />
         <StyledCloseButton
@@ -1634,7 +1657,7 @@ export default function Blog() {
       {!isEmpty ? (
         <Pagination
           currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
+          setCurrentPage={handlePageChange}
           itemsPerPage={6}
           items={blogPosts}
         />

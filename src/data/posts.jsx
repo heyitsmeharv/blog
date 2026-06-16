@@ -624,7 +624,7 @@ const allPosts = [
       {
         name: "AWS",
         background: "#FF9900",
-        icon: <AWSWhiteBackgroundSVG />,
+        icon: <AWSSVG />,
       },
       {
         name: "SSM",

@@ -965,6 +965,37 @@ export default function Blog() {
         navigate: "aws-multi-account-setup",
         published: true,
       },
+      {
+        title: "AWS Patch Management",
+        readingTime: "approx 45 minutes",
+        type: "Theory",
+        date: "15/06/2026",
+        tags: [
+          {
+            name: "AWS",
+            background: "#FF9900",
+            icon: <AWSWhiteBackgroundSVG />,
+          },
+          {
+            name: "SSM",
+            background: "#FF9900",
+            icon: <AWSSSMSVG />,
+          },
+          {
+            name: "EC2",
+            background: "#FF9900",
+            icon: <AWSEC2SVG />,
+          },
+          {
+            name: "Terraform",
+            background: "#7B42BC",
+            icon: <TerraformSVG />,
+          },
+        ],
+        intro: `By the end of this post you will understand how software vulnerabilities are discovered, scored, and tracked; how AWS SSM Patch Manager automates in-place patching across a fleet of EC2 instances; how EC2 Image Builder bakes patches into pre-hardened AMIs before any...`,
+        navigate: "aws-patch-management",
+        published: true,
+      },
     ].reverse(),
   );
 
@@ -1565,6 +1596,37 @@ export default function Blog() {
       ],
       intro: `This post is a blueprint for the conventional AWS multi-account architecture: a Management account acting as both the organisation root and the platform hub, alongside separate Dev, Stage, and Prod workload accounts. It covers why you would structure things this way, how each piece fits together, and the supporting services that make the setup complete...`,
       navigate: "aws-multi-account-setup",
+      published: true,
+    },
+    {
+      title: "AWS Patch Management",
+      readingTime: "approx 45 minutes",
+      type: "Theory",
+      date: "15/06/2026",
+      tags: [
+        {
+          name: "AWS",
+          background: "#FF9900",
+          icon: <AWSWhiteBackgroundSVG />,
+        },
+        {
+          name: "SSM",
+          background: "#FF9900",
+          icon: <AWSSSMSVG />,
+        },
+        {
+          name: "EC2",
+          background: "#FF9900",
+          icon: <AWSEC2SVG />,
+        },
+        {
+          name: "Terraform",
+          background: "#7B42BC",
+          icon: <TerraformSVG />,
+        },
+      ],
+      intro: `By the end of this post you will understand how software vulnerabilities are discovered, scored, and tracked; how AWS SSM Patch Manager automates in-place patching across a fleet of EC2 instances; how EC2 Image Builder bakes patches into pre-hardened AMIs before any...`,
+      navigate: "aws-patch-management",
       published: true,
     },
   ].reverse();

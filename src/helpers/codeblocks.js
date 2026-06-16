@@ -1007,3 +1007,806 @@ export const awsMultiAccountTagPolicy = `{
     }
   }
 }`;
+
+// ── AWS Patch Management ──────────────────────────────────────────────────────
+
+export const awsPatchManagementCLIPackageManager = `# See which security patches are available on this instance
+sudo dnf list --security
+
+# List CVE IDs attached to each available security update
+sudo dnf updateinfo list security
+
+# Apply only security-relevant patches (no interactive prompt)
+sudo dnf update --security -y
+
+# Check which packages would be updated without applying anything
+sudo dnf check-update --security`;
+
+export const awsPatchManagementTerraformIAMRole = `# Every EC2 instance managed by SSM needs this instance profile.
+# AmazonSSMManagedInstanceCore is the minimum — it grants:
+#   - registration with SSM Fleet Manager
+#   - agent self-updates from S3
+#   - Run Command execution
+#   - CloudWatch Logs output
+
+resource "aws_iam_role" "ssm_instance" {
+  name = "\${var.name}-\${var.environment}-ssm-instance"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_managed_instance_core" {
+  role       = aws_iam_role.ssm_instance.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "ssm_instance" {
+  name = "\${var.name}-\${var.environment}-ssm-instance"
+  role = aws_iam_role.ssm_instance.name
+}`;
+
+export const awsPatchManagementTerraformVPCEndpoints = `# Only needed for instances in private subnets WITHOUT a NAT gateway.
+# Cost: ~£0.008/endpoint/AZ/hour × 3 endpoints × 2 AZs ≈ £35/month.
+# If your instances already have outbound HTTPS via NAT, skip this block.
+
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.\${data.aws_region.current.name}.ssm"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.private_subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.\${data.aws_region.current.name}.ec2messages"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.private_subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.\${data.aws_region.current.name}.ssmmessages"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.private_subnet_ids
+  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  private_dns_enabled = true
+}`;
+
+export const awsPatchManagementTerraformBaseline = `locals {
+  # prod waits 14 days; everything else waits 7.
+  # Combined with staggered windows (dev Fri → stage Sat → prod Sun),
+  # this gives an effective ~21-day soak from patch release to production.
+  approve_days = var.approve_after_days != null ? var.approve_after_days : (
+    var.environment == "prod" ? 14 : 7
+  )
+}
+
+resource "aws_ssm_patch_baseline" "this" {
+  name             = "\${var.name}-\${var.environment}"
+  operating_system = "AMAZON_LINUX_2023"
+  description      = "Patch baseline — \${local.approve_days}-day soak"
+
+  approval_rule {
+    approve_after_days  = local.approve_days
+    compliance_level    = "CRITICAL"
+    enable_non_security = false
+
+    patch_filter {
+      key    = "CLASSIFICATION"
+      values = ["Security", "Bugfix"]
+    }
+
+    patch_filter {
+      key    = "SEVERITY"
+      values = ["Critical", "High", "Medium"]
+    }
+  }
+
+  # Packages listed here will never be installed, even if they match an
+  # approval rule. BLOCK prevents installation entirely (vs ALLOW_AS_DEPENDENCY).
+  rejected_patches        = var.rejected_patches
+  rejected_patches_action = "BLOCK"
+}`;
+
+export const awsPatchManagementTerraformPatchGroup = `# The patch group links a baseline to a set of instances via a tag.
+# One patch group maps to exactly one baseline.
+
+resource "aws_ssm_patch_group" "this" {
+  baseline_id = aws_ssm_patch_baseline.this.id
+  patch_group = "\${var.name}-\${var.environment}"
+}
+
+# ── In your EC2 Launch Template ───────────────────────────────────────────────
+# Tag every instance at launch so SSM knows which baseline to use.
+# For existing running instances: add the tag directly — SSM picks it up
+# on the next scan cycle within an hour, no restart required.
+
+resource "aws_launch_template" "app" {
+  # ... other config ...
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      PatchGroup = "\${var.name}-\${var.environment}"
+    }
+  }
+}`;
+
+export const awsPatchManagementTerraformMaintenanceWindow = `# All cron expressions are evaluated in UTC.
+# Recommended stagger:
+#   dev:   cron(0 22 ? * FRI *)   — Friday  22:00 UTC
+#   stage: cron(0 1  ? * SAT *)   — Saturday 01:00 UTC
+#   prod:  cron(0 2  ? * SUN *)   — Sunday  02:00 UTC
+
+resource "aws_ssm_maintenance_window" "this" {
+  name     = "\${var.name}-\${var.environment}"
+  schedule = var.maintenance_window_schedule   # e.g. cron(0 2 ? * SUN *)
+  duration = 4                                 # total window length in hours
+  cutoff   = 1                                 # stop new tasks 1 hr before end
+}
+
+resource "aws_ssm_maintenance_window_target" "this" {
+  window_id     = aws_ssm_maintenance_window.this.id
+  resource_type = "INSTANCE"
+
+  # Target by tag, not instance ID — durable across instance replacements
+  targets {
+    key    = "tag:PatchGroup"
+    values = ["\${var.name}-\${var.environment}"]
+  }
+}
+
+# Priority 1 — Install patches
+resource "aws_ssm_maintenance_window_task" "patch" {
+  window_id        = aws_ssm_maintenance_window.this.id
+  task_type        = "RUN_COMMAND"
+  task_arn         = "AWS-RunPatchBaseline"
+  priority         = 1
+  service_role_arn = aws_iam_role.maintenance_window.arn
+  max_concurrency  = "50%"   # patch at most 50% of the fleet at a time
+  max_errors       = "20%"   # abort if more than 20% of instances fail
+
+  targets {
+    key    = "WindowTargetIds"
+    values = [aws_ssm_maintenance_window_target.this.id]
+  }
+
+  task_invocation_parameters {
+    run_command_parameters {
+      cloudwatch_config {
+        cloudwatch_log_group_name = aws_cloudwatch_log_group.patch.name
+        cloudwatch_output_enabled = true
+      }
+
+      # SNS notification on task timeout, cancellation, or failure
+      dynamic "notification_config" {
+        for_each = var.sns_email != "" ? [1] : []
+        content {
+          notification_arn    = aws_sns_topic.alerts.arn
+          notification_events = ["TimedOut", "Cancelled", "Failed"]
+          notification_type   = "Command"
+        }
+      }
+
+      parameter {
+        name   = "Operation"
+        values = ["Install"]
+      }
+
+      # RebootIfNeeded is correct — NoReboot leaves InstalledPendingReboot
+      # states where the old vulnerable binary is still running in memory
+      parameter {
+        name   = "RebootOption"
+        values = ["RebootIfNeeded"]
+      }
+    }
+  }
+}`;
+
+export const awsPatchManagementTerraformScanAssociation = `# Runs AWS-RunPatchBaseline in Scan mode every hour.
+# Scan reads installed packages, compares against the baseline, and writes
+# the result to the compliance dashboard — without installing anything.
+# Without this association, the dashboard only updates when the weekly
+# maintenance window fires.
+
+resource "aws_ssm_association" "scan" {
+  name             = "AWS-RunPatchBaseline"
+  association_name = "\${var.name}-\${var.environment}-scan"
+
+  schedule_expression = "rate(1 hour)"
+
+  targets {
+    key    = "tag:PatchGroup"
+    values = ["\${var.name}-\${var.environment}"]
+  }
+
+  parameters = {
+    Operation = "Scan"
+  }
+
+  output_location {
+    s3_bucket_name = aws_s3_bucket.patch_logs.bucket
+    s3_key_prefix  = "scans/"
+  }
+}`;
+
+export const awsPatchManagementCLIComplianceStates = `# Per-patch states for a specific instance
+aws ssm describe-instance-patch-states \\
+  --instance-ids i-0abc1234567890def \\
+  --query 'InstancePatchStates[].{Instance:InstanceId,Missing:MissingCount,Failed:FailedCount,PendingReboot:InstalledPendingRebootCount,Installed:InstalledCount}'
+
+# All non-compliant instances across the patch group
+aws ssm list-resource-compliance-summaries \\
+  --filters "Key=ComplianceType,Values=Patch,Type=EQUAL" \\
+            "Key=Status,Values=NON_COMPLIANT,Type=EQUAL" \\
+  --query 'ResourceComplianceSummaryItems[].{Instance:ResourceId,Status:Status,PatchGroup:ExecutionSummary.ExecutionId}'
+
+# Instances with patches pending reboot (false-compliance risk)
+aws ssm list-resource-compliance-summaries \\
+  --filters "Key=ComplianceType,Values=Patch,Type=EQUAL" \\
+  --query 'ResourceComplianceSummaryItems[?ComplianceSummary.CompliantSummary.SeveritySummary != \`null\`]' \\
+  | jq '[.[] | select(.ComplianceSummary.NonCompliantSummary.SeveritySummary.InformationalCount > 0)]'`;
+
+export const awsPatchManagementTerraformInspector = `# Inspector v2 uses the SSM Agent's software inventory to read installed
+# packages and cross-reference them against the NVD + threat intelligence feeds.
+# No separate scanner needed — the SSM agent you've already set up is enough.
+
+resource "aws_inspector2_enabler" "this" {
+  account_ids    = [data.aws_caller_identity.current.account_id]
+  resource_types = ["EC2", "ECR"]
+}
+
+# EventBridge routes Critical Inspector findings to SNS within minutes —
+# no waiting for a weekly compliance report.
+resource "aws_cloudwatch_event_rule" "inspector_critical" {
+  name        = "\${var.name}-\${var.environment}-inspector-critical"
+  description = "Alert immediately on Inspector Critical findings"
+
+  event_pattern = jsonencode({
+    source      = ["aws.inspector2"]
+    detail-type = ["Inspector2 Finding"]
+    detail = {
+      severity = ["CRITICAL"]
+    }
+  })
+}
+
+resource "aws_cloudwatch_event_target" "inspector_critical" {
+  rule      = aws_cloudwatch_event_rule.inspector_critical.name
+  target_id = "patch-alerts-sns"
+  arn       = aws_sns_topic.alerts.arn   # defined in alerting.tf
+}`;
+
+export const awsPatchManagementTerraformPrePatchTask = `# Priority 0 — runs before the patch install task.
+# Snapshots all EBS volumes attached to each instance so you have a
+# restore point if a patch causes an issue. Conditional on var.pre_patch_snapshot.
+#
+# The instance role (ssm_instance) carries ec2:CreateSnapshot permission.
+# For stateless ASG fleets, set pre_patch_snapshot = false — rollback is a
+# Launch Template version revert + instance refresh, not a snapshot restore.
+
+resource "aws_ssm_maintenance_window_task" "snapshot" {
+  count            = var.pre_patch_snapshot ? 1 : 0
+  window_id        = aws_ssm_maintenance_window.this.id
+  task_type        = "RUN_COMMAND"
+  task_arn         = "AWS-RunShellScript"
+  priority         = 0
+  service_role_arn = aws_iam_role.maintenance_window.arn
+  max_concurrency  = var.max_concurrency
+  max_errors       = var.max_errors
+
+  targets {
+    key    = "WindowTargetIds"
+    values = [aws_ssm_maintenance_window_target.this.id]
+  }
+
+  task_invocation_parameters {
+    run_command_parameters {
+      parameter {
+        name = "commands"
+        values = [
+          "#!/bin/bash",
+          "set -e",
+          "INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)",
+          "REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/region)",
+          "VOLUMES=$(aws ec2 describe-instances --instance-id \\"$INSTANCE_ID\\" --region \\"$REGION\\" --query 'Reservations[0].Instances[0].BlockDeviceMappings[*].Ebs.VolumeId' --output text)",
+          "for VOLUME_ID in $VOLUMES; do",
+          "  SNAP_ID=$(aws ec2 create-snapshot --volume-id \\"$VOLUME_ID\\" --description \\"pre-patch-$INSTANCE_ID-$(date +%Y%m%d%H%M)\\" --region \\"$REGION\\" --query 'SnapshotId' --output text)",
+          "  echo \\"Created snapshot $SNAP_ID for volume $VOLUME_ID\\"",
+          "done",
+        ]
+      }
+    }
+  }
+}`;
+
+export const awsPatchManagementTerraformPostPatchTask = `# Priority 2 — runs after the patch install task.
+# Curls the application health check endpoint and exits non-zero on failure.
+# If enough instances fail (> max_errors), the maintenance window execution
+# is marked Failed — a clear automated signal without manual inspection.
+
+resource "aws_ssm_maintenance_window_task" "health_check" {
+  count            = var.post_patch_health_check_url != "" ? 1 : 0
+  window_id        = aws_ssm_maintenance_window.this.id
+  task_type        = "RUN_COMMAND"
+  task_arn         = "AWS-RunShellScript"
+  priority         = 2
+  service_role_arn = aws_iam_role.maintenance_window.arn
+  max_concurrency  = var.max_concurrency
+  max_errors       = var.max_errors
+
+  targets {
+    key    = "WindowTargetIds"
+    values = [aws_ssm_maintenance_window_target.this.id]
+  }
+
+  task_invocation_parameters {
+    run_command_parameters {
+      parameter {
+        name = "commands"
+        values = [
+          "#!/bin/bash",
+          "set -e",
+          "URL='\${var.post_patch_health_check_url}'",
+          "HTTP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 \\"$URL\\")",
+          "if [ \\"$HTTP_STATUS\\" -ne 200 ]; then",
+          "  echo \\"Health check FAILED: HTTP $HTTP_STATUS from $URL\\"",
+          "  exit 1",
+          "fi",
+          "echo \\"Health check PASSED: HTTP $HTTP_STATUS\\"",
+        ]
+      }
+    }
+  }
+}`;
+
+export const awsPatchManagementCLIEmergencyPatch = `# A Critical CVE has dropped and you can't wait for Sunday's maintenance window.
+# This fires AWS-RunPatchBaseline with Operation=Install immediately against
+# every instance in the patch group.
+
+# 1. Trigger — targets all instances tagged PatchGroup=my-app-prod
+aws ssm send-command \\
+  --document-name "AWS-RunPatchBaseline" \\
+  --targets "Key=tag:PatchGroup,Values=my-app-prod" \\
+  --parameters '{"Operation":["Install"],"RebootOption":["RebootIfNeeded"]}' \\
+  --comment "Emergency patch CVE-2021-44228" \\
+  --output-s3-bucket-name my-patch-logs \\
+  --output-s3-key-prefix emergency/ \\
+  --query 'Command.CommandId' \\
+  --output text
+
+# 2. Monitor — poll until all invocations complete
+aws ssm list-command-invocations \\
+  --command-id <command-id-from-above> \\
+  --details \\
+  --query 'CommandInvocations[].{Instance:InstanceId,Status:Status,Output:CommandPlugins[0].Output}'
+
+# 3. Confirm — verify compliance state updated to Installed
+aws ssm list-resource-compliance-summaries \\
+  --filters "Key=ComplianceType,Values=Patch,Type=EQUAL" \\
+            "Key=Status,Values=NON_COMPLIANT,Type=EQUAL" \\
+  --query 'ResourceComplianceSummaryItems[].{Instance:ResourceId,Missing:ComplianceSummary.NonCompliantSummary.SeveritySummary}'`;
+
+export const awsPatchManagementTerraformImageBuilder = `# Custom hardening component — removes unnecessary packages and captures
+# the full RPM manifest for audit / CVE diffing
+resource "aws_imagebuilder_component" "hardening" {
+  name     = "\${var.name}-\${var.environment}-hardening"
+  platform = "Linux"
+  version  = "1.0.0"
+
+  data = <<-YAML
+    name: al2023-hardening
+    schemaVersion: 1.0
+    phases:
+      - name: build
+        steps:
+          - name: RemoveUnnecessaryPackages
+            action: ExecuteBash
+            inputs:
+              commands:
+                - |
+                  for pkg in telnet rsh ypbind tftp-server; do
+                    rpm -q "$pkg" &>/dev/null && dnf remove -y "$pkg"
+                  done
+          - name: CaptureRpmManifest
+            action: ExecuteBash
+            inputs:
+              commands:
+                - rpm -qa --queryformat '%{NAME}|%{VERSION}|%{RELEASE}\\n' | sort > /tmp/rpm-manifest.txt
+  YAML
+}
+
+# Recipe = base AMI + AWS-managed patch component + custom hardening
+resource "aws_imagebuilder_image_recipe" "this" {
+  name         = "\${var.name}-\${var.environment}"
+  version      = "1.0.0"
+  parent_image = var.image_builder_base_ami_id   # latest al2023-ami-*-x86_64
+
+  component {
+    # AWS-managed: runs dnf update && dnf upgrade
+    component_arn = "arn:aws:imagebuilder:\${data.aws_region.current.name}:aws:component/update-linux/x.x.x/1"
+  }
+
+  component {
+    component_arn = aws_imagebuilder_component.hardening.arn
+  }
+}
+
+resource "aws_imagebuilder_infrastructure_configuration" "this" {
+  name                  = "\${var.name}-\${var.environment}"
+  instance_profile_name = aws_iam_instance_profile.image_builder.name
+  instance_types        = ["t3.small", "t3.medium"]   # t3.micro can OOM during dnf
+  subnet_id             = var.image_builder_subnet_id
+  sns_topic_arn         = aws_sns_topic.alerts.arn     # notify on build failure
+  terminate_instance_on_failure = true
+}
+
+resource "aws_imagebuilder_distribution_configuration" "this" {
+  name = "\${var.name}-\${var.environment}"
+
+  distribution {
+    region = data.aws_region.current.name
+
+    ami_distribution_configuration {
+      name = "\${var.name}-\${var.environment}-{{ imagebuilder:buildDate }}"
+      ami_tags = {
+        Name      = "\${var.name}-\${var.environment}"
+        BuiltBy   = "EC2ImageBuilder"
+        BaselineId = aws_ssm_patch_baseline.this.id
+      }
+    }
+  }
+}
+
+resource "aws_imagebuilder_image_pipeline" "this" {
+  name                             = "\${var.name}-\${var.environment}"
+  image_recipe_arn                 = aws_imagebuilder_image_recipe.this.arn
+  infrastructure_configuration_arn = aws_imagebuilder_infrastructure_configuration.this.arn
+  distribution_configuration_arn   = aws_imagebuilder_distribution_configuration.this.arn
+
+  # Weekly Sunday 01:00 UTC — before the prod maintenance window (02:00 UTC)
+  schedule {
+    schedule_expression = "cron(0 1 ? * SUN *)"
+  }
+
+  # Inspector scans the newly-built AMI before distribution.
+  # If Critical findings are found, the pipeline fails — preventing a
+  # vulnerable AMI from reaching your ASG.
+  image_scanning_configuration {
+    image_scanning_enabled = true
+  }
+}`;
+
+export const awsPatchManagementTerraformImageBuilderIAM = `# The build instance assumes this role during AMI construction.
+# Three managed policies cover:
+#   EC2InstanceProfileForImageBuilder    — Image Builder execution permissions
+#   AmazonSSMManagedInstanceCore         — SSM Agent (required for build connectivity)
+#   EC2ImageBuilderLifecycleExecutionPolicy — AMI deprecation and deletion
+
+resource "aws_iam_role" "image_builder" {
+  name = "\${var.name}-\${var.environment}-image-builder"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "image_builder_profile" {
+  role       = aws_iam_role.image_builder.name
+  policy_arn = "arn:aws:iam::aws:policy/EC2InstanceProfileForImageBuilder"
+}
+
+resource "aws_iam_role_policy_attachment" "image_builder_ssm" {
+  role       = aws_iam_role.image_builder.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_role_policy_attachment" "image_builder_lifecycle" {
+  role       = aws_iam_role.image_builder.name
+  policy_arn = "arn:aws:iam::aws:policy/EC2ImageBuilderLifecycleExecutionPolicy"
+}
+
+resource "aws_iam_instance_profile" "image_builder" {
+  name = "\${var.name}-\${var.environment}-image-builder"
+  role = aws_iam_role.image_builder.name
+}`;
+
+export const awsPatchManagementPackerTemplate = `# packer/amazon-linux-2023.pkr.hcl
+packer {
+  required_plugins {
+    amazon = {
+      version = ">= 1.3.0"
+      source  = "github.com/hashicorp/amazon"
+    }
+  }
+}
+
+# Always start from the latest AWS AL2023 AMI so the base is never stale
+data "amazon-ami" "al2023" {
+  region      = "eu-west-2"
+  most_recent = true
+  owners      = ["amazon"]
+  filters = {
+    name             = "al2023-ami-*-x86_64"
+    root-device-type = "ebs"
+  }
+}
+
+source "amazon-ebs" "al2023" {
+  region        = "eu-west-2"
+  instance_type = "t3.small"
+  source_ami    = data.amazon-ami.al2023.id
+
+  # Connect via SSM Session Manager — no inbound port 22 required
+  ssh_interface        = "session_manager"
+  communicator         = "ssh"
+  ssh_username         = "ec2-user"
+  iam_instance_profile = "packer-build"
+
+  ami_name = "patch-management-prod-\${formatdate("YYYYMMDDhhmmss", timestamp())}"
+}
+
+build {
+  sources = ["source.amazon-ebs.al2023"]
+
+  provisioner "shell" {
+    inline = [
+      "sudo dnf update -y --security",
+      "sudo dnf clean all",
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "for pkg in telnet rsh ypbind tftp-server; do",
+      "  rpm -q \\"$pkg\\" &>/dev/null && sudo dnf remove -y \\"$pkg\\"",
+      "done",
+      "rpm -qa --queryformat '%{NAME}|%{VERSION}|%{RELEASE}\\\\n' | sort > /tmp/rpm-manifest.txt",
+    ]
+  }
+
+  post-processor "manifest" {
+    output = "manifest.json"
+  }
+}
+
+# ── GitHub Actions workflow (trimmed) ────────────────────────────────────────
+# - name: Build AMI
+#   run: packer build -var="subnet_id=\${{ vars.BUILD_SUBNET_ID }}" packer/amazon-linux-2023.pkr.hcl
+#
+# - name: Update Launch Template
+#   run: |
+#     AMI_ID=$(jq -r '.builds[-1].artifact_id' manifest.json | cut -d: -f2)
+#     aws ec2 create-launch-template-version \\
+#       --launch-template-id \${{ vars.LAUNCH_TEMPLATE_ID }} \\
+#       --source-version '$Latest' \\
+#       --launch-template-data "{\\"ImageId\\":\\"$AMI_ID\\"}"
+#
+# - name: Start Instance Refresh
+#   run: |
+#     aws autoscaling start-instance-refresh \\
+#       --auto-scaling-group-name \${{ vars.ASG_NAME }} \\
+#       --preferences '{"MinHealthyPercentage":90,"InstanceWarmup":300}'`;
+
+export const awsPatchManagementCLIInstanceRefresh = `# After updating the Launch Template to point at the new AMI, trigger a
+# rolling instance refresh. Old instances are replaced in batches so the
+# ASG never drops below MinHealthyPercentage of capacity.
+#
+# MinHealthyPercentage: 90 → at most 10% of the fleet replaced at any time
+# InstanceWarmup: 300      → each new instance gets 300s to pass health checks
+#                            before the next batch is replaced
+
+aws autoscaling start-instance-refresh \\
+  --auto-scaling-group-name my-app-prod-asg \\
+  --preferences '{
+    "MinHealthyPercentage": 90,
+    "InstanceWarmup": 300
+  }'
+
+# Monitor the refresh — check until Status is Successful (or Failed/Cancelled)
+aws autoscaling describe-instance-refreshes \\
+  --auto-scaling-group-name my-app-prod-asg \\
+  --query 'InstanceRefreshes[0].{Status:Status,Progress:PercentageComplete,Reason:StatusReason}'
+
+# If a new instance fails its health check, the refresh pauses automatically.
+# Investigate, then resume or cancel:
+aws autoscaling resume-processes \\
+  --auto-scaling-group-name my-app-prod-asg \\
+  --scaling-processes Launch`;
+
+export const awsPatchManagementTerraformAlerting = `# Single shared SNS topic for all patch management alerts.
+# Inspector Critical findings (inspector.tf) also route to this topic.
+
+resource "aws_sns_topic" "alerts" {
+  name = "\${var.name}-\${var.environment}-patch-alerts"
+}
+
+resource "aws_sns_topic_subscription" "email" {
+  count     = var.sns_email != "" ? 1 : 0
+  topic_arn = aws_sns_topic.alerts.arn
+  protocol  = "email"
+  endpoint  = var.sns_email
+}
+
+# Allow EventBridge to publish to the topic
+resource "aws_sns_topic_policy" "alerts" {
+  arn = aws_sns_topic.alerts.arn
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "events.amazonaws.com" }
+      Action    = "sns:Publish"
+      Resource  = aws_sns_topic.alerts.arn
+    }]
+  })
+}
+
+# EventBridge — Maintenance Window Execution Failures
+resource "aws_cloudwatch_event_rule" "maintenance_window_failed" {
+  name = "\${var.name}-\${var.environment}-window-failed"
+
+  event_pattern = jsonencode({
+    source      = ["aws.ssm"]
+    detail-type = ["SSM Maintenance Window Execution State Change"]
+    detail      = { status = ["FAILED", "TIMED_OUT"] }
+  })
+}
+
+resource "aws_cloudwatch_event_target" "maintenance_window_failed" {
+  rule = aws_cloudwatch_event_rule.maintenance_window_failed.name
+  arn  = aws_sns_topic.alerts.arn
+}
+
+# EventBridge — Image Builder Pipeline Failures
+resource "aws_cloudwatch_event_rule" "image_builder_failed" {
+  count = var.enable_image_builder ? 1 : 0
+  name  = "\${var.name}-\${var.environment}-image-builder-failed"
+
+  event_pattern = jsonencode({
+    source      = ["aws.imagebuilder"]
+    detail-type = ["EC2 Image Builder Pipeline Execution State Change"]
+    detail      = { state = { status = ["FAILED"] } }
+  })
+}
+
+resource "aws_cloudwatch_event_target" "image_builder_failed" {
+  count = var.enable_image_builder ? 1 : 0
+  rule  = aws_cloudwatch_event_rule.image_builder_failed[0].name
+  arn   = aws_sns_topic.alerts.arn
+}`;
+
+export const awsPatchManagementCLIComplianceReport = `# Audit report: all non-compliant instances with patch counts and last scan time
+aws ssm list-resource-compliance-summaries \\
+  --filters "Key=ComplianceType,Values=Patch,Type=EQUAL" \\
+            "Key=Status,Values=NON_COMPLIANT,Type=EQUAL" \\
+  | jq -r '
+    ["InstanceId", "PatchGroup", "MissingCount", "FailedCount", "LastScan"],
+    (
+      .ResourceComplianceSummaryItems[] |
+      [
+        .ResourceId,
+        .ExecutionSummary.ExecutionId // "unknown",
+        (.ComplianceSummary.NonCompliantSummary.SeveritySummary.CriticalCount // 0 |
+          tostring) + " critical",
+        (.ComplianceSummary.NonCompliantSummary.SeveritySummary.HighCount // 0 |
+          tostring) + " high",
+        .ExecutionSummary.ExecutionTime // "unknown"
+      ]
+    ) | @csv
+  '
+
+# Instances with patches stuck in InstalledPendingReboot (false-compliance risk)
+# These instances were patched with NoReboot — the old vulnerable code is still
+# running in memory until the instance is rebooted.
+aws ssm describe-instance-patch-states-for-patch-group \\
+  --patch-group "my-app-prod" \\
+  --query 'InstancePatchStates[?InstalledPendingRebootCount > \`0\`].{Instance:InstanceId,PendingReboot:InstalledPendingRebootCount}'`;
+
+export const awsPatchManagementTerraformDataSync = `# Syncs SSM compliance data to a central S3 bucket in the management account.
+# Enables cross-account Athena queries over patch compliance data from all accounts.
+# This is a management-account resource — not part of the per-account module.
+
+resource "aws_ssm_resource_data_sync" "to_central" {
+  name = "patch-compliance-sync"
+
+  s3_destination {
+    bucket_name = "my-org-patch-compliance-\${data.aws_caller_identity.current.account_id}"
+    region      = "eu-west-2"
+    prefix      = "compliance/"
+  }
+}
+
+# S3 bucket policy in the management account — allows SSM from all org member accounts
+resource "aws_s3_bucket_policy" "patch_compliance" {
+  bucket = aws_s3_bucket.patch_compliance.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid    = "AllowSSMDataSync"
+      Effect = "Allow"
+      Principal = {
+        Service = "ssm.amazonaws.com"
+      }
+      Action = [
+        "s3:GetBucketAcl",
+        "s3:PutObject",
+      ]
+      Resource = [
+        aws_s3_bucket.patch_compliance.arn,
+        "\${aws_s3_bucket.patch_compliance.arn}/*",
+      ]
+      Condition = {
+        StringEquals = {
+          "aws:PrincipalOrgID" = data.aws_organizations_organization.current.id
+        }
+      }
+    }]
+  })
+}`;
+
+export const awsPatchManagementTerraformModuleBasic = `module "patch_management" {
+  source = "../../modules/patch-management"
+
+  name        = "my-app"
+  environment = "dev"
+
+  # Friday 22:00 UTC for dev; Saturday 01:00 for stage; Sunday 02:00 for prod
+  maintenance_window_schedule = "cron(0 22 ? * FRI *)"
+}`;
+
+export const awsPatchManagementTerraformModuleComplete = `module "patch_management" {
+  source = "../../modules/patch-management"
+
+  name        = "my-app"
+  environment = "prod"
+
+  # Sunday 02:00 UTC — lowest-traffic window with rest of Sunday to monitor
+  maintenance_window_schedule = "cron(0 2 ? * SUN *)"
+  maintenance_window_duration = 4
+  maintenance_window_cutoff   = 1
+
+  # RebootIfNeeded avoids InstalledPendingReboot false-compliance states
+  reboot_option   = "RebootIfNeeded"
+  max_concurrency = "50%"
+  max_errors      = "20%"
+
+  # Soak period: null = default (7 days dev / 14 days prod based on environment)
+  approve_after_days = null
+
+  # EBS snapshot before patching — rollback path for stateful workloads
+  pre_patch_snapshot = true
+
+  # Post-patch health check — asserts HTTP 200 on each patched instance
+  post_patch_health_check_url = "http://localhost/health"
+
+  # Inspector v2 for continuous CVE detection between maintenance windows
+  enable_inspector = true
+
+  # EC2 Image Builder for weekly Golden AMI builds (Sunday 01:00 UTC)
+  enable_image_builder      = true
+  image_builder_base_ami_id = "ami-0example"   # latest al2023-ami-*-x86_64
+  image_builder_subnet_id   = "subnet-0example"
+
+  # All alerts (maintenance window failures, Inspector Critical, Image Builder
+  # failures) route to this email via SNS
+  sns_email = "ops@example.com"
+}`;

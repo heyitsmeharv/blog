@@ -20,7 +20,7 @@ provider "aws" {
 module "analytics" {
   source = "heyitsmeharv/quiet-ly/aws"
 
-  version = "0.1.9"
+  version = "0.1.11"
 
   table_name            = var.table_name
   allowed_origin        = var.allowed_origin

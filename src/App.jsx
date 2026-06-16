@@ -71,6 +71,7 @@ import OutputUnderstanding from "./components/Posts/OutputUnderstanding.jsx";
 import NpmPublishing from "./components/Posts/NpmPublishing.jsx";
 import LambdaPowertools from "./components/Posts/LambdaPowertools.jsx";
 import AWSMultiAccountSetup from "./components/Posts/AWSMultiAccountSetup.jsx";
+import AWSPatchManagement from "./components/Posts/AWSPatchManagement.jsx";
 import { posts } from "./data/posts";
 import {
   blogText,
@@ -385,6 +386,11 @@ const App = () => {
                           exact
                           path="/blog/aws-multi-account-setup"
                           component={AWSMultiAccountSetup}
+                        />
+                        <Route
+                          exact
+                          path="/blog/aws-patch-management"
+                          component={AWSPatchManagement}
                         />
                         <Route component={NotFound} />
                       </Switch>

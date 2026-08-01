@@ -8,8 +8,20 @@ import FantasyFightPicker from "../resources/images/ffp.png";
 import QuietlyDashboard from "../resources/images/blog/Quiet-lyAnalytics/Dashboard.png";
 import ObservabilityDashboard from "../resources/images/blog/AWSObservabilityDashboard/demo-overview.png";
 import AWSSecAudit from "../resources/images/AWSSecAudit.svg";
+import MyTightFive from "../resources/images/mytightfive.png";
 
 export const projects = [
+  {
+    name: "My Tight Five",
+    description: {
+      EN: "A full-stack toolkit for stand-up comedians. Write jokes with setups and punchlines, tag and track them through draft, tested, and polished stages, build ordered sets via drag-and-drop, and rehearse with a read-through mode or a full-screen practice timer.",
+      ES: "Un conjunto de herramientas full-stack para comicos de stand-up. Escribe chistes con planteamiento y remate, etiquetalos y sigue su progreso por borrador, probado y pulido, arma sets ordenados mediante arrastrar y soltar, y ensaya con un modo de lectura o un temporizador de practica a pantalla completa.",
+    },
+    image: MyTightFive,
+    github: "https://github.com/heyitsmeharv/my-tight-five",
+    link: "https://mytightfive.co.uk",
+    tags: ["AWS", "Terraform", "React", "Node.js"],
+  },
   {
     name: "AWS Security Scorecard CLI",
     description: {

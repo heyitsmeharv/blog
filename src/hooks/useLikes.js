@@ -3,10 +3,17 @@ import { Analytics } from "../helpers/analytics";
 
 const LIKES_KEY = "portfolio_likes";
 export const endpoint = import.meta.env.VITE_LIKES_ENDPOINT;
+const url = typeof window !== "undefined" ? window.location.hostname : "";
+const localHosts = "localhost";
+const likesDisabled = localHosts.includes(url);
 
 export function useLikeCount(postId) {
   const [count, setCount] = useState(null);
   useEffect(() => {
+    if (likesDisabled) {
+      setCount(0);
+      return;
+    }
     if (!postId || !endpoint) return;
     fetch(`${endpoint}?postId=${encodeURIComponent(postId)}`)
       .then((r) => r.json())
@@ -40,6 +47,10 @@ export function useLikes(postId, visitorId) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (likesDisabled) {
+      setCount(0);
+      return;
+    }
     if (!postId || !endpoint) return;
     fetch(`${endpoint}?postId=${encodeURIComponent(postId)}`)
       .then((r) => r.json())
@@ -48,6 +59,7 @@ export function useLikes(postId, visitorId) {
   }, [postId]);
 
   const handleLike = async () => {
+    if (likesDisabled) return;
     if (liked || loading || !visitorId || !endpoint) return;
     setLoading(true);
     setLiked(true);
@@ -71,6 +83,7 @@ export function useLikes(postId, visitorId) {
   };
 
   const handleUnlike = async () => {
+    if (likesDisabled) return;
     if (!liked || loading || !visitorId || !endpoint) return;
     setLoading(true);
     setLiked(false);

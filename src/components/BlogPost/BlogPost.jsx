@@ -9,12 +9,12 @@ import { Analytics } from "../../helpers/analytics";
 import {
   comingSoonText,
   notPublishedText,
-  postTypeText,
   readMoreText,
   readingTimeText,
   tagsForItemText,
 } from "../../helpers/i18nText";
 import LikeCount from "../LikeCount/LikeCount";
+import TypeBadge from "../TypeBadge/TypeBadge";
 
 const Container = styled(motion.article)`
   background: ${({ theme }) => theme.surface || theme.secondary};
@@ -164,7 +164,7 @@ const BlogPost = ({
         <ComingSoonBanner>{notPublishedText(language)}</ComingSoonBanner>
       )}
       <TopBarText>
-        <StyledTopBarText>{postTypeText(language, type)}</StyledTopBarText>
+        <TypeBadge type={type} />
         <StyledTopBarText>{date}</StyledTopBarText>
       </TopBarText>
       <StyledTitle id={`blog-post-${navigate}`}>{title}</StyledTitle>

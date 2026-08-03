@@ -646,6 +646,19 @@ const allPosts = [
     navigate: "aws-patch-management",
     published: true,
   },
+  {
+    title: "Deploying to EC2",
+    readingTime: "approx 25 minutes",
+    type: "Practical",
+    date: "20/07/2026",
+    tags: [
+      { name: "AWS", background: "#FF9900", icon: <AWSSVG /> },
+      { name: "EC2", background: "#FF9900", icon: <AWSEC2SVG /> },
+    ],
+    intro: `I want to walkthrough how we can deploy to an EC2 instance, how it can be configured to be secure, to scale, and to be resilient. The goal is to walk through different configurations and show the differences between them. Everything below happens in the AWS Console and can be easily replicated in any AWS account...`,
+    navigate: "deploy-to-ec2",
+    published: false,
+  },
 ];
 
 // Newest first - matches Blog.jsx's .reverse() behaviour

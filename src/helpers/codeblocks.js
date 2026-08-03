@@ -1810,3 +1810,40 @@ export const awsPatchManagementTerraformModuleComplete = `module "patch_manageme
   # failures) route to this email via SNS
   sns_email = "ops@example.com"
 }`;
+
+export const awsDeployEc2UserDataScript = `#!/bin/bash
+set -euo pipefail
+
+dnf install -y nginx
+
+TOKEN=$(curl -sX PUT "http://169.254.169.254/latest/api/token" \\
+  -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+meta() {
+  curl -s -H "X-aws-ec2-metadata-token: $TOKEN" \\
+    "http://169.254.169.254/latest/meta-data/$1"
+}
+
+INSTANCE_ID=$(meta instance-id)
+AMI_ID=$(meta ami-id)
+INSTANCE_TYPE=$(meta instance-type)
+AZ=$(meta placement/availability-zone)
+LOCAL_IP=$(meta local-ipv4)
+
+cat > /usr/share/nginx/html/index.html <<HTML
+<!DOCTYPE html>
+<html>
+<head><title>deploy-to-ec2</title></head>
+<body>
+  <h1>Hello from EC2</h1>
+  <ul>
+    <li>Instance ID: \${INSTANCE_ID}</li>
+    <li>AMI ID: \${AMI_ID}</li>
+    <li>Instance type: \${INSTANCE_TYPE}</li>
+    <li>Availability zone: \${AZ}</li>
+    <li>Private IP: \${LOCAL_IP}</li>
+  </ul>
+</body>
+</html>
+HTML
+
+systemctl enable --now nginx`;

@@ -7,22 +7,15 @@ import SlideInBottom from "../../animations/SlideInBottom";
 import { Analytics } from "../../helpers/analytics";
 import {
   latestPostsText,
-  postTypeText,
   readPostText,
   readingTimeText,
   viewAllPostsText,
 } from "../../helpers/i18nText";
 import { posts } from "../../data/posts";
 import LikeCount from "../LikeCount/LikeCount";
+import TypeBadge from "../TypeBadge/TypeBadge";
 
 const FEATURED_COUNT = 3;
-
-const TYPE_COLORS = {
-  Practical: { bg: "#dbeafe", text: "#1e40af" },
-  Study: { bg: "#fef3c7", text: "#92400e" },
-  Theory: { bg: "#ede9fe", text: "#5b21b6" },
-  Reflection: { bg: "#ccfbf1", text: "#115e59" },
-};
 
 const normalizeHex = (value) => {
   if (!value || typeof value !== "string" || !value.startsWith("#")) {
@@ -167,16 +160,6 @@ const CardTop = styled.div`
   gap: 1rem;
 `;
 
-const TypeBadge = styled.span`
-  display: inline-block;
-  padding: 0.3rem 1rem;
-  border-radius: 999px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  background: ${({ $bg }) => $bg || "#e5e7eb"};
-  color: ${({ $color }) => $color || "#374151"};
-`;
-
 const DateText = styled.span`
   font-size: 1.3rem;
   color: ${({ theme }) => theme.mutedText || theme.secondary};
@@ -304,8 +287,6 @@ const LocalizedFeaturedBlogPosts = ({ language }) => {
         <Separator />
         <Grid>
           {featured.map((post, index) => {
-            const typeStyle = TYPE_COLORS[post.type] || {};
-
             return (
               <motion.div
                 key={post.navigate}
@@ -316,9 +297,7 @@ const LocalizedFeaturedBlogPosts = ({ language }) => {
               >
                 <Card>
                   <CardTop>
-                    <TypeBadge $bg={typeStyle.bg} $color={typeStyle.text}>
-                      {postTypeText(language, post.type)}
-                    </TypeBadge>
+                    <TypeBadge type={post.type} />
                     <DateText>{post.date}</DateText>
                   </CardTop>
                   <PostTitle>{post.title}</PostTitle>

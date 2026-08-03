@@ -462,7 +462,7 @@ const AWSPatchManagement = () => {
           from threat intelligence feeds - a theoretically lower-scored CVE with
           active exploit code in the wild may be prioritised higher than its raw
           CVSS number suggests. Full Inspector v2 coverage is in the{" "}
-          <TextLink to="/blog/aws-security-encryption">
+          <TextLink href="/blog/aws-security-encryption">
             AWS Security &amp; Encryption post
           </TextLink>
           .
@@ -526,7 +526,7 @@ const AWSPatchManagement = () => {
           inventory and compliance (Fleet Manager, Compliance), and parameter
           and secret storage. This post focuses on the patching side. The
           parameter store and secrets capabilities are covered in the{" "}
-          <TextLink to="/blog/aws-security-encryption">
+          <TextLink href="/blog/aws-security-encryption">
             AWS Security &amp; Encryption post
           </TextLink>
           .
@@ -557,8 +557,8 @@ const AWSPatchManagement = () => {
           </InlineHighlight>
           . In public subnets with a NAT gateway this works automatically. VPC
           and subnet concepts are covered in the{" "}
-          <TextLink to="/blog/aws-vpc">AWS VPC post</TextLink>. Without outbound
-          HTTPS access, instances will never appear as managed in SSM.
+          <TextLink href="/blog/aws-vpc">AWS VPC post</TextLink>. Without
+          outbound HTTPS access, instances will never appear as managed in SSM.
         </Paragraph>
 
         <Paragraph>
@@ -567,7 +567,7 @@ const AWSPatchManagement = () => {
           managed policy. This grants the agent permission to register itself
           with SSM, download agent updates from S3, and write command output to
           CloudWatch Logs. IAM roles and instance profiles are covered in the{" "}
-          <TextLink to="/blog/aws-identity-access-management">
+          <TextLink href="/blog/aws-identity-access-management">
             IAM post
           </TextLink>
           . One common mistake: attaching{" "}
@@ -719,9 +719,9 @@ const AWSPatchManagement = () => {
           AWS-managed default baseline. This is the unmanaged state - you lose
           per-environment control and inherit AWS's aggressive approval timings.
           Tag your EC2 Launch Templates (covered in the{" "}
-          <TextLink to="/blog/aws-elastic-compute-cloud">EC2 post</TextLink>) so
-          every new instance gets the correct tag automatically at launch. For
-          existing running instances, add the{" "}
+          <TextLink href="/blog/aws-elastic-compute-cloud">EC2 post</TextLink>)
+          so every new instance gets the correct tag automatically at launch.
+          For existing running instances, add the{" "}
           <InlineHighlight>PatchGroup</InlineHighlight> tag directly to the
           instance - SSM re-evaluates tags on every scan cycle and picks it up
           within an hour, no restart required.
@@ -904,7 +904,7 @@ const AWSPatchManagement = () => {
           vulnerability with the same CVSS score. No separate scanner or agent
           is needed beyond what you have already set up. Inspector is covered in
           full in the{" "}
-          <TextLink to="/blog/aws-security-encryption">
+          <TextLink href="/blog/aws-security-encryption">
             AWS Security &amp; Encryption post
           </TextLink>
           ; here the focus is on the integration with patching.
@@ -914,9 +914,9 @@ const AWSPatchManagement = () => {
           The alert pipeline: Inspector finding → EventBridge (AWS's serverless
           event routing service - it watches for events from AWS services and
           forwards matching events to targets you define) → SNS topic (
-          <TextLink to="/blog/aws-sns">SNS</TextLink> delivers the notification
-          to your email or on-call channel). For Critical findings you want this
-          firing within minutes, not waiting for a weekly report.
+          <TextLink href="/blog/aws-sns">SNS</TextLink> delivers the
+          notification to your email or on-call channel). For Critical findings
+          you want this firing within minutes, not waiting for a weekly report.
         </Paragraph>
 
         <CodeBlockWithCopy code={awsPatchManagementTerraformInspector} />
@@ -1034,7 +1034,7 @@ const AWSPatchManagement = () => {
           operating system, pre-installed software, and initial configuration.
           When you launch an EC2 instance, you pick an AMI - the instance starts
           from that state. AMIs are covered in depth in the{" "}
-          <TextLink to="/blog/aws-elastic-compute-cloud">EC2 post</TextLink>.
+          <TextLink href="/blog/aws-elastic-compute-cloud">EC2 post</TextLink>.
           What matters here is the implication: if the AMI already has all
           current security patches applied at build time, every instance
           launched from it starts patched - before user data runs, before the
@@ -1195,9 +1195,9 @@ const AWSPatchManagement = () => {
           multi-cloud image builds (Packer supports Azure and GCP with the same
           template), or you want the build logic version-controlled in your
           repository alongside your application code. The{" "}
-          <TextLink to="/blog/github-ci-cd">GitHub CI/CD post</TextLink> covers
-          GitHub Actions in depth; the Packer workflow integrates cleanly with
-          OIDC authentication to AWS.
+          <TextLink href="/blog/github-ci-cd">GitHub CI/CD post</TextLink>{" "}
+          covers GitHub Actions in depth; the Packer workflow integrates cleanly
+          with OIDC authentication to AWS.
         </Paragraph>
 
         <Paragraph>
@@ -1254,7 +1254,7 @@ const AWSPatchManagement = () => {
           pauses automatically - old instances keep running and nothing else is
           replaced until you investigate and resume or cancel. The ASG instance
           refresh is covered in the{" "}
-          <TextLink to="/blog/aws-elastic-compute-cloud">EC2 post</TextLink>;
+          <TextLink href="/blog/aws-elastic-compute-cloud">EC2 post</TextLink>;
           here the focus is on how it integrates with the AMI rotation workflow.
         </Paragraph>
 
@@ -1275,7 +1275,7 @@ const AWSPatchManagement = () => {
         <Paragraph>
           Operational alerting: the maintenance window task already has a{" "}
           <InlineHighlight>notification_config</InlineHighlight> that fires an{" "}
-          <TextLink to="/blog/aws-sns">SNS</TextLink> notification when a task
+          <TextLink href="/blog/aws-sns">SNS</TextLink> notification when a task
           times out, is cancelled, or fails. EventBridge supplements this with
           window-level alerting - watching for{" "}
           <InlineHighlight>
@@ -1322,7 +1322,7 @@ const AWSPatchManagement = () => {
             ec2-managedinstance-patch-compliance-status-check
           </InlineHighlight>{" "}
           AWS Config rule (
-          <TextLink to="/blog/aws-monitoring-audit">
+          <TextLink href="/blog/aws-monitoring-audit">
             covered in the Monitoring &amp; Audit post
           </TextLink>
           ) continuously checks every managed instance against your baseline and
@@ -1339,7 +1339,7 @@ const AWSPatchManagement = () => {
 
         <Paragraph>
           With dev, stage, and prod in separate AWS accounts (covered in the{" "}
-          <TextLink to="/blog/aws-multi-account-setup">
+          <TextLink href="/blog/aws-multi-account-setup">
             AWS Multi-Account Setup post
           </TextLink>
           ), managing patch infrastructure per-account via Terraform is
@@ -1368,7 +1368,7 @@ const AWSPatchManagement = () => {
           management account. For raw data querying,{" "}
           <InlineHighlight>aws_ssm_resource_data_sync</InlineHighlight> syncs
           SSM compliance data to a central{" "}
-          <TextLink to="/blog/aws-s3">S3</TextLink> bucket where Athena can
+          <TextLink href="/blog/aws-s3">S3</TextLink> bucket where Athena can
           query it across all accounts.
         </Paragraph>
 
@@ -1423,7 +1423,7 @@ const AWSPatchManagement = () => {
 
         <Paragraph>
           Terraform fundamentals are covered in the{" "}
-          <TextLink to="/blog/infrastructure-as-code-with-terraform">
+          <TextLink href="/blog/infrastructure-as-code-with-terraform">
             IaC with Terraform post
           </TextLink>
           .

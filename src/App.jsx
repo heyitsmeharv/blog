@@ -72,6 +72,7 @@ import NpmPublishing from "./components/Posts/NpmPublishing.jsx";
 import LambdaPowertools from "./components/Posts/LambdaPowertools.jsx";
 import AWSMultiAccountSetup from "./components/Posts/AWSMultiAccountSetup.jsx";
 import AWSPatchManagement from "./components/Posts/AWSPatchManagement.jsx";
+import AWSDeployEC2 from "./components/Posts/AWSDeployEC2.jsx";
 import { posts } from "./data/posts";
 import {
   blogText,
@@ -391,6 +392,11 @@ const App = () => {
                           exact
                           path="/blog/aws-patch-management"
                           component={AWSPatchManagement}
+                        />
+                        <Route
+                          exact
+                          path="/blog/deploy-to-ec2"
+                          component={AWSDeployEC2}
                         />
                         <Route component={NotFound} />
                       </Switch>

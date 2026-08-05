@@ -44,7 +44,10 @@ import Carousel from "../Carousel/Carousel";
 import { CodeBlockWithCopy } from "../Code/Code";
 
 // code blocks
-import { awsDeployEc2UserDataScript } from "../../helpers/codeblocks";
+import {
+  awsDeployEc2UserDataScript,
+  awsDeployEc2UserDataScriptRoot,
+} from "../../helpers/codeblocks";
 
 // images
 import NavigateToIAM from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_navigate_to_iam_roles.png";
@@ -54,9 +57,22 @@ import Permissions from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2
 import Name from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_name.png";
 import WithoutKeyPair from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_without_key_pair.png";
 import Anywhere from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_open.png";
+import InstanceProfile from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_instance_profile.png";
 import InstanceRunning from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_running.png";
 import MetaData from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_meta_data.png";
 import MetaData2 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_meta_data_2.png";
+import CreateTargetGroup from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_create_target_group.png";
+import CreateTargetGroup2 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_create_target_group_2.png";
+import AdvancedHealthCheckSettings from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_advanced_health_check.png";
+import RegisterTargets from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_register_targets.png";
+import RegisterTargets2 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_register_targets_2.png";
+import CreateLoadBalancerSG from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_create_lb_security_group.png";
+import CreateLoadBalancer from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_create_lb.png";
+import TargetGroupUnused from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_target_group_unused.png";
+import TargetGroupInProgress from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_target_group_in_progress.png";
+import TargetGroupHealthy from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_target_group_healthy.png";
+import LoadBalancerResource from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_load_balancer_resource_view.png";
+import MetaData3 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_meta_data_lb.png";
 
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
@@ -137,7 +153,7 @@ something that actually means what it says.`,
 
 const AWSDeployEC2 = () => {
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     Analytics.pageview("/blog/deploy-to-ec2");
     Analytics.track("blog_page_viewed", { slug: "deploy-to-ec2" });
   }, []);
@@ -310,6 +326,11 @@ const AWSDeployEC2 = () => {
           metadata.
         </Paragraph>
 
+        <PostImage
+          src={InstanceProfile}
+          alt="EC2 launch wizard - instance profile"
+        />
+
         <Paragraph>
           The reason we can do this is because of the{" "}
           <TextLink
@@ -386,13 +407,152 @@ const AWSDeployEC2 = () => {
         </Paragraph>
 
         <Paragraph>
-          <Strong>EC2 → Load Balancers → Create load balancer</Strong>, an
-          Application Load Balancer with its own security group - HTTP from
-          anywhere, but that's now the <Strong>only</Strong> thing
-          internet-facing. A target group behind it, pointed at port 80 with a{" "}
-          <InlineHighlight>/</InlineHighlight> health check, the existing
-          instance registered as its one target.
+          There are different kinds of load balancers but for this example,
+          we'll use an Application Load Balancer. This distributes incoming HTTP
+          and HTTPS traffic across multiple targets including EC2 instances
+          based on request attributes. Load balancers have listeners which act
+          as rules so that the load balancer knows how to route traffic. That
+          traffic will be routed to a target group, which is a group of targets
+          (EC2 instances) in this case.
         </Paragraph>
+
+        <Paragraph>
+          Before we create the load balancer, we'll do some prep work just like
+          we did for the EC2 instance with the IAM role. We'll create a target
+          group first, which we will put our EC2 instance into.
+        </Paragraph>
+
+        <Paragraph>
+          In the EC2 console, under <Strong>Load Balancing</Strong> in the left
+          sidebar, click <Strong>Target Groups</Strong>, then{" "}
+          <Strong>Create target group</Strong>.
+        </Paragraph>
+
+        <PostImage
+          src={CreateTargetGroup}
+          alt="EC2 console left sidebar with Target Groups selected under Load Balancing, 
+          and the Create target group button."
+        />
+
+        <Paragraph>
+          <Strong>Choose a target type</Strong> stays on{" "}
+          <Strong>Instances</Strong> - we're registering the running EC2
+          instance directly, not an IP address, a Lambda function, or another
+          load balancer. Give it a name,{" "}
+          <InlineHighlight>deploy-to-ec2</InlineHighlight>, leave the protocol
+          as <InlineHighlight>HTTP</InlineHighlight> on port{" "}
+          <InlineHighlight>80</InlineHighlight>. Leave the VPC as the default
+          one, since that's where we've deployed our instance into.
+        </Paragraph>
+
+        <PostImage
+          src={CreateTargetGroup2}
+          alt="Target group creation - target type, name, protocol, port, and VPC fields."
+        />
+
+        <Paragraph>
+          Health checks are what actually decides whether a target should
+          receive traffic, not just whether it exists. We want protocol{" "}
+          <InlineHighlight>HTTP</InlineHighlight>, and the path set to wherever
+          the application is being served, which in this case is
+          <InlineHighlight>/</InlineHighlight>. As per our user data script.
+        </Paragraph>
+
+        <CodeBlockWithCopy code={awsDeployEc2UserDataScriptRoot} />
+
+        <Paragraph>
+          A quick gloss over what's under{" "}
+          <Strong>Advanced health check settings</Strong>:
+        </Paragraph>
+
+        <TextList>
+          <TextListItem>
+            <Strong>Port</Strong> -{" "}
+            <InlineHighlight>Traffic port</InlineHighlight> by default, meaning
+            the health check hits the same port (80) as real requests.
+            Overriding it only matters if health checks and application traffic
+            genuinely need to go to different ports.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Healthy threshold</Strong> - consecutive successful checks
+            before a target is marked healthy and starts receiving traffic.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Unhealthy threshold</Strong> - consecutive failed checks
+            before a healthy target is pulled out of rotation.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Timeout</Strong> - how long a single check waits for a
+            response before counting it as a failure.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Interval</Strong> - how often a check runs.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Success codes</Strong> - which HTTP status codes count as
+            healthy.
+          </TextListItem>
+        </TextList>
+
+        <Paragraph>
+          The defaults are OK but I would recommend changing the interval to 15
+          seconds, and the healthy/unhealthy thresholds to 3. This way, a target
+          is marked healthy after 3 consecutive successful checks, and marked
+          unhealthy after 3 consecutive failed checks. This makes the health
+          check more responsive to changes in the target's health.
+        </Paragraph>
+
+        <PostImage
+          src={AdvancedHealthCheckSettings}
+          alt="Target group health check settings, including the advanced interval/threshold fields."
+        />
+
+        <Paragraph>
+          <Strong>Next</Strong> moves to <Strong>Register targets</Strong> -
+          select the running instance from the list, leave the port as{" "}
+          <InlineHighlight>80</InlineHighlight>, click{" "}
+          <Strong>Include as pending below</Strong>, then{" "}
+          <Strong>Create target group</Strong>. It won't show as healthy yet -
+          there's no load balancer sending it traffic to health-check against
+          until the next step.
+        </Paragraph>
+
+        <PostImage
+          src={RegisterTargets}
+          alt="Registering the instance as a pending target."
+        />
+
+        <PostImage
+          src={RegisterTargets2}
+          alt="Registering the instance as a pending target."
+        />
+
+        <Paragraph>
+          For the security group, create a new one rather than reusing the
+          instance's - this is what becomes the only thing internet-facing once
+          the instance gets locked down: HTTP from <Strong>Anywhere</Strong>.
+          Under <Strong>Listeners and routing</Strong>, the default listener on
+          port <InlineHighlight>80</InlineHighlight> should forward to the
+          target group created a moment ago - select it from the dropdown, then{" "}
+          <Strong>Create load balancer</Strong>.
+        </Paragraph>
+
+        <PostImage
+          src={CreateLoadBalancerSG}
+          alt="Create load balancer - security group configuration."
+        />
+
+        <Paragraph>
+          With the target group ready,{" "}
+          <Strong>EC2 → Load Balancers → Create load balancer</Strong>, and
+          choose <Strong>Application Load Balancer</Strong>. Give it a name,
+          leave the scheme as <Strong>Internet-facing</Strong>, and under
+          network mapping select at least two Availability Zones - an
+          Application Load Balancer needs more than one to actually be highly
+          available, even though there's only one instance behind it so far.
+        </Paragraph>
+
+        <PostImage src={CreateLoadBalancer} alt="Create load balancer." />
 
         <Paragraph>
           The change that actually matters happens back on the{" "}

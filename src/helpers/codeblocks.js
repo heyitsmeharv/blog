@@ -1847,3 +1847,8 @@ cat > /usr/share/nginx/html/index.html <<HTML
 HTML
 
 systemctl enable --now nginx`;
+
+export const awsDeployEc2UserDataScriptRoot = `# /usr/share/nginx/html is nginx's default document root, and index.html
+# is its default index file - together, that's what makes this page the
+# one nginx serves at the site's root path, "/".
+cat > /usr/share/nginx/html/index.html`;

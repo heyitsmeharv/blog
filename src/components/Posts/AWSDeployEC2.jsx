@@ -68,11 +68,22 @@ import RegisterTargets from "../../resources/images/blog/AWSDeployEC2/aws_deploy
 import RegisterTargets2 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_register_targets_2.png";
 import CreateLoadBalancerSG from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_create_lb_security_group.png";
 import CreateLoadBalancer from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_create_lb.png";
+import CreateLoadBalancer2 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_create_lb_2.png";
 import TargetGroupUnused from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_target_group_unused.png";
 import TargetGroupInProgress from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_target_group_in_progress.png";
 import TargetGroupHealthy from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_target_group_healthy.png";
 import LoadBalancerResource from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_load_balancer_resource_view.png";
 import MetaData3 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_meta_data_lb.png";
+import SgLockedDown from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_change_to_lb_tg.png";
+import CreateLaunchTemplate from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_create_template.png";
+import AutoScalingGuidance from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_guidance.png";
+import SelectLaunchTemplate from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_group_launch_template.png";
+import AutoScalingGroupAttachLB from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_attach_lb.png";
+import AutoScalingGroupHealthChecks from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_health_checks.png";
+import AutoScalingGroupSize from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_group_size.png";
+import AutoScalingGroupUpdatingCapacity from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_updating_capacity.png";
+import AutoScalingGroupAtDesiredCapacity from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_desired_capacity.png";
+import AutoScalingGroupUpdated from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_updated.png";
 
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
@@ -183,7 +194,7 @@ const AWSDeployEC2 = () => {
           to walk through different configurations and show the differences
           between them. Everything below happens in the AWS Console and can be
           easily replicated in any AWS account. You can register for a free AWS
-          account if you don't have one already{` `}
+          account if you don't have one already{" "}
           <TextLink href={awsSignup} target="_blank" rel="noopener noreferrer">
             here
           </TextLink>
@@ -238,9 +249,8 @@ const AWSDeployEC2 = () => {
         <Paragraph>
           Next, we need to attach the policy that allows the instance to use SSM
           Session Manager. Search for the policy called
-          <InlineHighlight>AmazonSSMManagedInstanceCore</InlineHighlight>
-          {` `}
-          and select it.
+          <InlineHighlight>AmazonSSMManagedInstanceCore</InlineHighlight> and
+          select it.
         </Paragraph>
 
         <PostImage src={Permissions} alt="Select permissions for the role" />
@@ -410,10 +420,14 @@ const AWSDeployEC2 = () => {
           There are different kinds of load balancers but for this example,
           we'll use an Application Load Balancer. This distributes incoming HTTP
           and HTTPS traffic across multiple targets including EC2 instances
-          based on request attributes. Load balancers have listeners which act
-          as rules so that the load balancer knows how to route traffic. That
-          traffic will be routed to a target group, which is a group of targets
-          (EC2 instances) in this case.
+          based on request attributes.
+        </Paragraph>
+
+        <Paragraph>
+          Load balancers have listeners which act as rules so that the load
+          balancer knows how to route traffic. That traffic will be routed to a
+          target group, which is a group of targets (EC2 instances) in this
+          case.
         </Paragraph>
 
         <Paragraph>
@@ -511,26 +525,66 @@ const AWSDeployEC2 = () => {
           <Strong>Next</Strong> moves to <Strong>Register targets</Strong> -
           select the running instance from the list, leave the port as{" "}
           <InlineHighlight>80</InlineHighlight>, click{" "}
-          <Strong>Include as pending below</Strong>, then{" "}
-          <Strong>Create target group</Strong>. It won't show as healthy yet -
-          there's no load balancer sending it traffic to health-check against
-          until the next step.
+          <Strong>Include as pending below</Strong>.
         </Paragraph>
 
         <PostImage
           src={RegisterTargets}
-          alt="Registering the instance as a pending target."
+          alt="Registering the instance as a pending target"
         />
 
         <PostImage
           src={RegisterTargets2}
-          alt="Registering the instance as a pending target."
+          alt="The instance added as a pending target, ready to create the target group"
         />
 
         <Paragraph>
-          For the security group, create a new one rather than reusing the
-          instance's - this is what becomes the only thing internet-facing once
-          the instance gets locked down: HTTP from <Strong>Anywhere</Strong>.
+          It won't show as healthy yet as there's no load balancer sending it
+          traffic to health-check against.
+        </Paragraph>
+
+        <Paragraph>
+          Once you've created the target group, its health check status shows as
+          <InlineHighlight>Unused</InlineHighlight> rather than healthy or
+          unhealthy, with <Strong>Load balancer: None associated</Strong> right
+          there on the same page. That's to be expected because we've not
+          attached a load balancer to it yet, which the status message implies.
+        </Paragraph>
+
+        <PostImage
+          src={TargetGroupUnused}
+          alt="Newly created target group showing the instance's health check status as Unused"
+        />
+
+        <Paragraph>
+          One final prep task before creating the load balancer: create a
+          security group for it by going to{" "}
+          <Strong>EC2 → Security Groups → Create security group</Strong>.
+        </Paragraph>
+
+        <Paragraph>
+          We want this to be the only thing that is internet-facing, so it needs
+          a rule that allows HTTP from <Strong>Anywhere</Strong>. The instance's
+          security group will be locked down to only allow traffic from this
+          load balancer's security group once it's created.
+        </Paragraph>
+
+        <PostImage
+          src={CreateLoadBalancerSG}
+          alt="Create load balancer - security group configuration"
+        />
+
+        <Paragraph>
+          With the target group and security group ready, let's go create our
+          load balancer by going to{" "}
+          <Strong>EC2 → Load Balancers → Create load balancer</Strong>, and
+          choose <Strong>Application Load Balancer</Strong>. Give it a name,
+          leave the scheme as <Strong>Internet-facing</Strong>, and under
+          network mapping select at least two Availability Zones, even though
+          there's only one instance behind it so far.
+        </Paragraph>
+
+        <Paragraph>
           Under <Strong>Listeners and routing</Strong>, the default listener on
           port <InlineHighlight>80</InlineHighlight> should forward to the
           target group created a moment ago - select it from the dropdown, then{" "}
@@ -538,128 +592,236 @@ const AWSDeployEC2 = () => {
         </Paragraph>
 
         <PostImage
-          src={CreateLoadBalancerSG}
-          alt="Create load balancer - security group configuration."
+          src={CreateLoadBalancer}
+          alt="Create load balancer - name, scheme, and Availability Zone mapping"
         />
 
         <Paragraph>
-          With the target group ready,{" "}
-          <Strong>EC2 → Load Balancers → Create load balancer</Strong>, and
-          choose <Strong>Application Load Balancer</Strong>. Give it a name,
-          leave the scheme as <Strong>Internet-facing</Strong>, and under
-          network mapping select at least two Availability Zones - an
-          Application Load Balancer needs more than one to actually be highly
-          available, even though there's only one instance behind it so far.
+          The load balancer itself takes a few minutes to finish provisioning
+          before its state shows <InlineHighlight>Active</InlineHighlight>.
         </Paragraph>
-
-        <PostImage src={CreateLoadBalancer} alt="Create load balancer." />
 
         <Paragraph>
-          The change that actually matters happens back on the{" "}
-          <Strong>instance's</Strong> security group: the "HTTP from anywhere"
-          rule gets removed, replaced with one that only trusts the ALB's
-          security group.
+          Back on the target group, <Strong>Load balancer</Strong> now names{" "}
+          <InlineHighlight>deploy-to-ec2</InlineHighlight> instead of "None
+          associated," and the target's health status has moved on from{" "}
+          <InlineHighlight>Unused</InlineHighlight> to{" "}
+          <InlineHighlight>Initial</InlineHighlight>. It will sit on "Target
+          registration is in progress" while it waits for enough consecutive
+          successful checks in order to be{" "}
+          <InlineHighlight>Healthy</InlineHighlight>.
         </Paragraph>
 
-        {/*
-          Screenshot: the instance security group's inbound rules after the
-          change, showing port 80's source as the ALB security group ID
-          rather than 0.0.0.0/0.
-          Save as: src/resources/images/blog/AWSDeployEC2/sg_locked_down.jpeg
-          import SgLockedDown from "../../resources/images/blog/AWSDeployEC2/sg_locked_down.jpeg";
-          <PostImage src={SgLockedDown} alt="Instance security group locked down to the ALB's security group only" />
-        */}
+        <PostImage
+          src={TargetGroupInProgress}
+          alt="Target group health check status moving from Unused to initial now that the ALB is checking it"
+        />
 
         <Paragraph>
-          Here's the proof, not the assumption: refreshing the same browser tab
-          that had the instance's direct IP in it now times out. Nothing
-          answers. That's the lockdown demonstrated, not just configured - the
-          network layer refusing the connection before it reaches the instance,
-          regardless of what nginx would have said. The ALB's DNS name, opened
-          in a new tab, returns the exact same status page the direct IP used
-          to.
+          And once the checks have completed, the target shows{" "}
+          <InlineHighlight>Healthy</InlineHighlight>
+          and should now be receiving traffic from the load balancer.
         </Paragraph>
 
-        {/*
-          Screenshot, side by side if possible: the direct IP tab timing
-          out next to the ALB DNS name tab showing the status page.
-          Save as: src/resources/images/blog/AWSDeployEC2/direct_vs_alb.jpeg
-          import DirectVsAlb from "../../resources/images/blog/AWSDeployEC2/direct_vs_alb.jpeg";
-          <PostImage src={DirectVsAlb} alt="Direct instance IP timing out next to the ALB DNS name working" />
-        */}
+        <PostImage
+          src={TargetGroupHealthy}
+          alt="Target group health check status showing healthy"
+        />
 
-        <Banner title="What confirms it" variant="info">
-          <Paragraph>
-            <Strong>Target Groups → Health checks tab</Strong> - the target
-            starts as <InlineHighlight>initial</InlineHighlight> and moves to{" "}
-            <InlineHighlight>healthy</InlineHighlight> after a couple of health
-            check intervals. A target that never gets there almost always means
-            the health check's path or port doesn't match what the application
-            is actually serving - not a networking fault.
-          </Paragraph>
-        </Banner>
+        <Paragraph>
+          If we navigate back to the load balancer you should now find that it
+          is active and has a <Strong>DNS name</Strong> assigned.
+        </Paragraph>
 
-        <SectionHeading>Letting It Heal Itself</SectionHeading>
+        <PostImage src={CreateLoadBalancer2} alt="Load balancer DNS name" />
+
+        <Paragraph>
+          Copy it, and open it in a new browser tab and you should be able to
+          see the same status page that the instance's public IP returned
+          earlier.
+        </Paragraph>
+
+        <PostImage
+          src={MetaData3}
+          alt="The status page loaded from the ALB's DNS name instead of the instance's direct IP"
+        />
+
+        <Paragraph>
+          The load balancer's own <Strong>Resource map</Strong> tab draws the
+          whole chain end to end - listener, rule, target group, target - and
+          with the target now healthy, every hop in it shows green: one request
+          path, confirmed working from the ALB's listener all the way down to
+          the instance.
+        </Paragraph>
+
+        <PostImage
+          src={LoadBalancerResource}
+          alt="ALB resource map showing the full request path - listener, rule, target group, and target - all healthy"
+        />
+
+        <Paragraph>
+          The last step is to lock down the instance's security group so that it
+          only allows traffic from the load balancer's security group, rather
+          than from anywhere. This is the security best practice that makes the
+          load balancer the only entry point to the instance, and the only way
+          for anyone on the internet to reach it.
+        </Paragraph>
+
+        <PostImage
+          src={SgLockedDown}
+          alt="Instance security group locked down to the ALB's security group only"
+        />
+
+        <Paragraph>
+          The status page should still load from the ALB's DNS name, but if you
+          try to open the instance's public IP directly in a browser, it should
+          now fail to connect.
+        </Paragraph>
+
+        <SectionHeading>From One to Many</SectionHeading>
 
         <Paragraph>
           One instance behind the ALB is still one instance - if it dies, the
-          target group has nothing healthy left to send traffic to. An Auto
-          Scaling Group fixes that, and setting one up doesn't mean describing
-          the instance again from scratch: on its detail page,{" "}
+          target group has nothing healthy left to send traffic to.{" "}
+          <Strong>Auto Scaling Group</Strong> fixes that, and we can set one up
+          from templates.
+        </Paragraph>
+
+        <Paragraph>
+          Select your running instance, then go to{" "}
           <Strong>
             Actions → Image and templates → Create template from instance
           </Strong>{" "}
-          copies the AMI, security group, IAM profile, and user data directly
-          from the instance that's already running.
+          We want to copy the AMI, security group, IAM profile, and user data
+          directly from the instance that's already running.
         </Paragraph>
 
-        {/*
-          Screenshot: the "Create template from instance" confirmation
-          screen, showing the settings pre-filled from the running instance.
-          Save as: src/resources/images/blog/AWSDeployEC2/template_from_instance.jpeg
-          import TemplateFromInstance from "../../resources/images/blog/AWSDeployEC2/template_from_instance.jpeg";
-          <PostImage src={TemplateFromInstance} alt="Create launch template from instance, pre-filled from the running instance" />
-        */}
+        <PostImage
+          src={CreateLaunchTemplate}
+          alt="Create launch template from instance"
+        />
 
         <Paragraph>
-          <Strong>EC2 → Auto Scaling Groups → Create</Strong>, that launch
-          template, the existing target group attached instead of a new one,
-          desired/min/max set to 2/2/4. Within a minute or two the instance list
-          grows to two - sharing a name, each with its own ID.
+          There is an option you can select which will let you know what options
+          aren't compatible to copy over to prevent any errors when creating the
+          template.
         </Paragraph>
 
-        {/*
-          Screenshot: the Instances list showing two instances sharing the
-          same Name tag.
-          Save as: src/resources/images/blog/AWSDeployEC2/asg_two_instances.jpeg
-          import AsgTwoInstances from "../../resources/images/blog/AWSDeployEC2/asg_two_instances.jpeg";
-          <PostImage src={AsgTwoInstances} alt="Two instances running under the Auto Scaling Group" />
-        */}
+        <PostImage
+          src={AutoScalingGuidance}
+          alt="Auto Scaling guidance for creating a launch template"
+        />
 
         <Paragraph>
-          Then the test that actually settles whether "self-healing" is real or
-          just documentation copy: pick one of the two instances and{" "}
-          <Strong>terminate</Strong> it directly, on purpose. The instance count
-          drops to one. Nothing else gets touched. Within a minute, a new
-          instance appears on its own - a genuinely different instance ID, not
-          the one that was terminated - and the target group shows two healthy
-          targets again.
+          Now we have the launch template, we can create an Auto Scaling Group
+          from it. Go to <Strong>EC2 → Auto Scaling Groups → Create</Strong>,
+          name it, and select the launch template we just created. Selecting{" "}
+          <InlineHighlight>Latest</InlineHighlight>, means any future change to
+          the template rolls out to new instances automatically which is pretty
+          neat.
         </Paragraph>
 
-        {/*
-          Screenshot: EC2 -> Auto Scaling Groups -> Activity tab, showing
-          the terminate + launch events from the self-healing test.
-          Save as: src/resources/images/blog/AWSDeployEC2/asg_activity_replace.jpeg
-          import AsgActivityReplace from "../../resources/images/blog/AWSDeployEC2/asg_activity_replace.jpeg";
-          <PostImage src={AsgActivityReplace} alt="ASG Activity tab showing an instance terminated and a replacement launched" />
-        */}
+        <PostImage
+          src={SelectLaunchTemplate}
+          alt="Select launch template when creating an Auto Scaling Group"
+        />
 
         <Paragraph>
-          That's the difference an Auto Scaling Group actually makes,
-          demonstrated rather than described - and the one step in this whole
-          walkthrough worth doing directly rather than taking on faith: killing
-          something on purpose and watching it come back unprompted proves a lot
-          more than a diagram claiming it would.
+          <Strong>Choose instance launch options</Strong> asks for the VPC and
+          which subnets to launch into. Picking subnets across more than one
+          Availability Zone is what makes the group resilient to an entire zone
+          going down, not just to one instance dying.
+        </Paragraph>
+
+        <Paragraph>
+          We want to <Strong>Attach to an existing load balancer</Strong>, and
+          select the load balancer we have created.
+        </Paragraph>
+
+        <PostImage
+          src={AutoScalingGroupAttachLB}
+          alt="Attach Auto Scaling Group to Load Balancer"
+        />
+
+        <Paragraph>
+          <Strong>Health checks</Strong> by default check only the EC2 status,
+          which confirm the instance itself is running and nothing about whether
+          the application inside is responding. Turning on{" "}
+          <InlineHighlight>
+            Elastic Load Balancing health checks
+          </InlineHighlight>{" "}
+          hands that judgment to the target group instead, so an instance that's
+          up but serving nothing gets replaced too as well as instances that
+          crash outright.
+        </Paragraph>
+
+        <PostImage
+          src={AutoScalingGroupHealthChecks}
+          alt="Auto Scaling Group health checks"
+        />
+
+        <Paragraph>
+          <Strong>Configure group size and scaling</Strong> sets desired/min/max
+          to 2/2/4. We could attach a scaling policy which could allow us to
+          scale under load, or CPU usage etc. For this purpose we just want to
+          change the count of our instances to match the desired.
+        </Paragraph>
+
+        <PostImage
+          src={AutoScalingGroupSize}
+          alt="Auto Scaling Group desired capacity"
+        />
+
+        <Paragraph>
+          Everything after that isn't needed (notifications, tags) for this
+          walkthrough. After finishing creating the autoscaling group we should
+          see the autoscaling group tell us it's updating the capacity.
+        </Paragraph>
+
+        <PostImage
+          src={AutoScalingGroupUpdatingCapacity}
+          alt="Auto Scaling Group updating capacity"
+        />
+
+        <Paragraph>
+          Once updated, it will increase our instance count to the desired
+          amount with the same name, each with its own ID.
+        </Paragraph>
+
+        <Carousel
+          items={[
+            {
+              title: "Auto Scaling Group at desired capacity",
+              description:
+                "The Auto Scaling Group has reached the desired capacity of 2 instances.",
+              src: AutoScalingGroupAtDesiredCapacity,
+            },
+            {
+              title: "Auto Scaling Group updated capacity",
+              description:
+                "The Auto Scaling Group has successfully updated its capacity to 2 instances.",
+              src: AutoScalingGroupUpdated,
+            },
+          ]}
+        />
+
+        <Banner title="Incorrect Instance Count" variant="warning">
+          <Paragraph>
+            If you find that you have one more desired instance running, it's
+            probably the original instance the launch template was built from.
+            As it was never launched by the ASG the Desired min/max only ever
+            describes instances the group launched itself, so that original
+            instance keeps sitting alongside it, invisible to the group
+            entirely.
+          </Paragraph>
+        </Banner>
+
+        <Paragraph>
+          To put the autoscaling group to the test you can pick one of the two
+          instances and <Strong>terminate</Strong> it directly, on purpose. The
+          instance count should drop to one and within a minute, a new instance
+          appears on its own with a different instance ID, and the target group
+          shows two healthy targets again.
         </Paragraph>
 
         <SectionHeading>Comparing the Three Ways Back In</SectionHeading>
@@ -756,6 +918,21 @@ const AWSDeployEC2 = () => {
             at launch, just a page that never loads afterward. Fixable after the
             fact by editing the security group's inbound rules directly and
             adding the same rule there.
+          </TextListItem>
+          <TextListItem>
+            <Strong>Editing a rule instead of replacing it</Strong> - locking
+            the instance down to the ALB means changing its HTTP rule's source
+            from <InlineHighlight>0.0.0.0/0</InlineHighlight> to the ALB's
+            security group, but the console won't do that as an in-place edit. A
+            rule created with a CIDR source stays a CIDR rule; typing a security
+            group ID into the same field throws{" "}
+            <Strong>
+              "You may not specify a referenced group id for an existing IPv4
+              CIDR rule."
+            </Strong>{" "}
+            The fix is to delete the old rule outright and add a new one,
+            picking the ALB's security group from the autocomplete dropdown
+            rather than pasting its ID as text.
           </TextListItem>
           <TextListItem>
             <Strong>Bookmarking the wrong address</Strong> - once the ALB is in

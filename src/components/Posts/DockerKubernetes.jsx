@@ -5116,7 +5116,11 @@ kubectl rollout status deployment/node-api`}
 
         <Paragraph>
           Those topics are covered in the{" "}
-          <TextLink href="/blog/docker-kubernetes-advanced">
+          <TextLink
+            href="/blog/docker-kubernetes-advanced"
+            target="_blank"
+            rel="noreferrer"
+          >
             follow-up post
           </TextLink>
           . The concepts here are the foundation they all build on.

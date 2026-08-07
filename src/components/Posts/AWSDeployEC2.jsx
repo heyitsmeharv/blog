@@ -26,6 +26,7 @@ import {
 import {
   PageTitle,
   SectionHeading,
+  SubSectionHeading,
   Paragraph,
   Strong,
   TextList,
@@ -84,6 +85,8 @@ import AutoScalingGroupSize from "../../resources/images/blog/AWSDeployEC2/aws_d
 import AutoScalingGroupUpdatingCapacity from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_updating_capacity.png";
 import AutoScalingGroupAtDesiredCapacity from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_desired_capacity.png";
 import AutoScalingGroupUpdated from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_updated.png";
+import EC2SSHOption from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_ssh_option.png";
+import EC2Connect from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect.png";
 
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
@@ -96,71 +99,6 @@ const awsIAMPost =
 
 const awsImdsDocs =
   "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html";
-
-const deployEc2Architecture = `[entry] Entry Point
-  (instance public IP - no ALB)
-  (or ALB DNS name - once one's in front)
-    [alb] Application Load Balancer
-      [tg] Target Group
-        [compute] Compute
-          (one instance)
-          (or an Auto Scaling Group)
-            [refresh] Terminate one -> ASG launches a replacement
-  [sg] Security Group
-    (22 from your IP - key pair / EC2 Instance Connect)
-    (80 from anywhere, or from the ALB's SG once locked down)
-  [iam] Instance IAM Role
-    (AmazonSSMManagedInstanceCore - enables SSM Session Manager)`;
-
-const deployEc2Decisions = [
-  {
-    title: "Putting an ALB in front, or not",
-    body: `Without one, the instance's own public IP is the entry point - simplest possible
-setup, but that IP changes if the instance stops and starts, and nothing is checking
-whether the app inside is actually responding before sending traffic its way. An ALB adds a
-stable DNS name and a health check that actively gates traffic - and it's a hard
-prerequisite for the next decision, since an Auto Scaling Group's instances have no shared
-entry point without one. Worth it the moment the entry point needs to outlive any one
-instance.`,
-  },
-  {
-    title: "Adding an Auto Scaling Group, or not",
-    body: `A single instance is one thing to reason about: it's either up or it isn't, and
-someone has to notice if it dies and relaunch it. An ASG makes "the right number of
-instances exist" AWS's problem instead of a human's - terminate one and a replacement
-appears without anyone touching anything. That's worth the extra sizing decisions
-(min/max/desired) the moment "someone will notice eventually and fix it by hand" stops being
-an acceptable answer for whatever's running here.`,
-  },
-  {
-    title: "EC2 Instance Connect vs SSM Session Manager vs a key pair",
-    body: `A traditional key pair is the most familiar option, but it means generating a
-key, keeping it safe, and leaving port 22 open indefinitely to whoever holds it. SSM Session
-Manager needs no open port at all and logs every session to CloudWatch, at the cost of an
-IAM instance role attached up front. EC2 Instance Connect sits between the two: no key to
-generate or lose, one click from the console, and port 22 is only ever usable with a
-temporary, AWS-issued key rather than a long-lived credential on a laptop. Attaching the SSM
-role from the first instance onward is what makes all three genuinely comparable rather than
-theoretical.`,
-  },
-  {
-    title: "Default VPC instead of a custom one",
-    body: `A custom VPC gets full control over CIDR ranges, subnet tiers, and routing - and
-is the right call for a production network. None of that network design is the point of
-this comparison, so the default VPC does the job instead: public subnets with a route to an
-internet gateway already exist in every region, in every account, unless someone's deleted
-it. That keeps the comparison focused on compute and load balancing, not subnet math.`,
-  },
-  {
-    title: "Always scope SSH to a single IP",
-    body: `Leaving port 22 open to 0.0.0.0/0 is the single most common EC2 security group
-mistake, and it's tempting specifically because it's zero extra effort. EC2 Instance Connect
-and SSM both narrow who can successfully authenticate once a connection is made, but neither
-stops an open port from being scanned and hammered by everyone else on the internet in the
-meantime. Scoping the rule to one /32 costs one extra step and turns the security group into
-something that actually means what it says.`,
-  },
-];
 
 const AWSDeployEC2 = () => {
   useEffect(() => {
@@ -199,6 +137,13 @@ const AWSDeployEC2 = () => {
             here
           </TextLink>
           .
+        </Paragraph>
+
+        <Paragraph>
+          There's a <TextLink href="#blockers">blockers section</TextLink> at
+          the end of this post that covers some of the things that could trip
+          you up while following this post. If you hit any issues, I would check
+          there first.
         </Paragraph>
 
         <SectionHeading>Before We Deploy</SectionHeading>
@@ -824,41 +769,136 @@ const AWSDeployEC2 = () => {
           shows two healthy targets again.
         </Paragraph>
 
-        <SectionHeading>Comparing the Three Ways Back In</SectionHeading>
+        <SectionHeading>How to "Connect" to an Instance</SectionHeading>
 
         <Paragraph>
-          Every configuration above attaches the same IAM role, so all three
-          connection methods are available throughout, not just at the end.
-          Clicking <Strong>Connect</Strong> on any instance surfaces the
-          comparison directly:
+          Now that we've finished with the configuration side of things, we can
+          look into the ways in which we can try and connect to EC2 instances.
+        </Paragraph>
+
+        <Paragraph>
+          You might be thinking - "haven't we already been connecting to our EC2
+          instance?" And we have, but that was through our browsers using HTTP
+          traffic on port 80. I want to show you how to connect to an instance
+          through SSH (Secure Shell) which uses port 22.
+        </Paragraph>
+
+        <Paragraph>
+          You might have recalled seeing this as an option whilst configuring a
+          security group for our EC2 instance.
+        </Paragraph>
+
+        <PostImage
+          src={EC2SSHOption}
+          alt="EC2 launch wizard security group step, with the Allow SSH traffic from checkbox highlighted"
+        />
+
+        <Paragraph>
+          A traditional key pair and <Strong>EC2 Instance Connect</Strong> both
+          rely on that rule - underneath, they're both an SSH connection on port
+          22, just with different ways of proving who's allowed to open it. The
+          third method, <Strong>Session Manager</Strong>, never touches port 22
+          at all - it depends on something else entirely: the IAM role attached
+          to the instance right at the beginning of this post, before there was
+          even anything running to connect to. That's exactly why it mattered
+          then.
+        </Paragraph>
+
+        <Paragraph>
+          At the beginning of the post I wanted us to make an IAM role to attach
+          to our EC2 instance. Now we're going to find out exactly why that was
+          relevant.
+        </Paragraph>
+
+        <Paragraph>
+          Select an instance and click <Strong>Connect</Strong> to see all of
+          the options.
+        </Paragraph>
+
+        <PostImage src={EC2Connect} alt="EC2 Connection options" />
+
+        <Paragraph>
+          That warning banner is the port distinction from earlier showing up
+          for real: <Strong>Port 22 (SSH) is not authorized</Strong>, because
+          this instance's security group was never given a rule for it - only
+          port 80 was. EC2 Instance Connect still needs an inbound path on port
+          22 to push its temporary key over, no key pair required doesn't mean
+          no port required, and the console says so directly rather than just
+          hanging.
+        </Paragraph>
+
+        <Paragraph>
+          <Strong>EC2 Instance Connect</Strong> is the tab AWS opens by default.
+          Username and port are pre-filled -{" "}
+          <InlineHighlight>ec2-user</InlineHighlight> and{" "}
+          <InlineHighlight>22</InlineHighlight> - and once port 22 is actually
+          authorized, clicking <Strong>Connect</Strong> opens a browser tab with
+          a terminal already logged in. Nothing was generated or downloaded to
+          get there: AWS pushes a temporary key over SSH for that one session
+          only, then throws it away. Port 22 is genuinely required, but there's
+          no long-lived credential anywhere for it to be stolen from.
+        </Paragraph>
+
+        <Paragraph>
+          <Strong>Session Manager</Strong> is the next tab over, and it asks for
+          nothing at all - no username, no port, just a <Strong>Connect</Strong>{" "}
+          button - because there's no SSH connection being configured underneath
+          it. All it needs is already in place: the SSM Agent running on the
+          instance (preinstalled on Amazon Linux 2023) and the IAM role attached
+          back in the very first step. Click it, and the same style of browser
+          terminal opens, except logged in as{" "}
+          <InlineHighlight>ssm-user</InlineHighlight> instead of{" "}
+          <InlineHighlight>ec2-user</InlineHighlight>, with every command typed
+          in that session logged to CloudWatch.
         </Paragraph>
 
         {/*
-          Screenshot: the "Connect to instance" dialog showing the EC2
-          Instance Connect and Session Manager tabs.
-          Save as: src/resources/images/blog/AWSDeployEC2/connect_dialog.jpeg
-          import ConnectDialog from "../../resources/images/blog/AWSDeployEC2/connect_dialog.jpeg";
-          <PostImage src={ConnectDialog} alt="EC2 Connect dialog showing Instance Connect and Session Manager tabs" />
+          Screenshot: the Session Manager tab, showing that it requires no
+          fields at all beyond the Connect button.
+          Save as: src/resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect_session_manager_tab.png
+          import ConnectSessionManagerTab from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect_session_manager_tab.png";
+          <PostImage src={ConnectSessionManagerTab} alt="Session Manager tab showing no fields required beyond the Connect button" />
         */}
+
+        <Paragraph>
+          <Strong>SSH client</Strong> is the traditional option, and the one tab
+          in this dialog that quietly doesn't work for these instances. AWS
+          still prints the exact command someone would run from their own
+          terminal -{" "}
+          <InlineHighlight>ssh -i "key.pem" ec2-user@...</InlineHighlight> - but
+          there is no <InlineHighlight>key.pem</InlineHighlight>. These
+          instances were launched with{" "}
+          <Strong>Proceed without a key pair</Strong> back at the very start, so
+          the instructions are generic rather than broken - AWS has no way of
+          knowing a key pair was never created until someone actually tries the
+          command and it fails.
+        </Paragraph>
+
+        {/*
+          Screenshot: the SSH client tab, showing the ssh command it expects
+          a key pair for.
+          Save as: src/resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect_ssh_client_tab.png
+          import ConnectSshClientTab from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect_ssh_client_tab.png";
+          <PostImage src={ConnectSshClientTab} alt="SSH client tab showing the ssh command that would be needed, with no key pair available" />
+        */}
+
+        <Paragraph>A quick side-by-side of the three:</Paragraph>
 
         <TextList>
           <TextListItem>
-            <Strong>EC2 Instance Connect</Strong> - the default tab, one click,
-            a browser terminal opens immediately. AWS pushes a temporary key
-            over SSH for that one session only - still port 22, but never a key
-            anyone has to keep safe.
+            <Strong>EC2 Instance Connect</Strong> - one click, still requires
+            port 22 open in the security group - but backed by a one-time key
+            instead of a long-lived one.
           </TextListItem>
           <TextListItem>
-            <Strong>SSM Session Manager</Strong> - a different tab in the same
-            dialog, the same one-click browser terminal, but no port 22 involved
-            at all. Every session is logged to CloudWatch, which is exactly what
-            the attached IAM role exists for.
+            <Strong>SSM Session Manager</Strong> - one click, no port 22 at all,
+            and every session logged to CloudWatch - at the cost of needing the
+            IAM role and agent in place beforehand.
           </TextListItem>
           <TextListItem>
-            <Strong>A traditional key pair</Strong> - not actually available
-            here, since these instances were launched without one from the first
-            step onward. Included for comparison, not as something this setup
-            supports.
+            <Strong>A traditional key pair</Strong> - the most familiar option,
+            and not actually available here, since these instances never had one
+            generated for them in the first place.
           </TextListItem>
         </TextList>
 
@@ -870,54 +910,22 @@ const AWSDeployEC2 = () => {
           outside.
         </Paragraph>
 
-        <SectionHeading>What Else This Setup Supports</SectionHeading>
-
-        <Paragraph>
-          The user data script installs nginx and renders a status page because
-          it gives every check above something concrete to test against - but
-          nothing about the security group, IAM role, ALB, or ASG cares what's
-          actually listening on port 80. The same setup supports several other
-          directions just as well:
-        </Paragraph>
+        <SectionHeading id="blockers">Blockers</SectionHeading>
 
         <TextList>
           <TextListItem>
-            <Strong>A containerized app</Strong> - swap the script for{" "}
-            <InlineHighlight>dnf install -y docker</InlineHighlight>,{" "}
-            <InlineHighlight>systemctl enable --now docker</InlineHighlight>,
-            then <InlineHighlight>docker run</InlineHighlight> with{" "}
-            <InlineHighlight>-p 80:&lt;container-port&gt;</InlineHighlight>.
+            <Strong>The HTTP checkbox, missed</Strong> - Skipping the{" "}
+            <Strong>Allow HTTP traffic from the internet</Strong> option means
+            the instance boots with nothing able to reach port 80 at all. If
+            that happens you'll get a page that never loads afterward.
           </TextListItem>
           <TextListItem>
-            <Strong>A language runtime app</Strong> - install Node or Python,
-            put the application code on the instance, run it as a systemd
-            service the same way nginx is enabled here.
-          </TextListItem>
-          <TextListItem>
-            <Strong>A scheduled or batch job</Strong> - no web server at all;
-            the ALB and ASG steps stop being relevant once there's no HTTP
-            traffic to load balance.
-          </TextListItem>
-          <TextListItem>
-            <Strong>A self-managed database</Strong> - worth pausing on rather
-            than defaulting to: the ASG replaces instances whenever the launch
-            template changes, which is exactly wrong for anything holding state
-            on local disk. A single instance with a separately-managed EBS
-            volume fits better than either the ALB or ASG step here.
-          </TextListItem>
-        </TextList>
-
-        <SectionHeading>Gotchas</SectionHeading>
-
-        <TextList>
-          <TextListItem>
-            <Strong>The HTTP checkbox, missed</Strong> - the launch wizard's SSH
-            rule appears automatically; HTTP does not. Skip{" "}
-            <Strong>Allow HTTP traffic from the internet</Strong> and the
-            instance boots with nothing able to reach port 80 at all - no error
-            at launch, just a page that never loads afterward. Fixable after the
-            fact by editing the security group's inbound rules directly and
-            adding the same rule there.
+            <Strong>Port 22 not authorized</Strong> - the flip side of the same
+            mistake. EC2 Instance Connect and a traditional key pair both need
+            port 22 open in the security group, and if it isn't, the console
+            says so directly rather than hanging:{" "}
+            <Strong>"Port 22 (SSH) is not authorized."</Strong> Session Manager
+            is unaffected either way, since it never touches port 22.
           </TextListItem>
           <TextListItem>
             <Strong>Editing a rule instead of replacing it</Strong> - locking
@@ -935,24 +943,6 @@ const AWSDeployEC2 = () => {
             rather than pasting its ID as text.
           </TextListItem>
           <TextListItem>
-            <Strong>Bookmarking the wrong address</Strong> - once the ALB is in
-            place, the instance's own public IP still resolves, but the security
-            group refuses it directly. The ALB's DNS name is the correct one to
-            keep using from that point on.
-          </TextListItem>
-          <TextListItem>
-            <Strong>A changing IP breaking SSH-based access</Strong> - EC2
-            Instance Connect stops working the moment the network handing out
-            the "My IP" address changes it. Re-checking{" "}
-            <InlineHighlight>curl -s ifconfig.me</InlineHighlight> and updating
-            the security group rule is the fix.
-          </TextListItem>
-          <TextListItem>
-            <Strong>A target stuck unhealthy</Strong> - almost always a mismatch
-            between the target group's health check path/port and what the
-            application actually serves, not a networking problem in disguise.
-          </TextListItem>
-          <TextListItem>
             <Strong>Forgetting to attach the target group to the ASG</Strong> -
             an Auto Scaling Group created without it launches instances happily,
             but the ALB keeps sending everything to whatever was registered
@@ -960,27 +950,12 @@ const AWSDeployEC2 = () => {
           </TextListItem>
         </TextList>
 
-        <ProjectArchitecture
-          archOutline={deployEc2Architecture}
-          type="tree"
-          summary="The entry point and compute layer change shape as the ALB and ASG get added - the security group and IAM role stay in place from the very first step, which is what keeps every connection method and the user data script identical throughout."
-        />
-
-        <EngineeringDecisions
-          title="Engineering Decisions"
-          decisions={deployEc2Decisions}
-        />
-
         <SectionHeading>Wrapping Up</SectionHeading>
 
         <Paragraph>
-          None of the individual pieces here are novel - a security group, a
-          load balancer, an Auto Scaling Group. What this walkthrough adds is
-          evidence at every step instead of an assumption: a curl that starts
-          failing exactly when it should, a target that turns healthy on its
-          own, an instance that comes back after being killed without anyone
-          stepping in to fix it. That's a different kind of proof than reading
-          that a configuration should work.
+          I hope you've found this walkthrough useful as we've not just explored
+          EC2 but the services around which support it, and that it helps you
+          get started with deploying to EC2 instances.
         </Paragraph>
       </PostContainer>
     </PageWrapper>

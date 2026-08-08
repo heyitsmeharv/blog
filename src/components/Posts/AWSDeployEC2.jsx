@@ -106,7 +106,7 @@ const awsImdsDocs =
 
 const AWSDeployEC2 = () => {
   useEffect(() => {
-    // window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
     Analytics.pageview("/blog/deploy-to-ec2");
     Analytics.track("blog_page_viewed", { slug: "deploy-to-ec2" });
   }, []);

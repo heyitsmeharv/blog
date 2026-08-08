@@ -657,7 +657,7 @@ const allPosts = [
     ],
     intro: `I want to walkthrough how we can deploy to an EC2 instance, how it can be configured to be secure, to scale, and to be resilient. The goal is to walk through different configurations and show the differences between them. Everything below happens in the AWS Console and can be easily replicated in any AWS account...`,
     navigate: "deploy-to-ec2",
-    published: false,
+    published: true,
   },
 ];
 

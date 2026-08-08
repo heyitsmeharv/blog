@@ -86,7 +86,11 @@ import AutoScalingGroupUpdatingCapacity from "../../resources/images/blog/AWSDep
 import AutoScalingGroupAtDesiredCapacity from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_desired_capacity.png";
 import AutoScalingGroupUpdated from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_auto_scaling_updated.png";
 import EC2SSHOption from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_ssh_option.png";
+import EC2Port22 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_add_port_22.png";
 import EC2Connect from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect.png";
+import EC2InstanceConnect from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_instance_connect.png";
+import EC2SSMSessionManager from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_ssm_session_manager.png";
+import EC2SSMSessionManager2 from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_ssm_session_manager_2.png";
 
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
@@ -795,37 +799,28 @@ const AWSDeployEC2 = () => {
 
         <Paragraph>
           A traditional key pair and <Strong>EC2 Instance Connect</Strong> both
-          rely on that rule - underneath, they're both an SSH connection on port
-          22, just with different ways of proving who's allowed to open it. The
-          third method, <Strong>Session Manager</Strong>, never touches port 22
-          at all - it depends on something else entirely: the IAM role attached
-          to the instance right at the beginning of this post, before there was
-          even anything running to connect to. That's exactly why it mattered
-          then.
+          rely on that rule, they're both an SSH connection on port 22, just
+          with different ways of proving who's allowed to open it.
         </Paragraph>
 
         <Paragraph>
-          At the beginning of the post I wanted us to make an IAM role to attach
-          to our EC2 instance. Now we're going to find out exactly why that was
-          relevant.
+          Let's edit out EC2 instances inbound security group ruleset to include
+          port 22 with your IP being the source. It should auto populate but you
+          can always run <InlineHighlight>curl -s ifconfig.me</InlineHighlight>{" "}
+          in a cmd window.
         </Paragraph>
 
+        <PostImage
+          src={EC2Port22}
+          alt="Edit EC2 Security Group to include port 22"
+        />
+
         <Paragraph>
-          Select an instance and click <Strong>Connect</Strong> to see all of
-          the options.
+          Now that's been changed we can go to the EC2 console and click{" "}
+          <Strong>Connect</Strong>.
         </Paragraph>
 
         <PostImage src={EC2Connect} alt="EC2 Connection options" />
-
-        <Paragraph>
-          That warning banner is the port distinction from earlier showing up
-          for real: <Strong>Port 22 (SSH) is not authorized</Strong>, because
-          this instance's security group was never given a rule for it - only
-          port 80 was. EC2 Instance Connect still needs an inbound path on port
-          22 to push its temporary key over, no key pair required doesn't mean
-          no port required, and the console says so directly rather than just
-          hanging.
-        </Paragraph>
 
         <Paragraph>
           <Strong>EC2 Instance Connect</Strong> is the tab AWS opens by default.
@@ -839,26 +834,60 @@ const AWSDeployEC2 = () => {
           no long-lived credential anywhere for it to be stolen from.
         </Paragraph>
 
+        <PostImage
+          src={EC2InstanceConnect}
+          alt="Connecting via Instance Connect"
+        />
+
         <Paragraph>
-          <Strong>Session Manager</Strong> is the next tab over, and it asks for
-          nothing at all - no username, no port, just a <Strong>Connect</Strong>{" "}
-          button - because there's no SSH connection being configured underneath
-          it. All it needs is already in place: the SSM Agent running on the
-          instance (preinstalled on Amazon Linux 2023) and the IAM role attached
-          back in the very first step. Click it, and the same style of browser
-          terminal opens, except logged in as{" "}
+          At the beginning of the post I wanted us to make an IAM role to attach
+          to our EC2 instance. That's because of the third method,
+          <Strong>Session Manager</Strong>, which never touches port 22 at all -
+          depends on the IAM role we attached to the instance.
+        </Paragraph>
+
+        <PostImage
+          src={EC2SSMSessionManager}
+          alt="Connecting via SSM Session Manager"
+        />
+
+        <Paragraph>
+          <Strong>Session Manager</Strong> uses no username, no port, just a{" "}
+          <Strong>Connect</Strong> button - because there's no SSH connection
+          being configured underneath it. All it needs is already in place: the
+          SSM Agent running on the instance (preinstalled on Amazon Linux 2023)
+          and the IAM role attached back in the very first step. Click it, and
+          the same style of browser terminal opens, except logged in as{" "}
           <InlineHighlight>ssm-user</InlineHighlight> instead of{" "}
           <InlineHighlight>ec2-user</InlineHighlight>, with every command typed
           in that session logged to CloudWatch.
         </Paragraph>
 
-        {/*
-          Screenshot: the Session Manager tab, showing that it requires no
-          fields at all beyond the Connect button.
-          Save as: src/resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect_session_manager_tab.png
-          import ConnectSessionManagerTab from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect_session_manager_tab.png";
-          <PostImage src={ConnectSessionManagerTab} alt="Session Manager tab showing no fields required beyond the Connect button" />
-        */}
+        <PostImage src={EC2SSMSessionManager2} alt="SSM Terminal Window" />
+
+        <Paragraph>
+          You can also run, by either working method,{" "}
+          <InlineHighlight>systemctl status nginx</InlineHighlight> and{" "}
+          <InlineHighlight>curl localhost</InlineHighlight> confirm what's
+          actually running versus what the ALB or a browser reports from
+          outside.
+        </Paragraph>
+
+        <SubSectionHeading>Other Methods</SubSectionHeading>
+
+        <Paragraph>
+          The same dialog offers a couple of other cards, worth knowing about
+          even though this setup doesn't need them.
+        </Paragraph>
+
+        <Paragraph>
+          <Strong>EC2 Instance Connect Endpoint</Strong> is the same
+          temporary-key mechanism as EC2 Instance Connect, for instances that
+          aren't directly reachable. Traffic routes through a VPC endpoint
+          instead of the instance's own public IP - exactly what an instance in
+          a private subnet, with no public IP at all, would need. Not a
+          requirement here, since this instance was deliberately given one.
+        </Paragraph>
 
         <Paragraph>
           <Strong>SSH client</Strong> is the traditional option, and the one tab
@@ -874,40 +903,13 @@ const AWSDeployEC2 = () => {
           command and it fails.
         </Paragraph>
 
-        {/*
-          Screenshot: the SSH client tab, showing the ssh command it expects
-          a key pair for.
-          Save as: src/resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect_ssh_client_tab.png
-          import ConnectSshClientTab from "../../resources/images/blog/AWSDeployEC2/aws_deploy_ec2_connect_ssh_client_tab.png";
-          <PostImage src={ConnectSshClientTab} alt="SSH client tab showing the ssh command that would be needed, with no key pair available" />
-        */}
-
-        <Paragraph>A quick side-by-side of the three:</Paragraph>
-
-        <TextList>
-          <TextListItem>
-            <Strong>EC2 Instance Connect</Strong> - one click, still requires
-            port 22 open in the security group - but backed by a one-time key
-            instead of a long-lived one.
-          </TextListItem>
-          <TextListItem>
-            <Strong>SSM Session Manager</Strong> - one click, no port 22 at all,
-            and every session logged to CloudWatch - at the cost of needing the
-            IAM role and agent in place beforehand.
-          </TextListItem>
-          <TextListItem>
-            <Strong>A traditional key pair</Strong> - the most familiar option,
-            and not actually available here, since these instances never had one
-            generated for them in the first place.
-          </TextListItem>
-        </TextList>
-
         <Paragraph>
-          Once connected, by either working method,{" "}
-          <InlineHighlight>systemctl status nginx</InlineHighlight> and{" "}
-          <InlineHighlight>curl localhost</InlineHighlight> confirm what's
-          actually running versus what the ALB or a browser reports from
-          outside.
+          <Strong>EC2 Serial Console</Strong> is the option for when nothing
+          else works - direct access to the instance's serial port, bypassing
+          the network stack entirely. Useful for a broken boot or a security
+          group misconfigured badly enough to lock every other method out,
+          though it needs enabling at the account level before it's available at
+          all, so it's not something to discover you need in the moment.
         </Paragraph>
 
         <SectionHeading id="blockers">Blockers</SectionHeading>

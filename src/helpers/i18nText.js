@@ -1,7 +1,11 @@
 const TEXT = {
   EN: {
     introductionText:
-      "I have 7 years of delivering large-scale commercial web applications written in React.js and hosted on AWS cloud infrastructure. AWS-certified platform engineer with 3+ years of experience building DevOps and cloud-native solutions using AWS, Terraform, and CI/CD tools. Leading development teams, modernising infrastructure, and delivering scalable internal tools across diverse industries.",
+      "I have multiple years of experience delivering large-scale commercial web applications written in React.js and hosted on AWS cloud infrastructure.",
+    introductionTextExtended:
+      "I'm currently an AWS-certified platform engineer building DevOps and cloud-native solutions using AWS, Terraform, and CI/CD tools.",
+    introductionStandoutLabel: "In a few words",
+    introductionStandoutLabelSecondary: "In a few more",
     contactMe: "Contact Me",
     curriculumVitaeButtonText: "Curriculum Vitae",
     contactMeText:
@@ -13,9 +17,7 @@ const TEXT = {
     messageInput: "Message *",
     sendMessageText: "Send Message",
     aboutMe: "About Me",
-    aboutMeText: `I started my professional career as a front-end developer after graduating with a degree in software for games.
-I have since branched out into various roles, taking on problem-solving, client-facing, and leadership responsibilities.
-I would describe myself as a fun, friendly, and enthusiastic problem solver with an inquisitive mindset.`,
+    aboutMeText: `My professional career began as a front-end developer after graduating with a degree in software for games. I have since branched out into various roles, taking on problem-solving, client-facing, and leadership responsibilities. I would describe myself as a fun, friendly, and enthusiastic problem solver with an inquisitive mindset.`,
     experienceText: "Experience",
     skillsText: "Tech Stack",
     skillsListText: "Here's a list of technologies I've used:",
@@ -97,7 +99,11 @@ I would describe myself as a fun, friendly, and enthusiastic problem solver with
   },
   ES: {
     introductionText:
-      "Tengo 7 años de experiencia en el desarrollo de aplicaciones web comerciales a gran escala, escritas en React.js y alojadas en la infraestructura de la nube de AWS. Soy ingeniero de plataforma certificado por AWS con más de 3 años de experiencia en la creación de soluciones DevOps y nativas de la nube utilizando AWS, Terraform y herramientas de CI/CD. Lidero equipos de desarrollo, modernizo infraestructuras y desarrollo herramientas internas escalables para diversos sectores.",
+      "Tengo múltiples años de experiencia en la entrega de aplicaciones web comerciales a gran escala, escritas en React.js y alojadas en la infraestructura de la nube de AWS.",
+    introductionTextExtended:
+      "Actualmente soy un ingeniero de plataforma certificado por AWS que construye soluciones DevOps y nativas de la nube utilizando AWS, Terraform y herramientas CI/CD.",
+    introductionStandoutLabel: "En pocas palabras",
+    introductionStandoutLabelSecondary: "En unas cuantas más",
     contactMe: "Cont\u00e1ctame",
     curriculumVitaeButtonText: "Curr\u00edculum vitae",
     contactMeText:
@@ -109,9 +115,7 @@ I would describe myself as a fun, friendly, and enthusiastic problem solver with
     messageInput: "Mensaje *",
     sendMessageText: "Enviar mensaje",
     aboutMe: "Sobre m\u00ed",
-    aboutMeText: `Empec\u00e9 mi carrera profesional como desarrollador front-end tras graduarme en software para videojuegos.
-Desde entonces he ampliado mi experiencia a distintos puestos, combinando resoluci\u00f3n de problemas, trabajo con clientes y liderazgo.
-Me describir\u00eda como una persona cercana, curiosa y entusiasta.`,
+    aboutMeText: `Mi carrera profesional comenz\u00f3 como desarrollador front-end tras graduarme con un t\u00edtulo en software para juegos. Desde entonces, me he ramificado en varios roles, asumiendo responsabilidades de resoluci\u00f3n de problemas, trato con clientes y liderazgo. Me describir\u00eda como una persona divertida, amigable y entusiasta, con una mentalidad inquisitiva.`,
     experienceText: "Experiencia",
     skillsText: "Tech Stack",
     skillsListText:
@@ -229,6 +233,12 @@ const locale = (language) => (language === "ES" ? "ES" : "EN");
 const t = (language, key) => TEXT[locale(language)][key] || TEXT.EN[key] || "";
 
 export const introductionText = (language) => t(language, "introductionText");
+export const introductionTextExtended = (language) =>
+  t(language, "introductionTextExtended");
+export const introductionStandoutLabel = (language) =>
+  t(language, "introductionStandoutLabel");
+export const introductionStandoutLabelSecondary = (language) =>
+  t(language, "introductionStandoutLabelSecondary");
 export const contactMe = (language) => t(language, "contactMe");
 export const curriculumVitaeButtonText = (language) =>
   t(language, "curriculumVitaeButtonText");

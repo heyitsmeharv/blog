@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import SlideInBottom from "../../animations/SlideInBottom";
+import FadeUp from "../../animations/FadeUp";
 import {
   aboutMe,
   aboutMeText,
@@ -54,6 +55,11 @@ const Text = styled.p`
 
 const Standout = styled.div`
   margin: 0 0 3rem;
+  animation: ${FadeUp} 0.5s ease 0.5s both;
+`;
+
+const Body = styled.div`
+  animation: ${FadeUp} 0.5s ease 0.85s both;
 `;
 
 const StandoutLabel = styled.p`
@@ -114,14 +120,16 @@ const AboutMe = ({ language }) => (
         <StandoutLabel>{introductionStandoutLabel(language)}</StandoutLabel>
         <StandoutText>{standoutText(language)}</StandoutText>
       </Standout>
-      <StandoutLabel>
-        {introductionStandoutLabelSecondary(language)}
-      </StandoutLabel>
-      <Text>{aboutMeText(language)}</Text>
-      <br />
-      <Text>{introductionText(language)}</Text>
-      <br />
-      <Text>{introductionTextExtended(language)}</Text>
+      <Body>
+        <StandoutLabel>
+          {introductionStandoutLabelSecondary(language)}
+        </StandoutLabel>
+        <Text>{aboutMeText(language)}</Text>
+        <br />
+        <Text>{introductionText(language)}</Text>
+        <br />
+        <Text>{introductionTextExtended(language)}</Text>
+      </Body>
     </Inner>
   </Container>
 );

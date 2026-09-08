@@ -35,6 +35,7 @@ import {
 
 // components
 import BackButton from "../Button/BackButton";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // images
 import SQSCommunicationPatterns from "../../resources/images/blog/AWSSQS/sqs_communication_patterns.jpeg";
@@ -296,6 +297,8 @@ const AWSSQS = () => {
           msg/s with batching. It does however remove duplicate messages from
           being sent.
         </Paragraph>
+
+        <ReviewTopicCTA deck="sqs" label="SQS" />
 
         <SubSectionHeading id="references">References</SubSectionHeading>
         <TextList>

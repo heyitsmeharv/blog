@@ -63,6 +63,7 @@ import { partitionsInAthena, columnarFormat } from "../../helpers/codeblocks";
 
 // components
 import BackButton from "../Button/BackButton";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 import { CodeBlockWithCopy } from "../Code/Code";
 
 const PostContainer = styled(BasePostContainer)`
@@ -583,6 +584,8 @@ const AWSDataAnalytics = () => {
           like Athena, Redshift and EMR.
         </Paragraph>
         <PostImage src={LakeFormation} alt="AWS Lake Formation overview" />
+
+        <ReviewTopicCTA deck="data-analytics" label="Data & Analytics" />
 
         <SectionHeading id="references">References</SectionHeading>
         <TextList>

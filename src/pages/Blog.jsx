@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 // helpers
@@ -171,6 +172,34 @@ const Container = styled.div`
   height: calc(100vh - 200px);
   background-color: #f8f9fa;
   color: #343a40;
+`;
+
+// AWS "squid ink" navy + Smile orange, to match the certification badge
+const AWS_NAVY = "#232F3E";
+const AWS_ORANGE = "#FF9900";
+
+const StudyNudge = styled(Link)`
+  display: block;
+  width: fit-content;
+  margin: 1.6rem auto 2.4rem;
+  padding: 0.8rem 1.8rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  background: ${AWS_NAVY};
+  border: 1px solid ${AWS_ORANGE};
+  border-radius: 999px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.focus};
+    outline-offset: 3px;
+  }
 `;
 
 const Message = styled.h1`
@@ -1730,6 +1759,18 @@ export default function Blog() {
           );
         })}
       </StyledPillButtonWrapper>
+      {activeFilter === "AWS" && (
+        <StudyNudge
+          to="/flashcards/saa-c03"
+          onClick={() =>
+            Analytics.track("flashcards_nudge_clicked", {
+              from: "blog-aws-filter",
+            })
+          }
+        >
+          SAA-C03 Exam Prep
+        </StudyNudge>
+      )}
       {!isEmpty ? (
         <Pagination
           currentPage={currentPage}

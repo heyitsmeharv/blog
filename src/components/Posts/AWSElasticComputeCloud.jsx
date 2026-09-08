@@ -12,6 +12,7 @@ import { AWSSVG, AWSEC2SVG } from "../../resources/styles/icons";
 
 // components
 import BackButton from "../Button/BackButton";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // layout
 import {
@@ -1156,6 +1157,8 @@ const AWSElasticComputeCloud = () => {
           CPU limit for the overall ASG instances hits above 75%, we can ask the
           ASG to deploy more instances (scale out).
         </Paragraph>
+
+        <ReviewTopicCTA deck="ec2" label="EC2" />
 
         <SectionHeading id="references">References</SectionHeading>
 

@@ -7,4 +7,8 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react-github-calendar"],
   },
+  test: {
+    environment: "node",
+    include: ["src/**/*.{test,spec}.{js,jsx}"],
+  },
 });

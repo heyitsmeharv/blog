@@ -43,6 +43,7 @@ import CloudFrontGlobalAccelerator from "../../resources/images/blog/AWSCloudFro
 
 // buttons
 import BackButton from "../Button/BackButton";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
@@ -370,6 +371,8 @@ const AWSCloudFront = () => {
             endpoints as needed.
           </TextListItem>
         </TextList>
+
+        <ReviewTopicCTA deck="cloudfront" label="CloudFront" />
 
         <SubSectionHeading id="references">References</SubSectionHeading>
         <TextList>

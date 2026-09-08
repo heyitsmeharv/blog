@@ -39,6 +39,7 @@ import {
 // components
 import BackButton from "../Button/BackButton";
 import Table from "../Table/Table";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // images
 import VPCOctects from "../../resources/images/blog/AWSVPC/vpc_octets_memo.jpeg";
@@ -1028,6 +1029,8 @@ const AWSVPC = () => {
             IPv6.
           </TextListItem>
         </TextList>
+
+        <ReviewTopicCTA deck="vpc" label="VPC" />
 
         <SubSectionHeading id="references">References</SubSectionHeading>
         <TextList>

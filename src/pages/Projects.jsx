@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "motion/react";
 
 // helpers
-import { Analytics } from "../helpers/analytics";
+import { projects } from "../helpers/projects";
+import { tagColors } from "../helpers/tagColors";
 import {
   allText,
   filterProjectsByTagText,
@@ -11,10 +12,6 @@ import {
   previousProjectPageText,
   projectsPageStatusText,
 } from "../helpers/i18nText";
-
-// data
-import { projects } from "../data/projects";
-import { tagColors } from "../data/tagColors";
 
 // context
 import { LanguageContext } from "../context/languageContext";

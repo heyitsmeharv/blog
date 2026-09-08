@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Journal } from "@styled-icons/bootstrap/Journal";
 
 import {

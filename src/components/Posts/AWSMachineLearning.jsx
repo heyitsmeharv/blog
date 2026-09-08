@@ -55,6 +55,7 @@ import { SSMLExample } from "../../helpers/codeblocks.js";
 // components
 import BackButton from "../Button/BackButton.jsx";
 import Table from "../Table/Table.jsx";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA.jsx";
 import { CodeBlockWithCopy } from "../Code/Code.jsx";
 
 const PostContainer = styled(BasePostContainer)`
@@ -449,6 +450,8 @@ const AWSMachineLearning = () => {
             <Strong>Textract</Strong>: document text and structure extraction.
           </TextListItem>
         </TextList>
+
+        <ReviewTopicCTA deck="machine-learning" label="Machine Learning" />
 
         <SectionHeading id="references">References</SectionHeading>
         <TextList>

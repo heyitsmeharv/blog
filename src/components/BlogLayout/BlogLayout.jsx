@@ -60,7 +60,7 @@ export const HeaderRow = styled.header`
 `;
 
 export const IconWrapper = styled.div`
-  flex-shrink: 0;
+  flex-shrink: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;

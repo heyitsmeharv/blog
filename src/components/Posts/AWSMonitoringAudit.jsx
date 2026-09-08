@@ -44,6 +44,7 @@ import {
 // components
 import BackButton from "../Button/BackButton.jsx";
 import Table from "../Table/Table.jsx";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA.jsx";
 import { CodeBlockWithCopy } from "../Code/Code.jsx";
 
 // images
@@ -695,6 +696,8 @@ const AWSMonitoringAudit = () => {
             Provide an audit trail for all API calls impacting the ELB.
           </TextListItem>
         </TextList>
+
+        <ReviewTopicCTA deck="monitoring-audit" label="Monitoring & Audit" />
 
         <SectionHeading id="references">References</SectionHeading>
         <TextList>

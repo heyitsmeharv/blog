@@ -17,6 +17,7 @@ import {
 
 // components
 import BackButton from "../Button/BackButton";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // layout
 import {
@@ -542,6 +543,8 @@ const AWSIdentityAccessManagement = () => {
           src={ControlTowerExample}
           alt="AWS Control Tower guardrails example"
         />
+
+        <ReviewTopicCTA deck="iam" label="IAM" />
 
         <SectionHeading>References</SectionHeading>
 

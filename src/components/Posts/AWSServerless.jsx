@@ -49,6 +49,7 @@ import StepFunctionExample from "../../resources/images/blog/AWSServerless/aws_s
 // components
 import BackButton from "../Button/BackButton";
 import Table from "../Table/Table";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 const PostContainer = styled(BasePostContainer)`
   animation: ${SlideInBottom} 0.5s forwards;
@@ -423,6 +424,8 @@ const AWSServerless = () => {
           and human approval steps (via callbacks or integrations).
         </Paragraph>
         <PostImage src={StepFunctionExample} alt="AWS Step Functions example" />
+
+        <ReviewTopicCTA deck="serverless" label="Serverless" />
 
         <SectionHeading id="references">References</SectionHeading>
         <TextList>

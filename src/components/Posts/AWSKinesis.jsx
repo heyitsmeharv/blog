@@ -38,6 +38,7 @@ import {
 // components
 import BackButton from "../Button/BackButton";
 import Table from "../Table/Table";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // images
 import KinesisDataStreams from "../../resources/images/blog/AWSKinesis/kinesis_data_streams.jpeg";
@@ -565,6 +566,8 @@ const AWSKinesis = () => {
         </SectionHeading>
 
         <Table columns={columns3} data={data3} />
+
+        <ReviewTopicCTA deck="kinesis" label="Kinesis" />
 
         <SubSectionHeading id="references">References</SubSectionHeading>
         <TextList>

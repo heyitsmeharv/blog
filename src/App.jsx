@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -36,6 +36,7 @@ import NotFound from "./pages/NotFound";
 
 // components
 import Navbar from "./components/Navbar/LocalizedNavbar";
+import Flashcards from "./components/Flashcards/Flashcards.jsx";
 
 // blog posts
 import TheStart from "./components/Posts/TheStart.jsx";
@@ -73,7 +74,7 @@ import LambdaPowertools from "./components/Posts/LambdaPowertools.jsx";
 import AWSMultiAccountSetup from "./components/Posts/AWSMultiAccountSetup.jsx";
 import AWSPatchManagement from "./components/Posts/AWSPatchManagement.jsx";
 import AWSDeployEC2 from "./components/Posts/AWSDeployEC2.jsx";
-import { posts } from "./data/posts";
+import { posts } from "./helpers/posts";
 import {
   blogText,
   portfolioText,
@@ -97,6 +98,10 @@ const getDocumentTitle = (pathname, language) => {
 
   if (pathname === "/projects") {
     return `${projectsText(language)} | Adam Harvey`;
+  }
+
+  if (pathname.startsWith("/flashcards")) {
+    return "Flashcards";
   }
 
   const slug = slugFromPath(pathname);
@@ -237,6 +242,16 @@ const App = () => {
                           exact
                           path="/analytics"
                           component={AnalyticsPage}
+                        />
+                        <Route
+                          exact
+                          path="/flashcards"
+                          component={Flashcards}
+                        />
+                        <Route
+                          exact
+                          path="/flashcards/:examId"
+                          component={Flashcards}
                         />
                         {/* Add blog posts here */}
                         <Route

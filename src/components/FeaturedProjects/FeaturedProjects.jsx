@@ -8,7 +8,7 @@ import {
   featuredProjectsText,
   viewAllProjectsText,
 } from "../../helpers/i18nText";
-import { projects } from "../../data/projects";
+import { projects } from "../../helpers/projects";
 import Project from "../Project/Project";
 
 const FEATURED_COUNT = 3;

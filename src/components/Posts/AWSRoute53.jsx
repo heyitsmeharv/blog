@@ -12,6 +12,7 @@ import { AWSSVG, AWSRoute53SVG } from "../../resources/styles/icons";
 
 // layout
 import BackButton from "../Button/BackButton";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 import {
   PageWrapper,
   PostTopBar,
@@ -618,6 +619,8 @@ const AWSRoute53 = () => {
           src={Route53HealthCheckPrivateHostedZone}
           alt="Route 53 private hosted zone health checks"
         />
+
+        <ReviewTopicCTA deck="route53" label="Route 53" />
 
         <SectionHeading id="references">References</SectionHeading>
 

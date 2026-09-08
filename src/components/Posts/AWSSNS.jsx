@@ -12,6 +12,7 @@ import { AWSSVG, AWSSNSSVG } from "../../resources/styles/icons";
 
 // components
 import BackButton from "../Button/BackButton";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // layout
 import {
@@ -213,6 +214,8 @@ const AWSSNS = () => {
           src={SNSMessageFiltering}
           alt="SNS message filtering diagram"
         />
+
+        <ReviewTopicCTA deck="sns" label="SNS" />
 
         <SubSectionHeading id="references">References</SubSectionHeading>
         <TextList>

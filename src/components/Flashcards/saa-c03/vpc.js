@@ -1,0 +1,214 @@
+/**
+ * VPC deck - drawn from the "Amazon Virtual Private Cloud (VPC)" post
+ * (/blog/aws-vpc). Each card's `ref` is the section it came from.
+ */
+export const vpc = {
+  id: "vpc",
+  title: "VPC",
+  postSlug: "aws-vpc",
+  cards: [
+    {
+      id: "vpc-subnet-scope",
+      type: "definition",
+      front: "What is a subnet, and what is it tied to?",
+      back: "A slice of your VPC's CIDR range tied to one specific Availability Zone. You can have multiple VPCs per region (default soft limit 5).",
+      ref: "Subnets",
+    },
+    {
+      id: "vpc-cidr-size-limits",
+      type: "definition",
+      front:
+        "Smallest and largest IPv4 CIDR block for a VPC, and how many blocks?",
+      back: "Minimum /28 (16 IPs), maximum /16 (65,536 IPs). Up to 5 IPv4 CIDR blocks per VPC.",
+      ref: "VPC in AWS",
+    },
+    {
+      id: "vpc-private-ranges",
+      type: "cloze",
+      front:
+        "A VPC CIDR must be a private range: 10.0.0.0/___, 172.16.0.0/___, or 192.168.0.0/___.",
+      back: "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16.",
+      ref: "VPC in AWS",
+    },
+    {
+      id: "vpc-reserved-ips",
+      type: "definition",
+      front: "How many IPs does AWS reserve per subnet, and which?",
+      back: "5: .0 network address, .1 VPC router, .2 Amazon DNS, .3 reserved for future use, .255 broadcast. So a /27 (32 IPs) leaves 27 usable.",
+      ref: "Subnets",
+    },
+    {
+      id: "vpc-public-subnet",
+      type: "definition",
+      front: "What makes a subnet public?",
+      back: "Its route table has a route sending 0.0.0.0/0 to an Internet Gateway. A private subnet has no direct internet route.",
+      ref: "Internet Gateway (IGW)",
+    },
+    {
+      id: "vpc-igw-cardinality",
+      type: "definition",
+      front:
+        "How many VPCs can an Internet Gateway attach to, and does it work on its own?",
+      back: "Exactly one VPC. On its own it does nothing - you must update route tables to point traffic at it.",
+      ref: "Internet Gateway (IGW)",
+    },
+    {
+      id: "vpc-nat-gateway-purpose",
+      type: "definition",
+      front: "What does a NAT Gateway do and what does it need?",
+      back: "Lets private-subnet instances make outbound connections to the internet while staying unreachable from it. Deployed in a public subnet, associated with an Elastic IP, and requires an attached IGW (private subnet -> NAT GW -> IGW).",
+      ref: "NAT Gateway",
+    },
+    {
+      id: "vpc-nat-gateway-ha",
+      type: "definition",
+      front: "How do you make NAT Gateways highly available?",
+      back: "Deploy one NAT Gateway per AZ and configure each AZ's private subnets to use the NAT Gateway in their own AZ (a NAT GW is only highly available within its AZ).",
+      ref: "NAT Gateway High Availability",
+    },
+    {
+      id: "vpc-nat-gateway-vs-instance",
+      type: "comparison",
+      front: "NAT Gateway vs NAT Instance?",
+      back: "NAT Gateway: managed by AWS, up to 100 Gbps, no security groups, can't be a bastion. NAT Instance: an EC2 instance you manage, bandwidth depends on instance type, supports security groups, can be used as a bastion host.",
+      ref: "NAT Gateway vs NAT Instance",
+    },
+    {
+      id: "vpc-sg-vs-nacl",
+      type: "comparison",
+      front: "Security Group vs NACL?",
+      back: "SG: instance level, stateful (return traffic auto-allowed), allow rules only, all rules evaluated. NACL: subnet level, stateless (return traffic must be explicitly allowed), allow AND deny rules, evaluated in order lowest-to-highest with first match winning.",
+      ref: "Differences Between Security Groups and NACLs",
+    },
+    {
+      id: "vpc-nacl-default",
+      type: "definition",
+      front: "Default NACL vs a custom NACL - starting rules?",
+      back: "The default NACL allows all traffic. A custom NACL starts with deny-all until you add rules.",
+      ref: "What is a NACL?",
+    },
+    {
+      id: "vpc-nacl-deny",
+      type: "scenario",
+      front:
+        "You need to block a specific IP range at the subnet boundary. SG or NACL?",
+      back: "NACL - it supports deny rules. Security groups support allow rules only.",
+      ref: "Differences Between Security Groups and NACLs",
+    },
+    {
+      id: "vpc-ephemeral-ports",
+      type: "definition",
+      front: "Why must NACL rules allow ephemeral ports?",
+      back: "NACLs are stateless, so return traffic isn't automatic - the client's response comes back on a short-lived high port (Linux 32768-60999, Windows 49152-65535) that the NACL must explicitly allow.",
+      ref: "Ephemeral Ports",
+    },
+    {
+      id: "vpc-peering-transitive",
+      type: "scenario",
+      front: "VPC A is peered with B, and B is peered with C. Can A reach C?",
+      back: "No - peering connections are one-to-one and there is no transitive routing. A->C needs its own peering connection.",
+      ref: "VPC Peering",
+    },
+    {
+      id: "vpc-peering-overlap",
+      type: "definition",
+      front:
+        "What CIDR rule applies to VPC peering, and what account/region combinations are supported?",
+      back: "The peered VPCs' CIDR ranges must not overlap. Peering works same-account or cross-account, and same-region or cross-region.",
+      ref: "VPC Peering",
+    },
+    {
+      id: "vpc-endpoint-purpose",
+      type: "definition",
+      front: "What do VPC endpoints let you do?",
+      back: "Connect privately from your VPC to supported AWS services and endpoint services without an IGW, NAT device, VPN or Direct Connect - traffic stays on the AWS network.",
+      ref: "VPC Endpoints",
+    },
+    {
+      id: "vpc-gateway-endpoint",
+      type: "definition",
+      front: "Which services use a Gateway endpoint, and what does it cost?",
+      back: "Only Amazon S3 and DynamoDB. You add a route in your route tables pointing at the endpoint. Highly available, fully managed, and free.",
+      ref: "Gateway Endpoints",
+    },
+    {
+      id: "vpc-interface-endpoint",
+      type: "definition",
+      front: "What is an Interface endpoint (AWS PrivateLink)?",
+      back: "An ENI with a private IP in your subnet used to reach many AWS services and custom endpoint services. Secured with security groups and NACLs like any ENI. Charged per hour and per GB processed.",
+      ref: "Interface Endpoints (AWS PrivateLink)",
+    },
+    {
+      id: "vpc-endpoint-gateway-vs-interface",
+      type: "comparison",
+      front: "Gateway endpoint vs Interface endpoint?",
+      back: "Gateway: S3 and DynamoDB only, route-table based, free. Interface: an ENI/PrivateLink for many services, security-group controlled, charged per hour and per GB.",
+      ref: "Types of Endpoints",
+    },
+    {
+      id: "vpc-flow-logs",
+      type: "definition",
+      front: "What do VPC Flow Logs capture and where can they be sent?",
+      back: "IP traffic (ACCEPT/REJECT) going to and from ENIs in your VPC. Delivered to CloudWatch Logs, S3, or Kinesis Data Firehose.",
+      ref: "VPC Flow Logs",
+    },
+    {
+      id: "vpc-s2s-vpn-components",
+      type: "comparison",
+      front: "Site-to-Site VPN: Virtual Private Gateway vs Customer Gateway?",
+      back: "VGW: the AWS-side VPN concentrator, attached to your VPC (customisable ASN). CGW: your on-premises VPN device or software appliance. Between them is an encrypted IPSec tunnel over the public internet.",
+      ref: "Site-to-Site VPN",
+    },
+    {
+      id: "vpc-direct-connect",
+      type: "definition",
+      front: "What is Direct Connect, and is it encrypted?",
+      back: "A dedicated, private network connection from on-premises to AWS that bypasses the public internet for more predictable performance. It is private but not encrypted - run a Site-to-Site VPN over it for encryption. Lead times are often weeks+.",
+      ref: "Direct Connect (DX)",
+    },
+    {
+      id: "vpc-direct-connect-gateway",
+      type: "definition",
+      front: "When do you use a Direct Connect Gateway?",
+      back: "To connect to VPCs in more than one region within the same account.",
+      ref: "Direct Connect (DX)",
+    },
+    {
+      id: "vpc-dx-resilience",
+      type: "scenario",
+      front:
+        "You have one Direct Connect link and want a failover path cheaper than a second DX connection. What do you use?",
+      back: "A Site-to-Site VPN as the failover path if the DX link goes down.",
+      ref: "Site-to-Site VPN as Backup",
+    },
+    {
+      id: "vpc-transit-gateway",
+      type: "scenario",
+      front:
+        "You need to connect many VPCs, on-premises networks and VPN/DX attachments at scale from one place. Service?",
+      back: "AWS Transit Gateway - a central hub for VPCs, on-prem, and VPN/DX attachments. It supports multicast, which VPC peering does not.",
+      ref: "Transit Gateway",
+    },
+    {
+      id: "vpc-egress-only-igw",
+      type: "definition",
+      front: "What is an Egress-Only Internet Gateway?",
+      back: "Outbound-only internet access for IPv6 traffic from your VPC - conceptually like a NAT Gateway but for IPv6 (IPv6 addresses are effectively public).",
+      ref: "Egress-Only Internet Gateway",
+    },
+    {
+      id: "vpc-networking-costs",
+      type: "definition",
+      front: "Which AWS traffic paths are cheapest and most expensive?",
+      back: "Same-AZ traffic is cheaper than cross-AZ; cross-region and internet egress are the most expensive. Private-IP traffic has lower egress charges than public IP. Inbound (ingress) is typically free.",
+      ref: "Networking Costs in AWS",
+    },
+    {
+      id: "vpc-network-firewall",
+      type: "definition",
+      front: "What is AWS Network Firewall?",
+      back: "A managed network security service for your VPC: stateful inspection, intrusion prevention/detection, and web filtering, with AWS and partner managed rule groups plus custom stateless/stateful rules. Integrates with AWS Firewall Manager for multi-account management.",
+      ref: "AWS Network Firewall",
+    },
+  ],
+};

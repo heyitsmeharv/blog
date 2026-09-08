@@ -50,6 +50,7 @@ import {
 // components
 import BackButton from "../Button/BackButton";
 import Table from "../Table/Table";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // images
 import TLSSSLExample from "../../resources/images/blog/AWSSecurityEncryption/aws_security_encryption_ssl_tls.jpeg";
@@ -852,6 +853,11 @@ const AWSSecurityEncryption = () => {
           to maintain compliance with data protection requirements.
         </Paragraph>
         <PostImage src={AWSMacie} alt="AWS Macie sensitive data discovery" />
+
+        <ReviewTopicCTA
+          deck="security-encryption"
+          label="Security & Encryption"
+        />
 
         <SectionHeading id="references">References</SectionHeading>
         <TextList>

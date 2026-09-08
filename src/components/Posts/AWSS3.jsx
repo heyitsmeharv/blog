@@ -43,6 +43,7 @@ import {
 
 // components
 import Table from "../Table/Table";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // images
 import S3Objects from "../../resources/images/blog/AWSS3/s3_objects.jpeg";
@@ -2143,6 +2144,8 @@ const AWS3 = () => {
             indexing and querying
           </TextListItem>
         </TextList>
+
+        <ReviewTopicCTA deck="s3" label="S3" />
 
         <SectionHeading id="references">References</SectionHeading>
 

@@ -11,7 +11,7 @@ import {
   readingTimeText,
   viewAllPostsText,
 } from "../../helpers/i18nText";
-import { posts } from "../../data/posts";
+import { posts } from "../../helpers/posts";
 import LikeCount from "../LikeCount/LikeCount";
 import TypeBadge from "../TypeBadge/TypeBadge";
 

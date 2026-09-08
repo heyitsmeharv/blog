@@ -12,6 +12,7 @@ import { AWSSVG, AWSRDSSVG } from "../../resources/styles/icons";
 // components
 import BackButton from "../Button/BackButton";
 import Table from "../Table/Table";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // layout
 import {
@@ -1282,6 +1283,8 @@ const AWSDatabases = () => {
           <TextListItem>Aurora (PostgerSQL): 5432</TextListItem>
           <TextListItem>Aurora (MySQL): 3306</TextListItem>
         </TextList>
+
+        <ReviewTopicCTA deck="databases" label="Databases" />
 
         <SectionHeading id="references">References</SectionHeading>
         <TextList>

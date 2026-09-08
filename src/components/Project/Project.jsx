@@ -7,7 +7,7 @@ import { Github } from "@styled-icons/boxicons-logos/Github";
 import { ExternalLink } from "@styled-icons/evaicons-solid/ExternalLink";
 
 // data
-import { tagColors } from "../../data/tagColors";
+import { tagColors } from "../../helpers/tagColors";
 import { LanguageContext } from "../../context/languageContext";
 import {
   liveDemoText,

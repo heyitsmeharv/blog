@@ -43,6 +43,7 @@ import {
 
 // components
 import BackButton from "../Button/BackButton";
+import ReviewTopicCTA from "../Flashcards/ReviewTopicCTA";
 
 // images
 import Docker from "../../resources/images/blog/AWSContainers/containers_docker.jpeg";
@@ -506,6 +507,8 @@ const AWSContainers = () => {
             capacity.
           </IndentedTextListItem>
         </IndentedTextList>
+
+        <ReviewTopicCTA deck="containers" label="Containers" />
 
         <SubSectionHeading id="references">References</SubSectionHeading>
         <TextList>

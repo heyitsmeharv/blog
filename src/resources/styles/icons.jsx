@@ -2408,16 +2408,16 @@ export const AWSLambdaSVG = () => {
           y2="0%"
           id="linearGradient-22"
         >
-          <stop stop-color="#C8511B" offset="0%"></stop>
-          <stop stop-color="#FF9900" offset="100%"></stop>
+          <stop stopColor="#C8511B" offset="0%"></stop>
+          <stop stopColor="#FF9900" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Lambda_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g id="Icon-Architecture-BG/64/Compute" fill="url(#linearGradient-22)">
           <rect id="Rectangle" x="0" y="0" width="80" height="80"></rect>
@@ -2444,16 +2444,16 @@ export const AWSAPIGatewaySVG = () => {
           y2="0%"
           id="linearGradient-23"
         >
-          <stop stop-color="#B0084D" offset="0%"></stop>
-          <stop stop-color="#FF4F8B" offset="100%"></stop>
+          <stop stopColor="#B0084D" offset="0%"></stop>
+          <stop stopColor="#FF4F8B" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_-Amazon-API-Gateway_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g id="Rectangle" fill="url(#linearGradient-23)">
           <rect x="0" y="0" width="80" height="80"></rect>
@@ -2486,16 +2486,16 @@ export const AWSStepFunctionsSVG = () => {
           y2="0%"
           id="linearGradient-24"
         >
-          <stop stop-color="#B0084D" offset="0%"></stop>
-          <stop stop-color="#FF4F8B" offset="100%"></stop>
+          <stop stopColor="#B0084D" offset="0%"></stop>
+          <stop stopColor="#FF4F8B" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Step-Functions_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Application-Integration"
@@ -2526,16 +2526,16 @@ export const AWSRegoknitionSVG = () => {
           y2="0%"
           id="linearGradient-25"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-Rekognition_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Machine-Learning"
@@ -2566,16 +2566,16 @@ export const AWSTranscribeSVG = () => {
           y2="0%"
           id="linearGradient-26"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-Transcribe_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Machine-Learning"
@@ -2606,16 +2606,16 @@ export const AWSPollySVG = () => {
           y2="0%"
           id="linearGradient-27"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-Polly_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Machine-Learning"
@@ -2646,16 +2646,16 @@ export const AWSTranslateSVG = () => {
           y2="0%"
           id="linearGradient-28"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-Translate_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Machine-Learning"
@@ -2686,16 +2686,16 @@ export const AWSLexSVG = () => {
           y2="0%"
           id="linearGradient-29"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-Lex_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Machine-Learning"
@@ -2726,16 +2726,16 @@ export const AWSComprehendSVG = () => {
           y2="0%"
           id="linearGradient-30"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-Comprehend_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Machine-Learning"
@@ -2766,16 +2766,16 @@ export const AWSSageMakerSVG = () => {
           y2="0%"
           id="linearGradient-31"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-SageMaker_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Machine-Learning"
@@ -2806,16 +2806,16 @@ export const AWSCloudWatchSVG = () => {
           y2="0%"
           id="linearGradient-32"
         >
-          <stop stop-color="#B0084D" offset="0%"></stop>
-          <stop stop-color="#FF4F8B" offset="100%"></stop>
+          <stop stopColor="#B0084D" offset="0%"></stop>
+          <stop stopColor="#FF4F8B" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-CloudWatch_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Management-Governance"
@@ -2846,16 +2846,16 @@ export const AWSCloudTrailSVG = () => {
           y2="0%"
           id="linearGradient-33"
         >
-          <stop stop-color="#B0084D" offset="0%"></stop>
-          <stop stop-color="#FF4F8B" offset="100%"></stop>
+          <stop stopColor="#B0084D" offset="0%"></stop>
+          <stop stopColor="#FF4F8B" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Cloud-Trail_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Management-Governance"
@@ -2886,16 +2886,16 @@ export const AWSConfigSVG = () => {
           y2="0%"
           id="linearGradient-34"
         >
-          <stop stop-color="#B0084D" offset="0%"></stop>
-          <stop stop-color="#FF4F8B" offset="100%"></stop>
+          <stop stopColor="#B0084D" offset="0%"></stop>
+          <stop stopColor="#FF4F8B" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Config_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Management-Governance"
@@ -2926,16 +2926,16 @@ export const AWSSnowSVG = () => {
           y2="0%"
           id="linearGradient-35"
         >
-          <stop stop-color="#1B660F" offset="0%"></stop>
-          <stop stop-color="#6CAE3E" offset="100%"></stop>
+          <stop stopColor="#1B660F" offset="0%"></stop>
+          <stop stopColor="#6CAE3E" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Snowball_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g id="Icon-Architecture-BG/64/Storage" fill="url(#linearGradient-35)">
           <rect id="Rectangle" x="0" y="0" width="80" height="80"></rect>
@@ -2962,16 +2962,16 @@ export const AWSFSXSVG = () => {
           y2="0%"
           id="linearGradient-36"
         >
-          <stop stop-color="#1B660F" offset="0%"></stop>
-          <stop stop-color="#6CAE3E" offset="100%"></stop>
+          <stop stopColor="#1B660F" offset="0%"></stop>
+          <stop stopColor="#6CAE3E" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-FSx_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g id="Rectangle" fill="url(#linearGradient-36)">
           <rect x="0" y="0" width="80" height="80"></rect>
@@ -3004,16 +3004,16 @@ export const AWSStorageGatewaySVG = () => {
           y2="0%"
           id="linearGradient-37"
         >
-          <stop stop-color="#1B660F" offset="0%"></stop>
-          <stop stop-color="#6CAE3E" offset="100%"></stop>
+          <stop stopColor="#1B660F" offset="0%"></stop>
+          <stop stopColor="#6CAE3E" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Storage-Gateway_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g id="Icon-Architecture-BG/64/Storage" fill="url(#linearGradient-37)">
           <rect id="Rectangle" x="0" y="0" width="80" height="80"></rect>
@@ -3041,16 +3041,16 @@ export const AWSTransferFamilySVG = () => {
           y2="0%"
           id="linearGradient-38"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Transfer-Family_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Migration-Transfer"
@@ -3081,16 +3081,16 @@ export const AWSDataSyncSVG = () => {
           y2="0%"
           id="linearGradient-39"
         >
-          <stop stop-color="#055F4E" offset="0%"></stop>
-          <stop stop-color="#56C0A7" offset="100%"></stop>
+          <stop stopColor="#055F4E" offset="0%"></stop>
+          <stop stopColor="#56C0A7" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Data-Sync_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Migration-Transfer"
@@ -3121,16 +3121,16 @@ export const AWSOrganisationsSVG = () => {
           y2="0%"
           id="linearGradient-40"
         >
-          <stop stop-color="#B0084D" offset="0%"></stop>
-          <stop stop-color="#FF4F8B" offset="100%"></stop>
+          <stop stopColor="#B0084D" offset="0%"></stop>
+          <stop stopColor="#FF4F8B" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Organizations_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Management-Governance"
@@ -3161,16 +3161,16 @@ export const AWSControlTowerSVG = () => {
           y2="0%"
           id="linearGradient-41"
         >
-          <stop stop-color="#B0084D" offset="0%"></stop>
-          <stop stop-color="#FF4F8B" offset="100%"></stop>
+          <stop stopColor="#B0084D" offset="0%"></stop>
+          <stop stopColor="#FF4F8B" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Control-Tower_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Management-Governance"
@@ -3201,16 +3201,16 @@ export const AWSKMSSVG = () => {
           y2="0%"
           id="linearGradient-42"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Key-Management-Services_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Security-Identity-Compliance"
@@ -3241,16 +3241,16 @@ export const AWSSSMSVG = () => {
           y2="0%"
           id="linearGradient-43"
         >
-          <stop stop-color="#B0084D" offset="0%"></stop>
-          <stop stop-color="#FF4F8B" offset="100%"></stop>
+          <stop stopColor="#B0084D" offset="0%"></stop>
+          <stop stopColor="#FF4F8B" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Systems-Manager_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Management-Governance"
@@ -3281,16 +3281,16 @@ export const AWSSecretsManagerSVG = () => {
           y2="0%"
           id="linearGradient-44"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Secrets-Manager_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Security-Identity-Compliance"
@@ -3321,16 +3321,16 @@ export const AWSCertificateManagerSVG = () => {
           y2="0%"
           id="linearGradient-45"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Certificate-Manager_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Security-Identity-Compliance"
@@ -3360,16 +3360,16 @@ export const AWSWAFSVG = () => {
           y2="0%"
           id="linearGradient-46"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-WAF_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g id="Rectangle" fill="url(#linearGradient-46)">
           <rect x="0" y="0" width="80" height="80"></rect>
@@ -3402,16 +3402,16 @@ export const AWSShieldSVG = () => {
           y2="0%"
           id="linearGradient-47"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Shield_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Security-Identity-Compliance"
@@ -3442,16 +3442,16 @@ export const AWSFirewallSVG = () => {
           y2="0%"
           id="linearGradient-48"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_AWS-Firewall-Manager_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Security-Identity-Compliance"
@@ -3482,16 +3482,16 @@ export const AWSGuardDutySVG = () => {
           y2="0%"
           id="linearGradient-49"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-GuardDuty_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Security-Identity-Compliance"
@@ -3522,16 +3522,16 @@ export const AWSInspectorSVG = () => {
           y2="0%"
           id="linearGradient-50"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-Inspector_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Security-Identity-Compliance"
@@ -3562,16 +3562,16 @@ export const AWSMacieSVG = () => {
           y2="0%"
           id="linearGradient-51"
         >
-          <stop stop-color="#BD0816" offset="0%"></stop>
-          <stop stop-color="#FF5252" offset="100%"></stop>
+          <stop stopColor="#BD0816" offset="0%"></stop>
+          <stop stopColor="#FF5252" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g
         id="Icon-Architecture/64/Arch_Amazon-Macie_64"
         stroke="none"
-        stroke-width="1"
+        strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         <g
           id="Icon-Architecture-BG/64/Security-Identity-Compliance"
@@ -3619,11 +3619,11 @@ export const AzureDevOpsSVG = () => {
           y2="1.026"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#0078D4" />
-          <stop offset=".16" stop-color="#1380DA" />
-          <stop offset=".53" stop-color="#3C91E5" />
-          <stop offset=".82" stop-color="#559CEC" />
-          <stop offset="1" stop-color="#5EA0EF" />
+          <stop stopColor="#0078D4" />
+          <stop offset=".16" stopColor="#1380DA" />
+          <stop offset=".53" stopColor="#3C91E5" />
+          <stop offset=".82" stopColor="#559CEC" />
+          <stop offset="1" stopColor="#5EA0EF" />
         </linearGradient>
       </defs>
     </StyledSvg>
@@ -3675,17 +3675,17 @@ export const ConventionalCommitsSVG = () => {
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMinYMin meet"
     >
-      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g
           id="Development"
           transform="translate(-624.000000, -48.000000)"
-          fill-rule="nonzero"
+          fillRule="nonzero"
         >
           <g id="git_merge_fill" transform="translate(624.000000, 48.000000)">
             <path
               d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z"
               id="MingCute"
-              fill-rule="nonzero"
+              fillRule="nonzero"
             ></path>
             <path
               d="M6,21 C4.34315,21 3,19.6569 3,18 C3,16.6938 3.83481,15.5825 5,15.1707 L5,8.82929 C3.83481,8.41746 3,7.30622 3,6 C3,4.34315 4.34315,3 6,3 C7.65685,3 9,4.34315 9,6 C9,7.30622 8.16519,8.41746 7,8.82929 L7,9 C7,10.1046 7.89543,11 9,11 L15,11 C17.2091,11 19,12.7909 19,15 L19,15.1707 C20.1652,15.5825 21,16.6938 21,18 C21,19.6569 19.6569,21 18,21 C16.3431,21 15,19.6569 15,18 C15,16.6938 15.8348,15.5825 17,15.1707 L17,15 C17,13.8954 16.1046,13 15,13 L9,13 C8.27143,13 7.58835,12.8052 7,12.4649 L7,15.1707 C8.16519,15.5825 9,16.6938 9,18 C9,19.6569 7.65685,21 6,21 Z"
@@ -3766,8 +3766,8 @@ export const WarningSVG = () => {
         fill="#1C274C"
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M8.2944 4.47643C9.36631 3.11493 10.5018 2.25 12 2.25C13.4981 2.25 14.6336 3.11493 15.7056 4.47643C16.7598 5.81544 17.8769 7.79622 19.3063 10.3305L19.7418 11.1027C20.9234 13.1976 21.8566 14.8523 22.3468 16.1804C22.8478 17.5376 22.9668 18.7699 22.209 19.8569C21.4736 20.9118 20.2466 21.3434 18.6991 21.5471C17.1576 21.75 15.0845 21.75 12.4248 21.75H11.5752C8.91552 21.75 6.84239 21.75 5.30082 21.5471C3.75331 21.3434 2.52637 20.9118 1.79099 19.8569C1.03318 18.7699 1.15218 17.5376 1.65314 16.1804C2.14334 14.8523 3.07658 13.1977 4.25818 11.1027L4.69361 10.3307C6.123 7.79629 7.24019 5.81547 8.2944 4.47643ZM9.47297 5.40432C8.49896 6.64148 7.43704 8.51988 5.96495 11.1299L5.60129 11.7747C4.37507 13.9488 3.50368 15.4986 3.06034 16.6998C2.6227 17.8855 2.68338 18.5141 3.02148 18.9991C3.38202 19.5163 4.05873 19.8706 5.49659 20.0599C6.92858 20.2484 8.9026 20.25 11.6363 20.25H12.3636C15.0974 20.25 17.0714 20.2484 18.5034 20.0599C19.9412 19.8706 20.6179 19.5163 20.9785 18.9991C21.3166 18.5141 21.3773 17.8855 20.9396 16.6998C20.4963 15.4986 19.6249 13.9488 18.3987 11.7747L18.035 11.1299C16.5629 8.51987 15.501 6.64148 14.527 5.40431C13.562 4.17865 12.8126 3.75 12 3.75C11.1874 3.75 10.4379 4.17865 9.47297 5.40432Z"
         fill="#1C274C"
       />
@@ -3792,8 +3792,8 @@ export const InfoSVG = () => {
         fill="#1C274C"
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12ZM12 2.75C6.89137 2.75 2.75 6.89137 2.75 12C2.75 17.1086 6.89137 21.25 12 21.25C17.1086 21.25 21.25 17.1086 21.25 12C21.25 6.89137 17.1086 2.75 12 2.75Z"
         fill="#1C274C"
       />

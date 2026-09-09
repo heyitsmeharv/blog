@@ -10,7 +10,6 @@ import { Analytics } from "./helpers/analytics";
 
 // context
 import { LanguageContext } from "./context/languageContext";
-import { UserContext } from "./context/userContext";
 
 // hooks
 import { useThemeMode } from "./hooks/useThemeMode";
@@ -210,220 +209,214 @@ const App = () => {
   }
 
   return (
-    <UserContext.Provider>
-      <LanguageContext.Provider value={language}>
-        <ThemeProvider theme={themeMode}>
-          <GlobalStyles />
-          <Router>
-            <PageTracker />
-            <SkipLink href="#main-content">
-              {skipToMainContentText(language)}
-            </SkipLink>
-            <Route
-              render={({ location }) => {
-                return (
-                  <RouteEffects
-                    location={location}
-                    mainRef={mainRef}
-                    language={language}
-                  >
-                    <Navbar
-                      currentLanguage={language}
-                      currentTheme={theme}
-                      toggleTheme={toggleTheme}
-                      toggleLanguage={toggleLanguage}
-                    />
-                    <AppMain id="main-content" ref={mainRef} tabIndex="-1">
-                      <Switch location={location}>
-                        <Route exact path="/" component={Home} />
-                        <Route exact path="/projects" component={Projects} />
-                        <Route exact path="/blog" component={Blog} />
-                        <Route
-                          exact
-                          path="/analytics"
-                          component={AnalyticsPage}
-                        />
-                        <Route
-                          exact
-                          path="/flashcards"
-                          component={Flashcards}
-                        />
-                        <Route
-                          exact
-                          path="/flashcards/:examId"
-                          component={Flashcards}
-                        />
-                        {/* Add blog posts here */}
-                        <Route
-                          exact
-                          path="/blog/the-start"
-                          component={TheStart}
-                        />
-                        <Route
-                          exact
-                          path="/blog/javascript-arrays"
-                          component={JavaScriptArray}
-                        />
-                        <Route
-                          exact
-                          path="/blog/javascript-objects"
-                          component={JavaScriptObjects}
-                        />
-                        <Route
-                          exact
-                          path="/blog/react-text-based-adventure"
-                          component={ReactAdventureGame}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-identity-access-management"
-                          component={AWSIdentityAccessManagement}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-elastic-compute-cloud"
-                          component={AWSElasticComputeCloud}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-databases"
-                          component={AWSDatabases}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-route53"
-                          component={AWSRoute53}
-                        />
-                        <Route exact path="/blog/aws-s3" component={AWSS3} />
-                        <Route
-                          exact
-                          path="/blog/aws-cloudfront"
-                          component={AWSCloudFront}
-                        />
-                        <Route exact path="/blog/aws-sqs" component={AWSSQS} />
-                        <Route exact path="/blog/aws-sns" component={AWSSNS} />
-                        <Route
-                          exact
-                          path="/blog/aws-kinesis"
-                          component={AWSKinesis}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-containers"
-                          component={AWSContainers}
-                        />
-                        <Route exact path="/blog/aws-vpc" component={AWSVPC} />
-                        <Route
-                          exact
-                          path="/blog/aws-data-analytics"
-                          component={AWSDataAnalytics}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-serverless"
-                          component={AWSServerless}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-machine-learning"
-                          component={AWSMachineLearning}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-monitoring-audit"
-                          component={AWSMonitoringAudit}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-security-encryption"
-                          component={AWSSecurityEncryption}
-                        />
-                        <Route
-                          exact
-                          path="/blog/getting-started-with-bash-scripting"
-                          component={BashScripting}
-                        />
-                        <Route
-                          exact
-                          path="/blog/github-ci-cd"
-                          component={GitHubCICD}
-                        />
-                        <Route
-                          exact
-                          path="/blog/intro-to-docker-kubernetes"
-                          component={DockerKubernetes}
-                        />
-                        <Route
-                          exact
-                          path="/blog/docker-kubernetes-advanced"
-                          component={DockerKubernetesAdvanced}
-                        />
-                        <Route
-                          exact
-                          path="/blog/infrastructure-as-code-with-terraform"
-                          component={IaCTerraform}
-                        />
-                        <Route
-                          exact
-                          path="/blog/semantic-versioning-with-conventional-commits"
-                          component={ConventionalCommits}
-                        />
-                        <Route
-                          exact
-                          path="/blog/building-your-own-analytics"
-                          component={QuietlyAnalytics}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-observability-dashboard"
-                          component={AWSObservabilityDashboard}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-sec-audit"
-                          component={AWSSecAudit}
-                        />
-                        <Route
-                          exact
-                          path="/blog/when-output-outruns-understanding"
-                          component={OutputUnderstanding}
-                        />
-                        <Route
-                          exact
-                          path="/blog/publishing-an-npm-package"
-                          component={NpmPublishing}
-                        />
-                        <Route
-                          exact
-                          path="/blog/lambda-powertools"
-                          component={LambdaPowertools}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-multi-account-setup"
-                          component={AWSMultiAccountSetup}
-                        />
-                        <Route
-                          exact
-                          path="/blog/aws-patch-management"
-                          component={AWSPatchManagement}
-                        />
-                        <Route
-                          exact
-                          path="/blog/deploy-to-ec2"
-                          component={AWSDeployEC2}
-                        />
-                        <Route component={NotFound} />
-                      </Switch>
-                    </AppMain>
-                  </RouteEffects>
-                );
-              }}
-            />
-          </Router>
-        </ThemeProvider>
-      </LanguageContext.Provider>
-    </UserContext.Provider>
+    <LanguageContext.Provider value={language}>
+      <ThemeProvider theme={themeMode}>
+        <GlobalStyles />
+        <Router>
+          <PageTracker />
+          <SkipLink href="#main-content">
+            {skipToMainContentText(language)}
+          </SkipLink>
+          <Route
+            render={({ location }) => {
+              return (
+                <RouteEffects
+                  location={location}
+                  mainRef={mainRef}
+                  language={language}
+                >
+                  <Navbar
+                    currentLanguage={language}
+                    currentTheme={theme}
+                    toggleTheme={toggleTheme}
+                    toggleLanguage={toggleLanguage}
+                  />
+                  <AppMain id="main-content" ref={mainRef} tabIndex="-1">
+                    <Switch location={location}>
+                      <Route exact path="/" component={Home} />
+                      <Route exact path="/projects" component={Projects} />
+                      <Route exact path="/blog" component={Blog} />
+                      <Route
+                        exact
+                        path="/analytics"
+                        component={AnalyticsPage}
+                      />
+                      <Route exact path="/flashcards" component={Flashcards} />
+                      <Route
+                        exact
+                        path="/flashcards/:examId"
+                        component={Flashcards}
+                      />
+                      {/* Add blog posts here */}
+                      <Route
+                        exact
+                        path="/blog/the-start"
+                        component={TheStart}
+                      />
+                      <Route
+                        exact
+                        path="/blog/javascript-arrays"
+                        component={JavaScriptArray}
+                      />
+                      <Route
+                        exact
+                        path="/blog/javascript-objects"
+                        component={JavaScriptObjects}
+                      />
+                      <Route
+                        exact
+                        path="/blog/react-text-based-adventure"
+                        component={ReactAdventureGame}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-identity-access-management"
+                        component={AWSIdentityAccessManagement}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-elastic-compute-cloud"
+                        component={AWSElasticComputeCloud}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-databases"
+                        component={AWSDatabases}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-route53"
+                        component={AWSRoute53}
+                      />
+                      <Route exact path="/blog/aws-s3" component={AWSS3} />
+                      <Route
+                        exact
+                        path="/blog/aws-cloudfront"
+                        component={AWSCloudFront}
+                      />
+                      <Route exact path="/blog/aws-sqs" component={AWSSQS} />
+                      <Route exact path="/blog/aws-sns" component={AWSSNS} />
+                      <Route
+                        exact
+                        path="/blog/aws-kinesis"
+                        component={AWSKinesis}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-containers"
+                        component={AWSContainers}
+                      />
+                      <Route exact path="/blog/aws-vpc" component={AWSVPC} />
+                      <Route
+                        exact
+                        path="/blog/aws-data-analytics"
+                        component={AWSDataAnalytics}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-serverless"
+                        component={AWSServerless}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-machine-learning"
+                        component={AWSMachineLearning}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-monitoring-audit"
+                        component={AWSMonitoringAudit}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-security-encryption"
+                        component={AWSSecurityEncryption}
+                      />
+                      <Route
+                        exact
+                        path="/blog/getting-started-with-bash-scripting"
+                        component={BashScripting}
+                      />
+                      <Route
+                        exact
+                        path="/blog/github-ci-cd"
+                        component={GitHubCICD}
+                      />
+                      <Route
+                        exact
+                        path="/blog/intro-to-docker-kubernetes"
+                        component={DockerKubernetes}
+                      />
+                      <Route
+                        exact
+                        path="/blog/docker-kubernetes-advanced"
+                        component={DockerKubernetesAdvanced}
+                      />
+                      <Route
+                        exact
+                        path="/blog/infrastructure-as-code-with-terraform"
+                        component={IaCTerraform}
+                      />
+                      <Route
+                        exact
+                        path="/blog/semantic-versioning-with-conventional-commits"
+                        component={ConventionalCommits}
+                      />
+                      <Route
+                        exact
+                        path="/blog/building-your-own-analytics"
+                        component={QuietlyAnalytics}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-observability-dashboard"
+                        component={AWSObservabilityDashboard}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-sec-audit"
+                        component={AWSSecAudit}
+                      />
+                      <Route
+                        exact
+                        path="/blog/when-output-outruns-understanding"
+                        component={OutputUnderstanding}
+                      />
+                      <Route
+                        exact
+                        path="/blog/publishing-an-npm-package"
+                        component={NpmPublishing}
+                      />
+                      <Route
+                        exact
+                        path="/blog/lambda-powertools"
+                        component={LambdaPowertools}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-multi-account-setup"
+                        component={AWSMultiAccountSetup}
+                      />
+                      <Route
+                        exact
+                        path="/blog/aws-patch-management"
+                        component={AWSPatchManagement}
+                      />
+                      <Route
+                        exact
+                        path="/blog/deploy-to-ec2"
+                        component={AWSDeployEC2}
+                      />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </AppMain>
+                </RouteEffects>
+              );
+            }}
+          />
+        </Router>
+      </ThemeProvider>
+    </LanguageContext.Provider>
   );
 };
 

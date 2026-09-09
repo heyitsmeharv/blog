@@ -296,7 +296,7 @@ const Introduction = ({ language, open, setOpen }) => {
             onLoad={() => setProfileLoaded(true)}
             onError={() => setProfileLoaded(true)}
             decoding="async"
-            fetchPriority="high"
+            fetchpriority="high"
           />
         </ProfileImageFrame>
         <InfoWrapper>

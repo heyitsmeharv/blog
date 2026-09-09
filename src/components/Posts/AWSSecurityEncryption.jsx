@@ -620,6 +620,22 @@ const AWSSecurityEncryption = () => {
           </TextListItem>
         </TextList>
 
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          Since{" "}
+          <TextLink
+            href="https://aws.amazon.com/about-aws/whats-new/2025/06/aws-certificate-manager-public-certificates-use-anywhere/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            17 June 2025
+          </TextLink>{" "}
+          you can request a public certificate as <Strong>exportable</Strong>{" "}
+          (extra cost) and use it on any workload outside AWS. The default is
+          still non-exportable, and certificates issued before that date can
+          never be exported.
+        </UpdateNote>
+
         <SubSectionHeading>Importing Public Certificates</SubSectionHeading>
         <Paragraph>
           You can import existing public certificates into ACM. There is{" "}
@@ -748,6 +764,21 @@ const AWSSecurityEncryption = () => {
             outcome.
           </IndentedTextListItem>
         </IndentedTextList>
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          The{" "}
+          <TextLink
+            href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-action.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            rule-action docs
+          </TextLink>{" "}
+          now also list <Strong>CAPTCHA</Strong> and <Strong>Challenge</Strong>{" "}
+          actions, which serve a puzzle or a silent browser challenge to weed
+          out bots (both carry an extra charge).
+        </UpdateNote>
 
         <TertiaryHeading>Rule Groups & Managed Rules</TertiaryHeading>
         <TextList>

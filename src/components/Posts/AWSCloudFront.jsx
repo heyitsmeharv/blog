@@ -32,6 +32,7 @@ import {
   TextLink,
   TextList,
   TextListItem,
+  UpdateNote,
 } from "../Typography/Typography";
 
 // images
@@ -204,6 +205,22 @@ const AWSCloudFront = () => {
           src={CloudFrontALBOrigin}
           alt="Diagram of CloudFront using an Application Load Balancer as origin"
         />
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          CloudFront{" "}
+          <TextLink
+            href="https://aws.amazon.com/about-aws/whats-new/2024/11/amazon-cloudfront-vpc-origins/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            VPC origins
+          </TextLink>{" "}
+          (November 2024) removed this constraint: an ALB, NLB, or EC2 origin
+          can now sit in a private subnet reached only through CloudFront over
+          PrivateLink, so the origin no longer needs to be public or allow the
+          edge IP ranges.
+        </UpdateNote>
 
         <SectionHeading id="geo-restriction">Geo-Restriction</SectionHeading>
         <Paragraph>

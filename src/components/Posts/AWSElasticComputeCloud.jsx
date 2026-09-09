@@ -38,6 +38,7 @@ import {
   TextLink,
   TextList,
   TextListItem,
+  UpdateNote,
 } from "../Typography/Typography";
 
 // images
@@ -500,6 +501,21 @@ const AWSElasticComputeCloud = () => {
             Not suitable for critical jobs or databases.
           </TextListItem>
         </TextList>
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          The current{" "}
+          <TextLink
+            href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Spot interruptions documentation
+          </TextLink>{" "}
+          lists capacity as the main reason AWS reclaims a Spot Instance - it
+          takes the instance back (with a 2-minute notice) when it needs the
+          capacity, not only when the Spot price exceeds your maximum price.
+        </UpdateNote>
 
         <SubSectionHeading>Dedicated Hosts</SubSectionHeading>
 

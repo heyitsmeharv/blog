@@ -12,7 +12,7 @@ export const kinesis = {
       label: "Kinesis family",
       type: "definition",
       front: "What are the parts of the Kinesis family?",
-      back: "Data Streams (capture/process real-time streams), Data Firehose (managed loading of streaming data into stores), Data Analytics (SQL / Apache Flink on streams), and Video Streams (stream video from devices).",
+      back: "Data Streams (capture/process real-time streams), Data Firehose (managed loading of streaming data into stores), Data Analytics (SQL / Apache Flink on streams), and Video Streams (stream video from devices). AWS has since rebranded Data Firehose as 'Amazon Data Firehose' and the Flink side of Data Analytics as 'Amazon Managed Service for Apache Flink'.",
       ref: "Kinesis Overview",
     },
     {

@@ -36,9 +36,12 @@ export const cloudfront = {
       id: "cf-custom-origin",
       label: "EC2 / ALB origin networking",
       type: "definition",
+      // The post predates CloudFront VPC origins (re:Invent 2024). Before that,
+      // a custom origin had to be publicly reachable and you locked it down with
+      // the edge IP ranges; now the origin can live in a private subnet.
       front:
         "What's the networking constraint when CloudFront uses an EC2 or load balancer origin?",
-      back: "CloudFront has no private VPC connectivity, so the origin's security groups must be set up to allow traffic from the edge locations.",
+      back: "A public origin isn't reachable privately from CloudFront, so its security group must allow CloudFront's edge IP ranges (managed prefix list com.amazonaws.global.cloudfront.origin-facing). CloudFront VPC origins (2024) let an ALB / NLB / EC2 origin sit in a private subnet, reached over PrivateLink, so no public exposure.",
       ref: "ALB as an Origin",
     },
     {

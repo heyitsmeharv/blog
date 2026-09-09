@@ -29,6 +29,7 @@ import {
   TextLink,
   TextList,
   TextListItem,
+  UpdateNote,
 } from "../Typography/Typography.jsx";
 
 // icons
@@ -363,6 +364,22 @@ const AWSMachineLearning = () => {
           It’s used for demand planning, inventory, workforce capacity and more.
         </Paragraph>
         <PostImage src={ForcastExample} alt="Amazon Forecast example" />
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          The{" "}
+          <TextLink
+            href="https://docs.aws.amazon.com/forecast/latest/dg/what-is-forecast.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Amazon Forecast developer guide
+          </TextLink>{" "}
+          now states it is no longer available to new customers (existing
+          customers can continue). AWS points new users to Amazon SageMaker
+          Canvas, though Forecast is still the exam&apos;s answer for this use
+          case.
+        </UpdateNote>
 
         <SectionHeading id="aws-kendra">Kendra</SectionHeading>
         <Paragraph>

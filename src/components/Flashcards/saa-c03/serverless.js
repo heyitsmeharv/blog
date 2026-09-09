@@ -72,7 +72,7 @@ export const serverless = {
       label: "Lambda SnapStart",
       type: "definition",
       front: "What is Lambda SnapStart?",
-      back: "Snapshots a fully initialised execution environment and reuses it, giving up to ~10x faster cold starts for supported runtimes (e.g. Java), at no extra cost.",
+      back: "Snapshots a fully initialised execution environment and reuses it, giving as low as sub-second startup for supported runtimes (Java 11+, Python 3.12+, .NET 8+). No extra cost for Java; Python and .NET add a caching charge plus a per-restore charge.",
       ref: "Lambda SnapStart",
     },
     {
@@ -80,7 +80,7 @@ export const serverless = {
       label: "Lambda@Edge vs CloudFront Functions",
       type: "comparison",
       front: "Lambda@Edge vs CloudFront Functions?",
-      back: "Lambda@Edge: multiple runtimes, viewer + origin triggers, 5-10s, up to 10 GB memory, network and request-body access - for heavier logic like image processing or complex auth. CloudFront Functions: JavaScript only, viewer triggers only, sub-millisecond, 2 MB, millions of requests/sec - for simple header/URL rewrites.",
+      back: "Lambda@Edge: Node.js/Python, viewer + origin triggers, up to 30s, up to 10 GB memory (origin triggers), network and request-body access - for heavier logic like image processing or complex auth. CloudFront Functions: JavaScript only, viewer triggers only, sub-millisecond, 2 MB memory, millions of requests/sec - for simple header/URL rewrites.",
       ref: "Lambda@Edge vs CloudFront Functions",
     },
     {

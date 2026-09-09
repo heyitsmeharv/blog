@@ -77,7 +77,10 @@ export const machineLearning = {
       type: "scenario",
       front:
         "Generate accurate time-series forecasts for demand planning, inventory or workforce capacity. Service?",
-      back: "Amazon Forecast - a managed ML time-series forecasting service.",
+      // Amazon Forecast has been closed to new customers since mid-2024 (AWS
+      // points new users to SageMaker Canvas), but it's still the SAA-C03 answer
+      // for this scenario.
+      back: "Amazon Forecast - a managed ML time-series forecasting service. (Closed to new customers since mid-2024; AWS now steers new users to Amazon SageMaker Canvas.)",
       ref: "Forecast",
     },
     {

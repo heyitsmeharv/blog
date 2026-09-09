@@ -31,7 +31,11 @@ export const ec2 = {
       type: "scenario",
       front:
         "Fault-tolerant batch jobs / data analysis that can be interrupted. Cheapest option?",
-      back: "Spot Instances - the most cost-efficient in AWS, using spare capacity. You can lose the instance at any time if the spot price rises above your max. Not for critical jobs or databases.",
+      // The post frames interruption purely as "spot price > your max bid". Per
+      // the current Spot interruptions docs, AWS reclaims instances mainly when
+      // it needs the capacity back, with a 2-minute notice; exceeding your
+      // optional max price is a secondary reason.
+      back: "Spot Instances - the most cost-efficient in AWS, using spare capacity. AWS can reclaim it at any time with a 2-minute interruption notice when it needs the capacity back (or if the Spot price rises above your optional max price). Not for critical jobs or databases.",
       ref: "Spot Instance",
     },
     {
@@ -135,7 +139,7 @@ export const ec2 = {
       type: "definition",
       front:
         "EBS snapshot features: Archive, Recycle Bin, Fast Snapshot Restore?",
-      back: "Archive: 75% cheaper, 24-72 hours to restore. Recycle Bin: retain deleted snapshots for recovery (1 day to 1 year). Fast Snapshot Restore: force full initialisation so there's no latency on first use - the most costly.",
+      back: "Archive: up to 75% cheaper, up to 72 hours to restore. Recycle Bin: retain deleted snapshots for recovery (1 day to 1 year). Fast Snapshot Restore: force full initialisation so there's no latency on first use - the most costly.",
       ref: "Snapshots",
     },
     {

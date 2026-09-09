@@ -28,7 +28,7 @@ export const databases = {
       label: "RDS Multi-AZ",
       type: "definition",
       front: "What is RDS Multi-AZ?",
-      back: "Mainly for disaster recovery: the app uses one DNS name for the main instance, which does SYNC replication to a standby in another AZ. On a problem with the main instance there's an automatic failover to the standby - no downtime, no app change.",
+      back: "For high availability within a region: the app uses one DNS name for the main instance, which does SYNC replication to a standby in another AZ. On a problem with the main instance there's an automatic failover to the standby - no app change. (Cross-region disaster recovery uses read replicas or Aurora Global instead.)",
       ref: "RDS Multi AZ",
     },
     {
@@ -36,7 +36,7 @@ export const databases = {
       label: "Read replica vs Multi-AZ",
       type: "comparison",
       front: "Read replica vs Multi-AZ?",
-      back: "Read replica: async, read-only, scales reads, can be cross-region. Multi-AZ: sync standby (not readable), automatic failover, for disaster recovery.",
+      back: "Read replica: async, read-only, scales reads, can be cross-region. Multi-AZ: sync standby (not readable), automatic failover, for high availability within a region.",
       ref: "RDS Multi AZ",
     },
     {
@@ -131,7 +131,7 @@ export const databases = {
       label: "Aurora Backtrack",
       type: "definition",
       front: "What is Aurora Backtrack?",
-      back: "Restore data to any point in time without using backups.",
+      back: "Rewind the cluster to a point in time in-place, without restoring from a backup (Aurora MySQL only).",
       ref: "Features of Aurora",
     },
     {
@@ -249,7 +249,10 @@ export const databases = {
       type: "scenario",
       front:
         "You need an immutable, cryptographically verifiable history of every change to your data, with no decentralisation. Service?",
-      back: "Amazon QLDB (Quantum Ledger Database) - immutable (no entry can be removed or modified), cryptographically verifiable, queried with SQL. (Amazon Managed Blockchain is the decentralised option.)",
+      // AWS retired Amazon QLDB on 31 July 2025. It's kept here because SAA-C03
+      // still tests it as the answer to this scenario; new workloads use Aurora
+      // PostgreSQL's audit/ledger capabilities instead.
+      back: "Amazon QLDB (Quantum Ledger Database) - immutable (no entry can be removed or modified), cryptographically verifiable, queried with SQL. (Amazon Managed Blockchain is the decentralised option.) Note: AWS retired QLDB on 31 July 2025.",
       ref: "Amazon QLDB (Quantum Ledger Database)",
     },
     {

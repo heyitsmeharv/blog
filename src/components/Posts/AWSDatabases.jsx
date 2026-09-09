@@ -1240,6 +1240,14 @@ const AWSDatabases = () => {
           </TextListItem>
         </TextList>
 
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          AWS ended support for Amazon QLDB on 31 July 2025. It's still worth
+          knowing for the exam, but new workloads that need a verifiable,
+          immutable history use Amazon Aurora PostgreSQL&apos;s audit/ledger
+          capabilities instead.
+        </UpdateNote>
+
         <SectionHeading id="timestream">Amazon Timestream</SectionHeading>
 
         <TextList>

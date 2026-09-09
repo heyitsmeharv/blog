@@ -193,7 +193,7 @@ export const vpc = {
       label: "Direct Connect Gateway",
       type: "definition",
       front: "When do you use a Direct Connect Gateway?",
-      back: "To connect to VPCs in more than one region within the same account.",
+      back: "To connect a Direct Connect connection to VPCs in more than one region (via their virtual private gateways or a transit gateway).",
       ref: "Direct Connect (DX)",
     },
     {

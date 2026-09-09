@@ -226,6 +226,22 @@ const AWSKinesis = () => {
           require immediate insights or actions based on incoming data.
         </Paragraph>
 
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          AWS has renamed two of these. &ldquo;Kinesis Data Firehose&rdquo; is
+          now{" "}
+          <TextLink
+            href="https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Amazon Data Firehose
+          </TextLink>
+          , and the Apache Flink side of &ldquo;Kinesis Data Analytics&rdquo; is
+          now Amazon Managed Service for Apache Flink. The functionality is
+          unchanged.
+        </UpdateNote>
+
         <SubSectionHeading>Kinesis Data Streams</SubSectionHeading>
         <TextList>
           <TextListItem>

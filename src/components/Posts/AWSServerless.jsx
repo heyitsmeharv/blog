@@ -29,6 +29,7 @@ import {
   TextLink,
   TextList,
   TextListItem,
+  UpdateNote,
 } from "../Typography/Typography";
 
 // icons
@@ -304,6 +305,21 @@ const AWSServerless = () => {
         </Paragraph>
         <PostImage src={LambdaSnapShot} alt="Lambda SnapStart" />
 
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          Per the current{" "}
+          <TextLink
+            href="https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            SnapStart documentation
+          </TextLink>
+          , SnapStart now also supports Python 3.12+ and .NET 8+ (not just
+          Java), and it&apos;s only free for Java - Python and .NET add a
+          snapshot caching charge plus a per-restore charge.
+        </UpdateNote>
+
         <SubSectionHeading>
           Lambda@Edge and CloudFront Functions
         </SubSectionHeading>
@@ -340,6 +356,21 @@ const AWSServerless = () => {
           Lambda@Edge vs CloudFront Functions
         </SubSectionHeading>
         <Table data={data3} columns={columns3} />
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          The{" "}
+          <TextLink
+            href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            CloudFront quotas
+          </TextLink>{" "}
+          now give a single Lambda@Edge function timeout of{" "}
+          <Strong>30 seconds</Strong> (for all trigger types), not the 5-10
+          seconds in the table above.
+        </UpdateNote>
 
         <SubSectionHeading>Which One to Choose?</SubSectionHeading>
         <TextList>

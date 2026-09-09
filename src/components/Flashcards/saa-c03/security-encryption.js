@@ -84,7 +84,7 @@ export const securityEncryption = {
       label: "Parameter Store vs Secrets Manager",
       type: "comparison",
       front: "SSM Parameter Store vs Secrets Manager?",
-      back: "Parameter Store: configuration & secrets, KMS optional, rotation manual or via Lambda, free (except API calls). Secrets Manager: primarily secrets, KMS mandatory, automated rotation, paid. Secrets Manager also stores DB credentials (RDS, Redshift, etc.) and can replicate secrets to other regions.",
+      back: "Parameter Store: configuration & secrets, KMS optional, rotation manual or via Lambda, standard tier free (advanced parameters and higher throughput cost). Secrets Manager: primarily secrets, KMS mandatory, automated rotation, paid. Secrets Manager also stores DB credentials (RDS, Redshift, etc.) and can replicate secrets to other regions.",
       ref: "Secrets Manager vs SSM Parameter Store",
     },
     {
@@ -100,7 +100,10 @@ export const securityEncryption = {
       label: "What ACM manages / export limit",
       type: "definition",
       front: "What does ACM manage, and what's the export limitation?",
-      back: "The lifecycle of SSL/TLS certificates - issuance, renewal and deployment. It auto-renews DNS-validated public certs (email-validated ones need manual approval at renewal). Public ACM certs cannot be exported for external use.",
+      // Since June 2025 ACM does support exporting public certificates if you
+      // request them as exportable (extra cost); certs issued before then, and
+      // the default (non-exportable) ones, still can't be exported.
+      back: "The lifecycle of SSL/TLS certificates - issuance, renewal and deployment. It auto-renews DNS-validated public certs (email-validated ones need manual approval at renewal). By default a public ACM cert can only be used on integrated AWS services and can't be exported; since June 2025 you can request an exportable public cert (extra cost) to use anywhere.",
       ref: "AWS Certificate Manager (ACM)",
     },
     {
@@ -124,7 +127,7 @@ export const securityEncryption = {
       label: "WAF rule matches & actions",
       type: "definition",
       front: "What can a WAF rule match on, and what are the rule actions?",
-      back: "IPs (up to 10,000 per IP set), string patterns, SQL injection and XSS signatures, geo-match, and rate-based rules for basic DDoS mitigation. Actions: Block, Allow, Count.",
+      back: "IPs (up to 10,000 per IP set), string patterns, SQL injection and XSS signatures, geo-match, and rate-based rules for basic DDoS mitigation. Actions: Block, Allow, Count, CAPTCHA, Challenge.",
       ref: "Web ACLs & Rules",
     },
     {

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import confetti from "canvas-confetti";
 
 import { Analytics } from "../../helpers/analytics";
+import { DeckIcon } from "./deckIcons";
 
 const TYPE_LABELS = {
   definition: "Definition",
@@ -62,14 +63,29 @@ const CardShell = styled(motion.div)`
   flex-direction: column;
 `;
 
+const CardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.4rem;
+`;
+
+const CardTypeIcon = styled(DeckIcon)`
+  display: flex;
+
+  svg {
+    width: 2.6rem;
+    height: 2.6rem;
+    margin: 0;
+  }
+`;
+
 const CardType = styled.span`
-  align-self: flex-start;
   font-size: 1.1rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: ${({ theme }) => theme.mutedText};
-  margin-bottom: 1.4rem;
 `;
 
 const Front = styled.p`
@@ -143,6 +159,11 @@ const Hint = styled.p`
   font-size: 1.2rem;
   text-align: center;
   color: ${({ theme }) => theme.mutedText};
+
+  /* Touch devices have no physical keyboard - the shortcuts don't apply. */
+  @media (hover: none) and (pointer: coarse) {
+    display: none;
+  }
 
   kbd {
     font-family: inherit;
@@ -329,7 +350,10 @@ export default function Session({
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.18 }}
         >
-          <CardType>{TYPE_LABELS[current.type] ?? current.type}</CardType>
+          <CardHeader>
+            <CardTypeIcon deckId={current.deckId} />
+            <CardType>{TYPE_LABELS[current.type] ?? current.type}</CardType>
+          </CardHeader>
           <Front>{current.front}</Front>
           {revealed && (
             <>

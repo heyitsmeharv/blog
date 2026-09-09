@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import { cardsForDecks } from "./decks";
+import { DeckIcon } from "./deckIcons";
 
 const Header = styled.header`
   margin-bottom: 2.4rem;
@@ -67,6 +68,17 @@ const Checkbox = styled.input.attrs({ type: "checkbox" })`
   flex-shrink: 0;
   accent-color: ${({ theme }) => theme.link};
   cursor: pointer;
+`;
+
+const DeckRowIcon = styled(DeckIcon)`
+  flex-shrink: 0;
+  display: flex;
+
+  svg {
+    width: 2.8rem;
+    height: 2.8rem;
+    margin: 0;
+  }
 `;
 
 const DeckTitle = styled.span`
@@ -272,6 +284,7 @@ export default function StartScreen({
                 onClick={(e) => e.stopPropagation()}
                 aria-label={deck.title}
               />
+              <DeckRowIcon deckId={deck.id} />
               <DeckTitle>{deck.title}</DeckTitle>
               <DeckMeta>
                 {deckStats.total} cards · {deckStats.due} due ·{" "}

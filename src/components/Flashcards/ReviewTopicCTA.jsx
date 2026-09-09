@@ -73,7 +73,7 @@ export default function ReviewTopicCTA({ examId = "saa-c03", deck, label }) {
           Analytics.track("flashcards_review_topic_clicked", { examId, deck })
         }
       >
-        Review {name} →
+        Review {name}
       </Action>
     </Wrap>
   );

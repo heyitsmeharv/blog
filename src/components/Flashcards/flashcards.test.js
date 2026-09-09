@@ -40,7 +40,18 @@ describe("flashcards data", () => {
     const exam = getExam("saa-c03");
     const iamOnly = cardsForDecks(exam, ["iam"]);
     expect(iamOnly.length).toBeGreaterThan(0);
-    expect(iamOnly).toEqual(cardsForDecks(exam)); // only one deck so far
+    expect(iamOnly.length).toBeLessThan(cardsForDecks(exam).length);
+    expect(iamOnly.every((card) => card.deckId === "iam")).toBe(true);
     expect(cardsForDecks(exam, ["does-not-exist"])).toHaveLength(0);
+  });
+
+  it("cardsForDecks attaches the deckId of the deck each card came from", () => {
+    const exam = getExam("saa-c03");
+    for (const card of cardsForDecks(exam)) {
+      expect(
+        exam.decks.some((deck) => deck.id === card.deckId),
+        card.id,
+      ).toBe(true);
+    }
   });
 });

@@ -69,6 +69,7 @@ export function summarise(cards, progress, at = Date.now()) {
   let unseen = 0;
   let due = 0;
   let lapses = 0;
+  let nextDueAt = null; // earliest review time among cards not yet due
 
   for (const card of cards) {
     const entry = progress[card.id];
@@ -78,7 +79,11 @@ export function summarise(cards, progress, at = Date.now()) {
     }
     boxes[entry.box - 1] += 1;
     lapses += entry.lapses;
-    if (isDue(entry, at)) due += 1;
+    if (isDue(entry, at)) {
+      due += 1;
+    } else if (nextDueAt === null || entry.dueAt < nextDueAt) {
+      nextDueAt = entry.dueAt;
+    }
   }
 
   return {
@@ -88,6 +93,7 @@ export function summarise(cards, progress, at = Date.now()) {
     mastered: boxes[TOP_BOX - 1],
     lapses,
     boxes,
+    nextDueAt,
   };
 }
 

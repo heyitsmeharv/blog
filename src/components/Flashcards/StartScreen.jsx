@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronForward } from "@styled-icons/ionicons-solid/ChevronForward";
 
 import { cardsForDecks } from "./decks";
@@ -15,50 +16,46 @@ const Chevron = styled(ChevronForward)`
   height: 1.6rem;
   flex-shrink: 0;
   color: ${({ theme }) => theme.mutedText};
-  transition: transform 0.15s ease;
+  transform: rotate(${({ $open }) => ($open ? "90deg" : "0deg")});
+  transition: transform 0.25s ease;
 `;
 
-const HowItWorks = styled.details`
+const Panel = styled.div`
   margin-bottom: 2.4rem;
   border: 1px solid ${({ theme }) => theme.secondary}44;
   border-radius: 0.8rem;
   background: ${({ theme }) => theme.surface};
+  overflow: hidden;
+`;
+
+const Trigger = styled.button.attrs({ type: "button" })`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.4rem;
+  font-family: inherit;
   font-size: 1.4rem;
-  line-height: 1.65;
-  color: ${({ theme }) => theme.mutedText};
+  font-weight: 700;
+  text-align: left;
+  color: ${({ theme }) => theme.text};
+  background: none;
+  border: none;
+  cursor: pointer;
 
-  summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    cursor: pointer;
-    padding: 1.1rem 1.4rem;
-    font-weight: 700;
-    color: ${({ theme }) => theme.text};
-    list-style: none;
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
-  }
-
-  &[open] summary {
-    border-bottom: 1px solid ${({ theme }) => theme.secondary}44;
-  }
-
-  &[open] ${Chevron} {
-    transform: rotate(90deg);
-  }
-
-  summary:focus-visible {
+  &:focus-visible {
     outline: 3px solid ${({ theme }) => theme.focus};
-    outline-offset: 2px;
+    outline-offset: -3px;
   }
 `;
 
 const HowBody = styled.div`
   padding: 1.2rem 1.4rem 1.6rem;
+  border-top: 1px solid ${({ theme }) => theme.secondary}44;
+  font-size: 1.4rem;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.mutedText};
 
   p {
     margin: 0 0 1rem;
@@ -163,6 +160,7 @@ const DeckRowIcon = styled(DeckIcon)`
 
 const DeckTitle = styled.span`
   flex: 1;
+  min-width: 8rem;
   font-size: 1.6rem;
   font-weight: 600;
   color: ${({ theme }) => theme.text};
@@ -187,29 +185,78 @@ const SummaryLink = styled(Link)`
   }
 `;
 
-const MASTERED_COLOUR = "#4c9a6b";
+const DeckBarRow = styled.div`
+  flex-basis: 100%;
+  margin-top: 0.2rem;
+`;
 
-const stateColour = ($state, theme) => {
-  if ($state === "mastered") return MASTERED_COLOUR;
-  if ($state === "learning") return theme.link;
-  return theme.secondary; // new / unseen
-};
+/* Boxes ripen red -> amber -> green as a card gets more mastered. */
+const BOX_COLOURS = ["#e05a4d", "#e8883c", "#e0b13c", "#8bc34a", "#3f9d5a"];
+const NEW_COLOUR = "#8b93a1"; // unseen - neutral, theme-independent
 
-const Bar = styled.div`
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** "today" | "tomorrow" | "in 3 days" | "in ~2 weeks" for a future timestamp. */
+function dueLabel(ts, now = Date.now()) {
+  const days = Math.ceil((ts - now) / DAY_MS);
+  if (days <= 0) return "today";
+  if (days === 1) return "tomorrow";
+  if (days < 7) return `in ${days} days`;
+  const weeks = Math.round(days / 7);
+  return weeks <= 1 ? "in ~1 week" : `in ~${weeks} weeks`;
+}
+
+/** One-line status: what's the next thing to do in this selection/deck? */
+function statusText(s) {
+  if (s.due > 0) return `${s.due} due now`;
+  if (s.nextDueAt != null) return `next review ${dueLabel(s.nextDueAt)}`;
+  if (s.unseen > 0) return `${s.unseen} ready to start`;
+  return "all mastered";
+}
+
+const BoxBarTrack = styled.div`
   display: flex;
-  height: 1rem;
+  width: 100%;
+  height: ${({ $tall }) => ($tall ? "1rem" : "0.6rem")};
+  margin: ${({ $tall }) => ($tall ? "1.2rem 0 1.2rem" : "0")};
   border-radius: 999px;
   overflow: hidden;
-  background: ${({ theme }) => theme.secondary}33;
-  margin: 1.2rem 0 1rem;
+  background: ${({ theme }) => theme.secondary}22;
 `;
 
-const Segment = styled.div`
-  height: 100%;
+const BoxSeg = styled.div`
   flex-grow: ${({ $count }) => $count};
   flex-basis: 0;
-  background: ${({ $state, theme }) => stateColour($state, theme)};
+  background: ${({ $new, $colour }) => ($new ? NEW_COLOUR : $colour)};
 `;
+
+const BoxSwatch = styled.span`
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  border-radius: 0.3rem;
+  background: ${({ $new, $colour }) => ($new ? NEW_COLOUR : $colour)};
+`;
+
+/** Proportional strip: box 1..5, then unseen. Hidden when nothing has counts. */
+function BoxBar({ boxes, unseen, tall }) {
+  const total = boxes.reduce((sum, n) => sum + n, 0) + unseen;
+  if (total === 0) return null;
+
+  const label = [
+    ...boxes.map((n, i) => (i === 4 ? `Mastered: ${n}` : `Box ${i + 1}: ${n}`)),
+    `New: ${unseen}`,
+  ].join(" · ");
+
+  return (
+    <BoxBarTrack $tall={tall} title={label} aria-label={label}>
+      {boxes.map((n, i) => (
+        <BoxSeg key={i} $count={n} $colour={BOX_COLOURS[i]} />
+      ))}
+      <BoxSeg $count={unseen} $new />
+    </BoxBarTrack>
+  );
+}
 
 const Key = styled.ul`
   display: flex;
@@ -226,14 +273,6 @@ const KeyItem = styled.li`
   gap: 0.6rem;
   font-size: 1.3rem;
   color: ${({ theme }) => theme.mutedText};
-`;
-
-const Swatch = styled.span`
-  width: 1rem;
-  height: 1rem;
-  flex-shrink: 0;
-  border-radius: 0.3rem;
-  background: ${({ $state, theme }) => stateColour($state, theme)};
 `;
 
 const Legend = styled.p`
@@ -338,6 +377,8 @@ export default function StartScreen({
   onReset,
 }) {
   const [selected, setSelected] = useState(() => new Set(initialDeckIds));
+  const [howOpen, setHowOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   const toggle = (deckId) => {
     setSelected((prev) => {
@@ -356,8 +397,6 @@ export default function StartScreen({
   const hasSelection = selectedIds.length > 0;
   const reviewQueueEmpty = stats.due === 0 && stats.unseen === 0;
 
-  const learning = stats.boxes.slice(0, 4).reduce((sum, n) => sum + n, 0);
-
   return (
     <div>
       <Header>
@@ -365,56 +404,79 @@ export default function StartScreen({
         <Name>{exam.name}</Name>
       </Header>
 
-      <HowItWorks>
-        <summary>
+      <Panel>
+        <Trigger
+          onClick={() => setHowOpen((o) => !o)}
+          aria-expanded={howOpen}
+          aria-controls="how-it-works-body"
+        >
           How this works
-          <Chevron aria-hidden="true" />
-        </summary>
-        <HowBody>
-          <p>
-            These are spaced-repetition flashcards built on the{" "}
-            <strong>Leitner system</strong>. Every card sits in one of five
-            boxes:
-          </p>
-          <ul>
-            <li>New cards start in box 1 and are shown straight away.</li>
-            <li>
-              Answer <strong>Got it</strong> and the card moves up a box - you
-              won&apos;t see it again for a while, and the gap grows each time
-              (roughly 2, then 4, then 9, then 18 days).
-            </li>
-            <li>
-              Answer <strong>Missed it</strong> and it drops straight back to
-              box 1.
-            </li>
-            <li>
-              A card that reaches box 5 counts as <strong>mastered</strong>.
-            </li>
-          </ul>
-          <p>
-            <strong>Start review</strong> shows the cards that are due plus a
-            few new ones; <strong>Cram all</strong> ignores the schedule and
-            runs through every card in the decks you&apos;ve picked. Progress is
-            saved in this browser only.
-          </p>
-          <p>
-            The idea came from Nicky Case&apos;s{" "}
-            <a
-              href="https://ncase.me/remember/"
-              target="_blank"
-              rel="noreferrer"
+          <Chevron $open={howOpen} aria-hidden="true" />
+        </Trigger>
+        <AnimatePresence initial={false}>
+          {howOpen && (
+            <motion.div
+              id="how-it-works-body"
+              key="how-body"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.25,
+                ease: "easeInOut",
+              }}
+              style={{ overflow: "hidden" }}
             >
-              How To Remember Anything Forever-ish
-            </a>
-            .
-          </p>
-        </HowBody>
-      </HowItWorks>
+              <HowBody>
+                <p>
+                  These are spaced-repetition flashcards built on the{" "}
+                  <strong>Leitner system</strong>. Every card sits in one of
+                  five boxes:
+                </p>
+                <ul>
+                  <li>New cards start in box 1 and are shown straight away.</li>
+                  <li>
+                    Answer <strong>Got it</strong> and the card moves up a box -
+                    you won&apos;t see it again for a while, and the gap grows
+                    each time (roughly 2, then 4, then 9, then 18 days).
+                  </li>
+                  <li>
+                    Answer <strong>Missed it</strong> and it drops straight back
+                    to box 1.
+                  </li>
+                  <li>
+                    A card that reaches box 5 counts as{" "}
+                    <strong>mastered</strong>.
+                  </li>
+                </ul>
+                <p>
+                  <strong>Start review</strong> shows the cards that are due
+                  plus a few new ones; <strong>Cram all</strong> ignores the
+                  schedule and runs through every card in the decks you&apos;ve
+                  picked. Progress is saved in this browser only.
+                </p>
+                <p>
+                  The idea came from Nicky Case&apos;s{" "}
+                  <a
+                    href="https://ncase.me/remember/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    How To Remember Anything Forever-ish
+                  </a>
+                  .
+                </p>
+              </HowBody>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Panel>
 
       <SectionLabel>Decks</SectionLabel>
       <DeckList>
         {exam.decks.map((deck) => {
           const deckStats = statsFor(deck.cards);
+          const started = deckStats.total - deckStats.unseen > 0;
           return (
             <DeckRow key={deck.id} onClick={() => toggle(deck.id)}>
               <Checkbox
@@ -426,8 +488,7 @@ export default function StartScreen({
               <DeckRowIcon deckId={deck.id} />
               <DeckTitle>{deck.title}</DeckTitle>
               <DeckMeta>
-                {deckStats.total} cards · {deckStats.due} due ·{" "}
-                {deckStats.unseen} new
+                {deckStats.total} cards · {statusText(deckStats)}
               </DeckMeta>
               <SummaryLink
                 to={`/flashcards/${exam.id}/${deck.id}/summary`}
@@ -435,6 +496,11 @@ export default function StartScreen({
               >
                 Summary
               </SummaryLink>
+              {started && (
+                <DeckBarRow>
+                  <BoxBar boxes={deckStats.boxes} unseen={deckStats.unseen} />
+                </DeckBarRow>
+              )}
             </DeckRow>
           );
         })}
@@ -444,24 +510,18 @@ export default function StartScreen({
         Progress {hasSelection ? "" : "(select a deck)"}
       </SectionLabel>
       <Legend>
-        {stats.total} cards · {stats.due} due now
+        {stats.total} cards · {statusText(stats)}
       </Legend>
-      <Bar aria-hidden="true">
-        <Segment $state="mastered" $count={stats.mastered} />
-        <Segment $state="learning" $count={learning} />
-        <Segment $state="new" $count={stats.unseen} />
-      </Bar>
+      <BoxBar boxes={stats.boxes} unseen={stats.unseen} tall />
       <Key>
+        {stats.boxes.map((n, i) => (
+          <KeyItem key={i}>
+            <BoxSwatch $colour={BOX_COLOURS[i]} aria-hidden="true" />
+            {i === 4 ? `${n} mastered` : `Box ${i + 1}: ${n}`}
+          </KeyItem>
+        ))}
         <KeyItem>
-          <Swatch $state="mastered" aria-hidden="true" />
-          {stats.mastered} mastered
-        </KeyItem>
-        <KeyItem>
-          <Swatch $state="learning" aria-hidden="true" />
-          {learning} learning
-        </KeyItem>
-        <KeyItem>
-          <Swatch $state="new" aria-hidden="true" />
+          <BoxSwatch $new aria-hidden="true" />
           {stats.unseen} new
         </KeyItem>
       </Key>
@@ -483,8 +543,8 @@ export default function StartScreen({
 
       {hasSelection && reviewQueueEmpty && (
         <CaughtUp>
-          Nothing due and nothing new in these decks - you're caught up. Use{" "}
-          <strong>Cram all</strong> to run through them anyway.
+          Nothing due and nothing new in these decks - you&apos;re caught up.
+          Use <strong>Cram all</strong> to run through them anyway.
         </CaughtUp>
       )}
 

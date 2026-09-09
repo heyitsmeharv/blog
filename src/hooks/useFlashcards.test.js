@@ -141,6 +141,16 @@ describe("summarise", () => {
       mastered: 2,
       lapses: 6,
       boxes: [1, 0, 1, 0, 2],
+      nextDueAt: NOW + DAY, // earliest dueAt among the not-yet-due cards (b, c)
     });
+  });
+
+  it("nextDueAt is null when every seen card is already due", () => {
+    const deck = cards("a", "b");
+    const progress = {
+      a: { box: 1, dueAt: NOW - DAY, lapses: 0 },
+      b: { box: 2, dueAt: NOW, lapses: 0 },
+    };
+    expect(summarise(deck, progress, NOW).nextDueAt).toBeNull();
   });
 });

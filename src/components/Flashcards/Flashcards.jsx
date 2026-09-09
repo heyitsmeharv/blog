@@ -163,8 +163,9 @@ export default function Flashcards() {
 
   const confirmReset = useCallback(() => {
     reset();
+    if (exam) localStorage.removeItem(decksStorageKey(exam.id));
     setConfirmingReset(false);
-  }, [reset]);
+  }, [reset, exam]);
 
   if (!exam) {
     return (

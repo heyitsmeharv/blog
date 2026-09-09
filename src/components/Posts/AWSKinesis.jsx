@@ -212,6 +212,9 @@ const AWSKinesis = () => {
               Kinesis vs SQS vs SNS
             </TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="kinesis-overview">Kinesis Overview</SectionHeading>
@@ -574,6 +577,8 @@ const AWSKinesis = () => {
         </SectionHeading>
 
         <Table columns={columns3} data={data3} />
+
+        <SubSectionHeading id="review">Review</SubSectionHeading>
 
         <ReviewTopicCTA deck="kinesis" label="Kinesis" />
 

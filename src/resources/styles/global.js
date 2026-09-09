@@ -57,6 +57,24 @@ export const GlobalStyles = createGlobalStyle`
     border: 0;
   }
 
+  /* Zero the page margin so browsers drop their injected header/footer
+     (page title, URL, date, page numbers). Components add their own print
+     padding instead. */
+  @page {
+    margin: 0;
+  }
+
+  @media print {
+    nav {
+      display: none !important;
+    }
+
+    body {
+      background: #fff;
+      color: #000;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;

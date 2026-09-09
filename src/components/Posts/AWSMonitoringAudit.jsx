@@ -166,6 +166,9 @@ const AWSMonitoringAudit = () => {
               CloudWatch vs CloudTrail vs Config
             </TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="aws-cloudwatch">CloudWatch</SectionHeading>
@@ -696,6 +699,8 @@ const AWSMonitoringAudit = () => {
             Provide an audit trail for all API calls impacting the ELB.
           </TextListItem>
         </TextList>
+
+        <SectionHeading id="review">Review</SectionHeading>
 
         <ReviewTopicCTA deck="monitoring-audit" label="Monitoring & Audit" />
 

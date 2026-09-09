@@ -150,6 +150,9 @@ const AWSElasticComputeCloud = () => {
               Scaling the services using an auto-scaling group (ASG)
             </TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="what-is-ec2">What is an EC2?</SectionHeading>
@@ -1157,6 +1160,8 @@ const AWSElasticComputeCloud = () => {
           CPU limit for the overall ASG instances hits above 75%, we can ask the
           ASG to deploy more instances (scale out).
         </Paragraph>
+
+        <SectionHeading id="review">Review</SectionHeading>
 
         <ReviewTopicCTA deck="ec2" label="EC2" />
 

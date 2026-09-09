@@ -36,6 +36,7 @@ import NotFound from "./pages/NotFound";
 // components
 import Navbar from "./components/Navbar/LocalizedNavbar";
 import Flashcards from "./components/Flashcards/Flashcards.jsx";
+import SummarySheet from "./components/Flashcards/SummarySheet.jsx";
 
 // blog posts
 import TheStart from "./components/Posts/TheStart.jsx";
@@ -100,7 +101,7 @@ const getDocumentTitle = (pathname, language) => {
   }
 
   if (pathname.startsWith("/flashcards")) {
-    return "Flashcards";
+    return pathname.endsWith("/summary") ? "Summary sheet" : "Flashcards";
   }
 
   const slug = slugFromPath(pathname);
@@ -242,6 +243,11 @@ const App = () => {
                         component={AnalyticsPage}
                       />
                       <Route exact path="/flashcards" component={Flashcards} />
+                      <Route
+                        exact
+                        path="/flashcards/:examId/:deckId/summary"
+                        component={SummarySheet}
+                      />
                       <Route
                         exact
                         path="/flashcards/:examId"

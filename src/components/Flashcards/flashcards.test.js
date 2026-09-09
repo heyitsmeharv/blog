@@ -54,4 +54,22 @@ describe("flashcards data", () => {
       ).toBe(true);
     }
   });
+
+  it("any `label` a card has is a non-empty string", () => {
+    for (const exam of exams) {
+      for (const card of cardsForDecks(exam)) {
+        if (card.label !== undefined) {
+          expect(typeof card.label, card.id).toBe("string");
+          expect(card.label.trim().length, card.id).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
+
+  it("the s3 deck (summary-sheet worked example) labels every card", () => {
+    const s3 = getExam("saa-c03").decks.find((deck) => deck.id === "s3");
+    for (const card of s3.cards) {
+      expect(card.label, card.id).toBeTruthy();
+    }
+  });
 });

@@ -9,6 +9,7 @@ export const cloudfront = {
   cards: [
     {
       id: "cf-what",
+      label: "What CloudFront is / request flow",
       type: "definition",
       front: "What is CloudFront and how does a request flow?",
       back: "A CDN that caches content at global edge locations and regional edge caches. A request goes to the nearest edge; on a cache hit it's served directly, on a miss CloudFront fetches from the origin (e.g. S3, EC2) and caches it at the edge for future requests.",
@@ -16,6 +17,7 @@ export const cloudfront = {
     },
     {
       id: "cf-security",
+      label: "CloudFront security features",
       type: "definition",
       front: "What security features does CloudFront offer?",
       back: "AWS Shield for DDoS protection, SSL/TLS encryption, and integration with AWS WAF.",
@@ -23,6 +25,7 @@ export const cloudfront = {
     },
     {
       id: "cf-s3-oac",
+      label: "Serve S3 through CloudFront",
       type: "scenario",
       front:
         "You want to serve content from an S3 bucket through CloudFront, controlling access to the bucket. How?",
@@ -31,6 +34,7 @@ export const cloudfront = {
     },
     {
       id: "cf-custom-origin",
+      label: "EC2 / ALB origin networking",
       type: "definition",
       front:
         "What's the networking constraint when CloudFront uses an EC2 or load balancer origin?",
@@ -39,6 +43,7 @@ export const cloudfront = {
     },
     {
       id: "cf-geo-restriction",
+      label: "Geo-restriction",
       type: "scenario",
       front:
         "You must restrict content to (or block it from) specific countries. Feature?",
@@ -47,6 +52,7 @@ export const cloudfront = {
     },
     {
       id: "cf-price-classes",
+      label: "Price classes",
       type: "comparison",
       front: "CloudFront price classes?",
       back: "Price Class All: all regions, best performance. Price Class 200: most regions, excludes the most expensive. Price Class 100: only the least expensive regions. Fewer edge locations = lower cost.",
@@ -54,6 +60,7 @@ export const cloudfront = {
     },
     {
       id: "cf-cache-invalidation",
+      label: "Cache invalidation",
       type: "scenario",
       front:
         "You updated a website but viewers still get the old cached objects. What do you do?",
@@ -62,6 +69,7 @@ export const cloudfront = {
     },
     {
       id: "cf-global-accelerator",
+      label: "Global Accelerator",
       type: "definition",
       front: "What does AWS Global Accelerator provide?",
       back: "Two static IP addresses as a fixed entry point, and routing over the AWS global network to the nearest healthy endpoint (endpoints grouped by region), with health checks and failover. Integrated with AWS Shield.",
@@ -69,6 +77,7 @@ export const cloudfront = {
     },
     {
       id: "cf-global-accelerator-usecase",
+      label: "Fixed entry IPs + failover",
       type: "scenario",
       front:
         "You need a fixed pair of entry IP addresses and traffic routed to the optimal healthy regional endpoint with failover. Service?",

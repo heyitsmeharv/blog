@@ -620,6 +620,8 @@ const AWSRoute53 = () => {
           alt="Route 53 private hosted zone health checks"
         />
 
+        <SectionHeading id="review">Review</SectionHeading>
+
         <ReviewTopicCTA deck="route53" label="Route 53" />
 
         <SectionHeading id="references">References</SectionHeading>

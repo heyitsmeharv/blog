@@ -9,6 +9,7 @@ export const kinesis = {
   cards: [
     {
       id: "kinesis-family",
+      label: "Kinesis family",
       type: "definition",
       front: "What are the parts of the Kinesis family?",
       back: "Data Streams (capture/process real-time streams), Data Firehose (managed loading of streaming data into stores), Data Analytics (SQL / Apache Flink on streams), and Video Streams (stream video from devices).",
@@ -16,6 +17,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-shard-throughput",
+      label: "Shard throughput",
       type: "cloze",
       front:
         "A Kinesis Data Streams shard ingests up to ___ MB/s and emits up to ___ MB/s.",
@@ -24,6 +26,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-record",
+      label: "Kinesis record",
       type: "definition",
       front: "What makes up a Kinesis record?",
       back: "A sequence number, a partition key, and the data blob.",
@@ -31,6 +34,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-retention",
+      label: "Data Streams vs Firehose: storage & replay",
       type: "comparison",
       front: "Data Streams vs Firehose - data storage and replay?",
       back: "Data Streams stores data up to 365 days and supports replay. Firehose has no data storage and doesn't support replay.",
@@ -38,6 +42,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-capacity-modes",
+      label: "Provisioned vs on-demand",
       type: "comparison",
       front: "Kinesis Data Streams provisioned vs on-demand mode?",
       // On-demand now starts lower (4 MB/s write / 8 MB/s read) and, in
@@ -48,6 +53,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-ordering",
+      label: "Keep per-source data in order",
       type: "scenario",
       front:
         "100 trucks stream GPS data and each truck's data must stay in order. How?",
@@ -56,6 +62,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-consumers",
+      label: "Shared vs enhanced fan-out consumers",
       type: "comparison",
       front: "Kinesis shared consumers vs enhanced fan-out consumers?",
       back: "Shared (standard): consumers pull, sharing 2 MB/s per shard. Enhanced fan-out: each consumer gets its own dedicated pushed throughput of 2 MB/s per shard, reducing data-processing lag.",
@@ -63,6 +70,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-firehose",
+      label: "Load streaming data, no code",
       type: "scenario",
       front:
         "You just need to load streaming data into S3, Redshift or OpenSearch with no code and no servers. Service?",
@@ -71,6 +79,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-streams-vs-firehose",
+      label: "Data Streams vs Firehose",
       type: "comparison",
       front: "Kinesis Data Streams vs Firehose?",
       back: "Streams: you write producer/consumer code, real-time (~200 ms), data stored up to 365 days, supports replay, you manage scaling (shard splitting/merging). Firehose: fully managed, near-real-time, no data storage, no replay, automatic scaling, loads into destinations.",
@@ -78,6 +87,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-data-analytics",
+      label: "Real-time SQL over a stream",
       type: "scenario",
       front:
         "You need real-time SQL analysis / anomaly detection over a Kinesis stream with no infrastructure to manage. Service?",
@@ -86,6 +96,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-vs-sqs-vs-sns",
+      label: "Kinesis vs SQS vs SNS",
       type: "comparison",
       front: "Kinesis vs SQS vs SNS (per the post's table)?",
       back: "Kinesis: real-time big data / analytics / ETL, replay possible, ordering at the shard level. SQS: consumers pull, data is deleted after being consumed, as many consumers as you want, ordering only on FIFO. SNS: pub/sub push to many subscribers, data is not persisted (lost if not delivered).",
@@ -93,6 +104,7 @@ export const kinesis = {
     },
     {
       id: "kinesis-video-streams",
+      label: "Stream video from devices",
       type: "scenario",
       front:
         "Securely stream video from connected devices (security cameras, drones) into AWS for analytics and ML. Service?",

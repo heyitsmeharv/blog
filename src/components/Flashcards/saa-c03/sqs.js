@@ -9,6 +9,7 @@ export const sqs = {
   cards: [
     {
       id: "sqs-purpose",
+      label: "What SQS is / message lifecycle",
       type: "definition",
       front: "What is SQS and how does a message's lifecycle work?",
       back: "A fully managed message queue that decouples and scales producers and consumers. A message persists in the queue until the consumer deletes it or it hits the retention limit.",
@@ -16,6 +17,7 @@ export const sqs = {
     },
     {
       id: "sqs-consume-flow",
+      label: "How a consumer processes messages",
       type: "definition",
       front: "How does a consumer process SQS messages?",
       back: "Poll the queue (up to 10 messages per call), process, then call DeleteMessage. If it isn't deleted within the visibility timeout, it becomes visible again and can be processed twice.",
@@ -23,6 +25,7 @@ export const sqs = {
     },
     {
       id: "sqs-visibility-timeout",
+      label: "Visibility timeout & default",
       type: "definition",
       front: "What is the SQS message visibility timeout, and its default?",
       back: "After a consumer polls a message it becomes invisible to other consumers. Default 30 seconds. If not processed in time it will be processed twice - the consumer can call ChangeMessageVisibility to get more time.",
@@ -30,6 +33,7 @@ export const sqs = {
     },
     {
       id: "sqs-long-polling",
+      label: "Long polling",
       type: "scenario",
       front:
         "Consumers keep making empty polls against a mostly-empty queue. How do you cut API calls?",
@@ -38,6 +42,7 @@ export const sqs = {
     },
     {
       id: "sqs-standard-guarantees",
+      label: "Standard queue guarantees",
       type: "definition",
       front: "A Standard queue's delivery and ordering guarantees?",
       back: "At-least-once delivery (duplicate messages possible) and best-effort ordering (messages can arrive out of order). Nearly unlimited API calls per second, under 10 ms latency.",
@@ -45,6 +50,7 @@ export const sqs = {
     },
     {
       id: "sqs-retention",
+      label: "Message retention",
       type: "cloze",
       front:
         "An SQS message can stay in a queue for ___ by default and a maximum of ___.",
@@ -53,6 +59,7 @@ export const sqs = {
     },
     {
       id: "sqs-message-size",
+      label: "Message size limit",
       type: "cloze",
       // The post says 256 KB. AWS has since raised the SQS maximum message size
       // to 1 MiB (verified against the "Amazon SQS message quotas" docs, which
@@ -64,6 +71,7 @@ export const sqs = {
     },
     {
       id: "sqs-fifo",
+      label: "FIFO queue & throughput",
       type: "definition",
       // The post only cites the 300 / 3,000 numbers. Those are the default
       // (non-high-throughput) per-queue limits; high throughput mode raises the
@@ -74,6 +82,7 @@ export const sqs = {
     },
     {
       id: "sqs-standard-vs-fifo",
+      label: "Standard vs FIFO",
       type: "scenario",
       front:
         "Messages must be processed in order and duplicates removed. Standard or FIFO queue?",
@@ -82,6 +91,7 @@ export const sqs = {
     },
     {
       id: "sqs-asg-scaling",
+      label: "Scale workers with the backlog",
       type: "scenario",
       front:
         "A worker fleet on an ASG needs to scale with the SQS backlog. What drives it?",
@@ -90,6 +100,7 @@ export const sqs = {
     },
     {
       id: "sqs-decouple-pattern",
+      label: "Decouple a bottlenecked front-end",
       type: "scenario",
       front:
         "A front-end app is bottlenecked doing slow processing inline. How do you decouple it?",
@@ -98,6 +109,7 @@ export const sqs = {
     },
     {
       id: "sqs-access-policy",
+      label: "SQS queue policy",
       type: "definition",
       front: "What is an SQS queue policy used for?",
       back: "Cross-account access to the queue, and allowing other services (SNS, S3, ...) to write to it.",
@@ -105,6 +117,7 @@ export const sqs = {
     },
     {
       id: "sqs-security",
+      label: "SQS security (transit & rest)",
       type: "definition",
       front: "How is an SQS queue secured in transit and at rest?",
       back: "In transit: HTTPS. At rest: encryption with AWS KMS (client-side encryption is also possible). Access control via AWS IAM.",

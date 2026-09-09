@@ -9,6 +9,7 @@ export const serverless = {
   cards: [
     {
       id: "sl-what",
+      label: "What 'serverless' means",
       type: "definition",
       front: "What does 'serverless' mean?",
       back: "Not that there are no servers - you just don't manage, provision or see them. You focus on code and config; AWS handles capacity, scaling and patching. The term now covers any fully managed service, not just compute.",
@@ -16,6 +17,7 @@ export const serverless = {
     },
     {
       id: "sl-lambda-basics",
+      label: "What Lambda is",
       type: "definition",
       front: "What is AWS Lambda, in one line?",
       back: "A serverless compute service that runs your code in response to events, on demand, scaling automatically with traffic. You pay per request and compute duration.",
@@ -23,6 +25,7 @@ export const serverless = {
     },
     {
       id: "sl-lambda-limits",
+      label: "Lambda key limits",
       type: "definition",
       front: "Lambda's key limits: max runtime, memory, deployment size?",
       back: "Max execution time 900 seconds (15 minutes). Memory 128 MB to 10 GB (1 MB increments). Deployment: 50 MB zipped, 250 MB uncompressed. /tmp disk 512 MB to 10 GB.",
@@ -30,6 +33,7 @@ export const serverless = {
     },
     {
       id: "sl-lambda-too-long",
+      label: "25-minute job in Lambda?",
       type: "scenario",
       front:
         "A job reliably takes ~25 minutes. Can it run in a single Lambda invocation?",
@@ -38,6 +42,7 @@ export const serverless = {
     },
     {
       id: "sl-reserved-concurrency",
+      label: "Guarantee capacity for a function",
       type: "scenario",
       front:
         "A critical Lambda must be guaranteed capacity within the account's 1,000 concurrency limit. What do you set?",
@@ -46,6 +51,7 @@ export const serverless = {
     },
     {
       id: "sl-throttling",
+      label: "Exceeding concurrency",
       type: "definition",
       front:
         "What happens when Lambda invocations exceed available concurrency?",
@@ -54,6 +60,7 @@ export const serverless = {
     },
     {
       id: "sl-provisioned-concurrency",
+      label: "Kill cold-start latency",
       type: "scenario",
       front:
         "A user-facing Lambda has cold-start latency you can't tolerate. Fix?",
@@ -62,6 +69,7 @@ export const serverless = {
     },
     {
       id: "sl-snapstart",
+      label: "Lambda SnapStart",
       type: "definition",
       front: "What is Lambda SnapStart?",
       back: "Snapshots a fully initialised execution environment and reuses it, giving up to ~10x faster cold starts for supported runtimes (e.g. Java), at no extra cost.",
@@ -69,6 +77,7 @@ export const serverless = {
     },
     {
       id: "sl-edge-lambda-vs-cf-functions",
+      label: "Lambda@Edge vs CloudFront Functions",
       type: "comparison",
       front: "Lambda@Edge vs CloudFront Functions?",
       back: "Lambda@Edge: multiple runtimes, viewer + origin triggers, 5-10s, up to 10 GB memory, network and request-body access - for heavier logic like image processing or complex auth. CloudFront Functions: JavaScript only, viewer triggers only, sub-millisecond, 2 MB, millions of requests/sec - for simple header/URL rewrites.",
@@ -76,6 +85,7 @@ export const serverless = {
     },
     {
       id: "sl-apigw-what",
+      label: "API Gateway & integrations",
       type: "definition",
       front: "What is API Gateway and what can it integrate with?",
       back: "A managed service to create, publish, secure, monitor and manage APIs - a front door between backends and clients. Integration types: Lambda, HTTP endpoints, and direct AWS service integrations (S3, DynamoDB, Step Functions).",
@@ -83,6 +93,7 @@ export const serverless = {
     },
     {
       id: "sl-apigw-types",
+      label: "REST vs HTTP vs WebSocket APIs",
       type: "comparison",
       front: "API Gateway REST vs HTTP vs WebSocket APIs?",
       back: "REST: full-featured (legacy but still widely used). HTTP: lighter, cheaper, lower latency, for most common API use cases. WebSocket: stateful, real-time communication over WebSockets.",
@@ -90,6 +101,7 @@ export const serverless = {
     },
     {
       id: "sl-apigw-endpoint-types",
+      label: "API Gateway endpoint types",
       type: "comparison",
       front: "API Gateway endpoint types: edge-optimized, regional, private?",
       back: "Edge-optimized: fronted by CloudFront for global clients. Regional: for clients in the same region. Private: accessible only within a VPC via VPC endpoints.",
@@ -97,6 +109,7 @@ export const serverless = {
     },
     {
       id: "sl-step-functions",
+      label: "Orchestrate a multi-step workflow",
       type: "scenario",
       front:
         "You need to orchestrate a multi-step workflow across Lambda, SQS and SNS with retries, parallel steps and a human approval step. Service?",

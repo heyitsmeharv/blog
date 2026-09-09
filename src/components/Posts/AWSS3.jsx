@@ -265,6 +265,9 @@ const AWS3 = () => {
               Storage Options Comparison
             </TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="s3-introduction">
@@ -2144,6 +2147,8 @@ const AWS3 = () => {
             indexing and querying
           </TextListItem>
         </TextList>
+
+        <SectionHeading id="review">Review</SectionHeading>
 
         <ReviewTopicCTA deck="s3" label="S3" />
 

@@ -179,6 +179,9 @@ const AWSDatabases = () => {
           <TextListItem>
             <TextLink href="#timestream">Amazon Timestream</TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="database-types">Database Types</SectionHeading>
@@ -1290,6 +1293,8 @@ const AWSDatabases = () => {
           <TextListItem>Aurora (PostgerSQL): 5432</TextListItem>
           <TextListItem>Aurora (MySQL): 3306</TextListItem>
         </TextList>
+
+        <SectionHeading id="review">Review</SectionHeading>
 
         <ReviewTopicCTA deck="databases" label="Databases" />
 

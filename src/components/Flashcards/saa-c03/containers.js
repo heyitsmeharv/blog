@@ -9,6 +9,7 @@ export const containers = {
   cards: [
     {
       id: "ctr-ecs",
+      label: "Amazon ECS",
       type: "definition",
       front: "What is Amazon ECS?",
       back: "A fully managed container orchestration service that runs and manages Docker containers on a cluster of EC2 instances or on AWS Fargate.",
@@ -16,6 +17,7 @@ export const containers = {
     },
     {
       id: "ctr-ecs-objects",
+      label: "Task definition / task / service",
       type: "definition",
       front: "ECS: task definition vs task vs service?",
       back: "Task definition: the blueprint (Docker image, CPU/memory, networking, env vars). Task: an instance of a task definition. Service: keeps a specified number of tasks running continuously, scales them on demand, and replaces failed tasks.",
@@ -23,6 +25,7 @@ export const containers = {
     },
     {
       id: "ctr-launch-types",
+      label: "EC2 vs Fargate launch type",
       type: "comparison",
       front: "ECS EC2 launch type vs Fargate launch type?",
       back: "EC2: you provision and maintain the instances, each running the ECS agent to register with the cluster. Fargate: you don't provision infrastructure - tasks run based on the CPU/RAM you specify in the task definition.",
@@ -30,6 +33,7 @@ export const containers = {
     },
     {
       id: "ctr-fargate-usecase",
+      label: "Run containers, no infrastructure",
       type: "scenario",
       front:
         "You want to run containers without managing the underlying infrastructure. Option?",
@@ -38,6 +42,7 @@ export const containers = {
     },
     {
       id: "ctr-iam-roles",
+      label: "Instance profile vs task role",
       type: "comparison",
       front: "ECS EC2 instance profile vs ECS task role?",
       back: "Instance profile (EC2 launch type only): used by the ECS agent - call the ECS API, send logs to CloudWatch, pull images from ECR, read Secrets Manager / SSM Parameter Store. Task role: a role for a specific task, defined in the task definition (different services can have different roles).",
@@ -45,6 +50,7 @@ export const containers = {
     },
     {
       id: "ctr-task-role-scenario",
+      label: "Per-service container permissions",
       type: "scenario",
       front:
         "One ECS service's containers need a permission that other services on the same cluster shouldn't have. How?",
@@ -53,6 +59,7 @@ export const containers = {
     },
     {
       id: "ctr-ecs-lb",
+      label: "ECS with ALB vs NLB",
       type: "comparison",
       front: "ECS with ALB vs NLB?",
       back: "ALB: supported, works for most use cases. NLB: recommended for high-throughput / high-performance workloads, or when pairing with AWS PrivateLink.",
@@ -60,6 +67,7 @@ export const containers = {
     },
     {
       id: "ctr-ecs-efs",
+      label: "ECS shared persistent data",
       type: "scenario",
       front:
         "ECS tasks need to share persistent data, and tasks may run in any AZ. What do you mount?",
@@ -68,6 +76,7 @@ export const containers = {
     },
     {
       id: "ctr-ecs-autoscaling",
+      label: "ECS Service Auto Scaling",
       type: "definition",
       front: "What metrics and policies does ECS Service Auto Scaling use?",
       back: "Via AWS Application Auto Scaling, on ECS service average CPU, ECS service average memory, or ALB request count per target - using target tracking, step, or scheduled scaling policies.",
@@ -75,6 +84,7 @@ export const containers = {
     },
     {
       id: "ctr-ecr",
+      label: "Amazon ECR",
       type: "definition",
       front: "What is Amazon ECR?",
       back: "A fully managed container registry for Docker images (private or public) with image vulnerability scanning, versioning, image tags, and lifecycle policies.",
@@ -82,6 +92,7 @@ export const containers = {
     },
     {
       id: "ctr-eks",
+      label: "What EKS manages",
       type: "definition",
       front: "What does EKS manage, and what do you manage?",
       back: "AWS manages the Kubernetes control plane (API server, etcd) including scaling, patching and upgrades. You manage the worker nodes - or run them on Fargate.",
@@ -89,6 +100,7 @@ export const containers = {
     },
     {
       id: "ctr-eks-node-types",
+      label: "EKS node options",
       type: "comparison",
       front:
         "EKS node options: managed node groups, self-managed nodes, Fargate?",

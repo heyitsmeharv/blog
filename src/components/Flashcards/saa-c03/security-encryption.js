@@ -10,6 +10,7 @@ export const securityEncryption = {
   cards: [
     {
       id: "sec-encryption-types",
+      label: "Server-side vs client-side encryption",
       type: "comparison",
       front: "Server-side encryption vs client-side encryption?",
       back: "Server-side: AWS encrypts data before writing to disk and decrypts on access, keys managed by KMS or service-owned keys. Client-side: your app encrypts before sending and decrypts after retrieval - AWS only ever sees ciphertext.",
@@ -17,6 +18,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-kms-what",
+      label: "What KMS provides",
       type: "definition",
       front: "What does KMS provide?",
       back: "Centralised key management with fine-grained IAM controls and detailed CloudTrail auditing. For symmetric keys you never get the raw key material - you call the KMS API to use the key.",
@@ -24,6 +26,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-kms-symmetric-vs-asymmetric",
+      label: "KMS symmetric vs asymmetric",
       type: "comparison",
       front: "KMS symmetric vs asymmetric CMKs?",
       back: "Symmetric (AES-256): one key to encrypt and decrypt; what most AWS services use (S3, EBS, RDS, SQS, DynamoDB); API-only. Asymmetric (RSA/ECC): public/private pair for encrypt-decrypt or sign-verify; the public key is downloadable, so parties outside AWS who can't call the KMS API can still encrypt.",
@@ -31,6 +34,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-kms-key-types",
+      label: "KMS key types & pricing",
       type: "comparison",
       front:
         "KMS AWS-owned vs AWS-managed vs customer-managed vs imported keys?",
@@ -39,6 +43,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-kms-key-policy",
+      label: "Why IAM alone can't grant KMS access",
       type: "definition",
       front: "Why can't IAM alone grant access to a KMS key?",
       back: "Every key has a key policy (like an S3 bucket policy). You can't grant access without the key policy allowing it, even if IAM says 'Allow'. The default key policy grants the account root; a custom key policy is required for cross-account use.",
@@ -46,6 +51,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-kms-rotation",
+      label: "KMS key rotation by type",
       type: "definition",
       // The post predates two KMS changes (verified against the KMS "Rotate AWS
       // KMS keys" docs): customer-managed keys now have a real on-demand rotation
@@ -57,6 +63,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-kms-multi-region",
+      label: "Same key usable across regions",
       type: "scenario",
       front:
         "A multi-region database (e.g. DynamoDB Global Tables) needs the same key usable in each region. Feature?",
@@ -65,6 +72,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-encrypted-snapshot-copy",
+      label: "Copy an encrypted snapshot",
       type: "scenario",
       front:
         "You're copying an encrypted EBS snapshot across accounts or regions. What's needed?",
@@ -73,6 +81,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-param-store-vs-secrets-manager",
+      label: "Parameter Store vs Secrets Manager",
       type: "comparison",
       front: "SSM Parameter Store vs Secrets Manager?",
       back: "Parameter Store: configuration & secrets, KMS optional, rotation manual or via Lambda, free (except API calls). Secrets Manager: primarily secrets, KMS mandatory, automated rotation, paid. Secrets Manager also stores DB credentials (RDS, Redshift, etc.) and can replicate secrets to other regions.",
@@ -80,6 +89,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-secrets-manager-rotation",
+      label: "Automatic DB credential rotation",
       type: "scenario",
       front: "You need automatic rotation of database credentials. Service?",
       back: "AWS Secrets Manager - built for automatic secret rotation, and it stores database credentials (RDS, Redshift, etc.).",
@@ -87,6 +97,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-acm",
+      label: "What ACM manages / export limit",
       type: "definition",
       front: "What does ACM manage, and what's the export limitation?",
       back: "The lifecycle of SSL/TLS certificates - issuance, renewal and deployment. It auto-renews DNS-validated public certs (email-validated ones need manual approval at renewal). Public ACM certs cannot be exported for external use.",
@@ -94,6 +105,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-acm-validation",
+      label: "ACM DNS vs email validation",
       type: "comparison",
       front: "ACM DNS validation vs email validation?",
       back: "DNS validation (add a CNAME record): ACM renews the cert automatically. Email validation: requires manual approval at renewal.",
@@ -101,6 +113,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-waf-what",
+      label: "What WAF is / what it attaches to",
       type: "definition",
       front: "What is AWS WAF and what can it attach to?",
       back: "Protects web applications from common exploits (SQL injection, XSS, bad bots) by inspecting HTTP(S) requests against Web ACL rules before they reach the backend. Attaches to ALB, API Gateway, CloudFront, AppSync GraphQL APIs, and Cognito user pools - not NLB.",
@@ -108,6 +121,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-waf-rules",
+      label: "WAF rule matches & actions",
       type: "definition",
       front: "What can a WAF rule match on, and what are the rule actions?",
       back: "IPs (up to 10,000 per IP set), string patterns, SQL injection and XSS signatures, geo-match, and rate-based rules for basic DDoS mitigation. Actions: Block, Allow, Count.",
@@ -115,6 +129,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-waf-fixed-ip",
+      label: "WAF + fixed IPs (no NLB support)",
       type: "scenario",
       front:
         "You need WAF protection plus fixed IP addresses, but WAF doesn't support NLB. Pattern?",
@@ -123,6 +138,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-shield-tiers",
+      label: "Shield Standard vs Advanced",
       type: "comparison",
       front: "AWS Shield Standard vs Advanced?",
       back: "Standard: enabled by default at no extra cost; protects against most common network/transport-layer DDoS attacks. Advanced: enhanced detection and mitigation, DDoS cost protection, detailed visibility, and 24/7 access to the AWS DDoS Response Team.",
@@ -130,6 +146,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-firewall-manager",
+      label: "Org-wide security policy enforcement",
       type: "scenario",
       front:
         "You need to enforce WAF Web ACLs, Shield Advanced and security-group policies consistently across every account in the organisation. Service?",
@@ -138,6 +155,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-guardduty",
+      label: "Continuous threat detection",
       type: "scenario",
       front:
         "You want continuous detection of malicious activity (compromised credentials, reconnaissance, data exfiltration, crypto-mining) with no agents. Service?",
@@ -146,6 +164,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-inspector",
+      label: "Scan workloads for CVEs",
       type: "scenario",
       front:
         "You need to scan workloads for CVEs and security issues. Service?",
@@ -154,6 +173,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-macie",
+      label: "Discover sensitive data in S3",
       type: "scenario",
       front:
         "You need to discover and classify sensitive data (PII, financial data) in S3. Service?",
@@ -162,6 +182,7 @@ export const securityEncryption = {
     },
     {
       id: "sec-detection-trio",
+      label: "GuardDuty vs Inspector vs Macie",
       type: "comparison",
       front: "GuardDuty vs Inspector vs Macie?",
       back: "GuardDuty: threat detection from data-source analysis. Inspector: vulnerability management (CVEs, misconfigurations) of workloads. Macie: sensitive-data discovery and classification in S3.",

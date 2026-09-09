@@ -9,6 +9,7 @@ export const sns = {
   cards: [
     {
       id: "sns-purpose",
+      label: "Pub/sub pattern",
       type: "definition",
       front: "What pattern does SNS implement?",
       back: "Publish/subscribe. A publisher sends one message to a topic; the topic delivers it to every subscription. The producer only sends to the one topic, not to each endpoint directly.",
@@ -16,6 +17,7 @@ export const sns = {
     },
     {
       id: "sns-subscriber-types",
+      label: "Subscriber endpoint types",
       type: "definition",
       front:
         "What kinds of endpoint can subscribe to an SNS topic (per the post)?",
@@ -24,6 +26,7 @@ export const sns = {
     },
     {
       id: "sns-fan-out",
+      label: "Fan-out pattern",
       type: "scenario",
       front:
         "One event needs to reach several systems independently, without losing messages. Pattern?",
@@ -32,6 +35,7 @@ export const sns = {
     },
     {
       id: "sns-fan-out-policy",
+      label: "Fan-out to SQS requirements",
       type: "definition",
       front:
         "What's required for SNS fan-out to an SQS queue, and does it cross regions?",
@@ -40,6 +44,7 @@ export const sns = {
     },
     {
       id: "sns-message-filtering",
+      label: "Message filtering",
       type: "scenario",
       front:
         "You want a particular subscription to receive only some of a topic's messages. How?",
@@ -48,6 +53,7 @@ export const sns = {
     },
     {
       id: "sns-security",
+      label: "SNS security",
       type: "definition",
       front: "How is an SNS topic secured?",
       back: "Encryption at rest with AWS KMS, HTTPS in transit, access control via AWS IAM, and an SNS topic policy for cross-account access or letting other services (e.g. S3) publish.",

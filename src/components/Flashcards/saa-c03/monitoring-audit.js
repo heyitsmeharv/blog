@@ -9,6 +9,7 @@ export const monitoringAudit = {
   cards: [
     {
       id: "mon-three-services",
+      label: "CloudWatch vs CloudTrail vs Config",
       type: "comparison",
       front: "CloudWatch vs CloudTrail vs Config - one line each?",
       back: "CloudWatch: performance monitoring - metrics, logs, dashboards, alarms, events. CloudTrail: API-level auditing - who did what, when, from where. Config: configuration history, compliance evaluation, change timelines.",
@@ -16,6 +17,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-ec2-default-metrics",
+      label: "OS-level metrics & logs from EC2",
       type: "scenario",
       front:
         "You need OS-level metrics (memory, disk) and logs from an EC2 instance in CloudWatch. What's needed?",
@@ -24,6 +26,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-agent-types",
+      label: "Logs Agent vs Unified Agent",
       type: "comparison",
       front: "CloudWatch Logs Agent vs CloudWatch Unified Agent?",
       back: "Logs Agent: legacy, only sends logs to CloudWatch Logs. Unified Agent: newer, sends logs AND additional system metrics, config via SSM Parameter Store.",
@@ -31,6 +34,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-logs-components",
+      label: "Log group vs log stream",
       type: "definition",
       front: "CloudWatch Logs: log group vs log stream, and retention?",
       back: "Log group: a logical group of log streams sharing retention, access policies and tags. Log stream: log events from a single source. Retention is set per log group, from 1 day to indefinite.",
@@ -38,6 +42,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-logs-insights",
+      label: "CloudWatch Logs Insights",
       type: "definition",
       front: "What is CloudWatch Logs Insights for, and not for?",
       back: "An on-demand query engine for log data (filtering, aggregation, visualisation) - great for troubleshooting. Not for real-time processing.",
@@ -45,6 +50,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-subscription-filters",
+      label: "Real-time processing of log events",
       type: "scenario",
       front: "You need real-time processing of log events. Feature?",
       back: "CloudWatch Logs subscription filters - push matching log events to Kinesis Data Streams, Kinesis Data Firehose, or AWS Lambda.",
@@ -52,6 +58,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-metric-filter",
+      label: "Alarm on a log pattern",
       type: "scenario",
       front:
         "You want an alarm when a particular pattern appears in your logs. How?",
@@ -60,6 +67,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-alarm-states",
+      label: "Alarm states",
       type: "definition",
       front: "The three CloudWatch alarm states?",
       back: "OK (within threshold), ALARM (threshold breached), INSUFFICIENT_DATA (not enough recent datapoints).",
@@ -67,6 +75,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-alarm-targets",
+      label: "Alarm actions",
       type: "definition",
       front: "What actions can a CloudWatch alarm trigger?",
       back: "EC2 actions (stop, terminate, reboot, recover), Auto Scaling (scale out / in), and SNS notifications.",
@@ -74,6 +83,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-composite-alarms",
+      label: "Composite alarm",
       type: "definition",
       front: "What is a composite alarm?",
       back: "An alarm that monitors the state of other alarms using AND/OR logic - ideal for reducing alert noise.",
@@ -81,6 +91,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-eventbridge",
+      label: "Amazon EventBridge",
       type: "definition",
       front: "What is Amazon EventBridge?",
       back: "A serverless event bus connecting AWS services, SaaS apps and your own apps. Rules match events by pattern or schedule (cron) and route to targets like Lambda, Step Functions, SNS, SQS, Kinesis, ECS tasks and Systems Manager.",
@@ -88,6 +99,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-eventbridge-buses",
+      label: "EventBridge bus types",
       type: "definition",
       front: "EventBridge bus types?",
       back: "Default bus (receives many AWS service events), custom buses (your applications), partner buses (SaaS integrations). A schema registry can discover event schemas and generate code bindings.",
@@ -95,6 +107,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-eventbridge-root-login",
+      label: "Notify on root login",
       type: "scenario",
       front: "You want to be notified whenever the root user logs in. How?",
       back: "An EventBridge rule that reacts to the root user login event and sends a notification (e.g. to SNS).",
@@ -102,6 +115,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-cloudtrail",
+      label: "What CloudTrail records",
       type: "definition",
       front: "What does CloudTrail record and where does it deliver?",
       back: "API-level audit logs - who did what, when, and from where. Delivered to S3, and optionally to CloudWatch Logs.",
@@ -109,6 +123,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-cloudtrail-event-types",
+      label: "Management vs data events",
       type: "comparison",
       front: "CloudTrail management events vs data events?",
       back: "Management events: operations that change resource configuration (create an EC2 instance, modify a security group) - logged by default. Data events: high-volume actions on resources (S3 object-level APIs, Lambda invocations) - disabled by default due to volume/cost, enabled per resource.",
@@ -116,6 +131,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-cloudtrail-retention",
+      label: "CloudTrail retention without a trail",
       type: "definition",
       front:
         "How long does CloudTrail keep events without a trail, and how do you keep them longer?",
@@ -124,6 +140,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-cloudtrail-insights",
+      label: "CloudTrail Insights",
       type: "definition",
       front: "What is CloudTrail Insights?",
       back: "Analyses management events to detect unusual activity - e.g. spikes in API calls or abnormal error rates - and surfaces them as insight events.",
@@ -131,6 +148,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-config",
+      label: "What AWS Config does",
       type: "definition",
       front: "What does AWS Config do?",
       back: "Continuously records the configuration of your AWS resources and evaluates them against compliance rules - for configuration audit, change tracking and policy enforcement.",
@@ -138,6 +156,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-config-rules-no-block",
+      label: "Config rules don't block",
       type: "definition",
       front: "Do AWS Config rules block non-compliant actions?",
       back: "No - they only detect and flag resources as COMPLIANT or NON_COMPLIANT. There are hundreds of AWS managed rules, or write custom rules backed by Lambda or Guard.",
@@ -145,6 +164,7 @@ export const monitoringAudit = {
     },
     {
       id: "mon-config-remediation",
+      label: "Auto-fix non-compliant resources",
       type: "scenario",
       front: "You want non-compliant resources fixed automatically. How?",
       back: "Attach a remediation action (an SSM Automation document) to the Config rule - Config runs it when a resource is NON_COMPLIANT.",

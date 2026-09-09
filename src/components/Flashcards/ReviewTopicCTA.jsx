@@ -59,14 +59,15 @@ const Action = styled(Link)`
 `;
 
 /**
- * End-of-post prompt linking to the flashcard deck for this topic.
+ * End-of-post prompt linking to the flashcard deck for this topic. The summary
+ * sheet is reached from the flashcards start screen, not from here.
  * `deck` is the deck id (matches a deck in the exam manifest and `?decks=`).
  */
 export default function ReviewTopicCTA({ examId = "saa-c03", deck, label }) {
   const name = label ?? "this topic";
   return (
     <Wrap>
-      <Text>Test your recall on {name} with spaced-repetition flashcards.</Text>
+      <Text>Review this {name} post with spaced-repetition flashcards.</Text>
       <Action
         to={`/flashcards/${examId}?decks=${deck}`}
         onClick={() =>

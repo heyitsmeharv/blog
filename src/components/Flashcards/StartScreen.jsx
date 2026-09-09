@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import { cardsForDecks } from "./decks";
@@ -40,7 +41,8 @@ const DeckList = styled.ul`
 const DeckRow = styled.li`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
   padding: 1.2rem 1.4rem;
   margin-bottom: 0.8rem;
   background: ${({ theme }) => theme.surface};
@@ -92,6 +94,19 @@ const DeckMeta = styled.span`
   font-size: 1.3rem;
   color: ${({ theme }) => theme.mutedText};
   white-space: nowrap;
+`;
+
+const SummaryLink = styled(Link)`
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.link};
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const MASTERED_COLOUR = "#4c9a6b";
@@ -290,6 +305,12 @@ export default function StartScreen({
                 {deckStats.total} cards · {deckStats.due} due ·{" "}
                 {deckStats.unseen} new
               </DeckMeta>
+              <SummaryLink
+                to={`/flashcards/${exam.id}/${deck.id}/summary`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                Summary
+              </SummaryLink>
             </DeckRow>
           );
         })}

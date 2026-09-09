@@ -179,6 +179,9 @@ const AWSMachineLearning = () => {
               Machine Learning Summary
             </TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="aws-rekognition">Rekognition</SectionHeading>
@@ -450,6 +453,8 @@ const AWSMachineLearning = () => {
             <Strong>Textract</Strong>: document text and structure extraction.
           </TextListItem>
         </TextList>
+
+        <SectionHeading id="review">Review</SectionHeading>
 
         <ReviewTopicCTA deck="machine-learning" label="Machine Learning" />
 

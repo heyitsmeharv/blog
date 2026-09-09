@@ -133,6 +133,9 @@ const AWSContainers = () => {
               Amazon EKS (Elastic Kubernetes Service)
             </TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="what-is-docker">What is Docker?</SectionHeading>
@@ -507,6 +510,8 @@ const AWSContainers = () => {
             capacity.
           </IndentedTextListItem>
         </IndentedTextList>
+
+        <SubSectionHeading id="review">Review</SubSectionHeading>
 
         <ReviewTopicCTA deck="containers" label="Containers" />
 

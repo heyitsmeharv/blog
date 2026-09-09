@@ -10,6 +10,7 @@ export const machineLearning = {
   cards: [
     {
       id: "ml-rekognition",
+      label: "Image / video analysis + moderation",
       type: "scenario",
       front:
         "Detect objects/faces/text in images and video, and flag inappropriate content with edge cases sent for human review. Services?",
@@ -18,6 +19,7 @@ export const machineLearning = {
     },
     {
       id: "ml-transcribe",
+      label: "Audio / video to text",
       type: "scenario",
       front:
         "Convert audio and video into text (with timestamps and speaker labels). Service?",
@@ -26,6 +28,7 @@ export const machineLearning = {
     },
     {
       id: "ml-polly",
+      label: "Text to speech",
       type: "scenario",
       front:
         "Turn text into natural-sounding speech, with control over pronunciation and prosody. Service?",
@@ -34,6 +37,7 @@ export const machineLearning = {
     },
     {
       id: "ml-translate",
+      label: "Translate text",
       type: "scenario",
       front:
         "Translate text between many languages in real time or batch. Service?",
@@ -42,6 +46,7 @@ export const machineLearning = {
     },
     {
       id: "ml-lex-connect",
+      label: "Chatbot + contact centre",
       type: "scenario",
       front:
         "Build a voice/text chatbot, and use it in a cloud contact centre. Services?",
@@ -50,6 +55,7 @@ export const machineLearning = {
     },
     {
       id: "ml-comprehend",
+      label: "NLP insights from text",
       type: "scenario",
       front:
         "Extract sentiment, entities, key phrases, language and PII from unstructured text. Service?",
@@ -58,6 +64,7 @@ export const machineLearning = {
     },
     {
       id: "ml-sagemaker",
+      label: "Build / train / deploy custom models",
       type: "scenario",
       front:
         "You need to build, train and deploy your own custom ML model at scale. Service?",
@@ -66,6 +73,7 @@ export const machineLearning = {
     },
     {
       id: "ml-forecast",
+      label: "Time-series forecasting",
       type: "scenario",
       front:
         "Generate accurate time-series forecasts for demand planning, inventory or workforce capacity. Service?",
@@ -74,6 +82,7 @@ export const machineLearning = {
     },
     {
       id: "ml-kendra",
+      label: "Natural-language enterprise search",
       type: "scenario",
       front:
         "Let users ask natural-language questions and get relevant answers from structured and unstructured data across multiple internal repositories. Service?",
@@ -82,6 +91,7 @@ export const machineLearning = {
     },
     {
       id: "ml-personalize",
+      label: "Personalised recommendations",
       type: "scenario",
       front:
         "Add real-time personalised product/content recommendations without building a recommendation engine. Service?",
@@ -90,6 +100,7 @@ export const machineLearning = {
     },
     {
       id: "ml-textract",
+      label: "Extract text / forms from documents",
       type: "scenario",
       front:
         "Extract text, handwriting and structured form/table data from PDFs and scanned images (beyond basic OCR). Service?",

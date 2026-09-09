@@ -252,6 +252,9 @@ const AWSVPC = () => {
           <TextListItem>
             <TextLink href="#vpc-summary">VPC Summary</TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="vpc-introduction">
@@ -1029,6 +1032,8 @@ const AWSVPC = () => {
             IPv6.
           </TextListItem>
         </TextList>
+
+        <SubSectionHeading id="review">Review</SubSectionHeading>
 
         <ReviewTopicCTA deck="vpc" label="VPC" />
 

@@ -144,6 +144,9 @@ const AWSDataAnalytics = () => {
           <TextListItem>
             <TextLink href="#aws-lake-formation">Lake Formation</TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="aws-athena">Athena</SectionHeading>
@@ -584,6 +587,8 @@ const AWSDataAnalytics = () => {
           like Athena, Redshift and EMR.
         </Paragraph>
         <PostImage src={LakeFormation} alt="AWS Lake Formation overview" />
+
+        <SectionHeading id="review">Review</SectionHeading>
 
         <ReviewTopicCTA deck="data-analytics" label="Data & Analytics" />
 

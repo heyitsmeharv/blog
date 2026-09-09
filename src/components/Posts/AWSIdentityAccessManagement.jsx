@@ -544,6 +544,8 @@ const AWSIdentityAccessManagement = () => {
           alt="AWS Control Tower guardrails example"
         />
 
+        <SectionHeading id="review">Review</SectionHeading>
+
         <ReviewTopicCTA deck="iam" label="IAM" />
 
         <SectionHeading>References</SectionHeading>

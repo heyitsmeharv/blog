@@ -96,6 +96,9 @@ const AWSSNS = () => {
           <TextListItem>
             <TextLink href="#message-filtering">Message Filtering</TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="sns-introduction">
@@ -214,6 +217,8 @@ const AWSSNS = () => {
           src={SNSMessageFiltering}
           alt="SNS message filtering diagram"
         />
+
+        <SubSectionHeading id="review">Review</SubSectionHeading>
 
         <ReviewTopicCTA deck="sns" label="SNS" />
 

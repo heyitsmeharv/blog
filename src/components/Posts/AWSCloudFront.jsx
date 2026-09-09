@@ -101,6 +101,9 @@ const AWSCloudFront = () => {
           <TextListItem>
             <TextLink href="#global-accelerator">Global Accelerator</TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="cloudfront-overview">AWS CloudFront</SectionHeading>
@@ -371,6 +374,8 @@ const AWSCloudFront = () => {
             endpoints as needed.
           </TextListItem>
         </TextList>
+
+        <SubSectionHeading id="review">Review</SubSectionHeading>
 
         <ReviewTopicCTA deck="cloudfront" label="CloudFront" />
 

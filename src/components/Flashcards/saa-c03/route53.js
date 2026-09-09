@@ -9,6 +9,7 @@ export const route53 = {
   cards: [
     {
       id: "r53-what",
+      label: "What Route 53 provides",
       type: "definition",
       front: "What does Route 53 provide?",
       back: "A scalable, highly available DNS service: hosted zones, domain registration, traffic-routing policies, and health checks (enabling automatic DNS failover). Named after the traditional DNS port 53.",
@@ -16,6 +17,7 @@ export const route53 = {
     },
     {
       id: "r53-record-types",
+      label: "A / AAAA / CNAME / NS",
       type: "definition",
       front: "The main record types: A, AAAA, CNAME, NS?",
       back: "A: hostname to IPv4. AAAA: hostname to IPv6. CNAME: hostname to another hostname. NS: the name servers for a hosted zone, which control how traffic is routed for a domain.",
@@ -23,6 +25,7 @@ export const route53 = {
     },
     {
       id: "r53-hosted-zones",
+      label: "Public vs private hosted zone",
       type: "comparison",
       front: "Public vs private hosted zone?",
       back: "Public: records for routing traffic on the internet (public domain names). Private: records for routing traffic within one or more VPCs (private domain names).",
@@ -30,6 +33,7 @@ export const route53 = {
     },
     {
       id: "r53-cname-vs-alias",
+      label: "CNAME vs Alias",
       type: "comparison",
       front: "CNAME vs Alias record?",
       back: "CNAME points to another hostname but cannot be a root (apex) domain. Alias is Route 53-specific, works with root and non-root domains, is always type A/AAAA, is free, has native health-check support, and auto-recognises IP changes of the target. You can't set a TTL on an Alias.",
@@ -37,6 +41,7 @@ export const route53 = {
     },
     {
       id: "r53-alias-apex",
+      label: "Apex domain to an AWS resource",
       type: "scenario",
       front:
         "You need mydomain.com (the root/apex) to point at an AWS resource. Record type?",
@@ -45,6 +50,7 @@ export const route53 = {
     },
     {
       id: "r53-ttl",
+      label: "High vs low TTL",
       type: "comparison",
       front: "High vs low TTL on a Route 53 record?",
       back: "High TTL (days): less traffic on Route 53, but higher chance of serving an outdated record. Low TTL (seconds): more traffic and cost, but slim chance of an outdated record. TTL is mandatory on every record type except Alias.",
@@ -52,6 +58,7 @@ export const route53 = {
     },
     {
       id: "r53-simple-routing",
+      label: "Simple routing",
       type: "definition",
       front: "Simple routing policy - behaviour and limitation?",
       back: "Routes to a single resource (or you can list multiple values and the client picks one at random). Cannot be associated with health checks.",
@@ -59,6 +66,7 @@ export const route53 = {
     },
     {
       id: "r53-weighted-routing",
+      label: "Weighted routing",
       type: "scenario",
       front:
         "You want to send a percentage of traffic to a new version of a service (e.g. for testing). Routing policy?",
@@ -67,6 +75,7 @@ export const route53 = {
     },
     {
       id: "r53-latency-routing",
+      label: "Latency-based routing",
       type: "scenario",
       front:
         "You want each user directed to the resource with the lowest latency for them. Routing policy?",
@@ -75,6 +84,7 @@ export const route53 = {
     },
     {
       id: "r53-failover-routing",
+      label: "Failover routing",
       type: "scenario",
       front:
         "Active-passive: use the secondary resource only when the primary is unhealthy. Routing policy?",
@@ -83,6 +93,7 @@ export const route53 = {
     },
     {
       id: "r53-geolocation-routing",
+      label: "Geolocation routing",
       type: "scenario",
       front:
         "Users must be routed by their location regardless of latency (e.g. for website localisation or restricting content). Routing policy?",
@@ -91,6 +102,7 @@ export const route53 = {
     },
     {
       id: "r53-geoproximity",
+      label: "Geoproximity routing",
       type: "definition",
       front: "What does geoproximity routing do, and what does it require?",
       back: "Distributes traffic based on how close users are to the resource, with an adjustable bias to shift more or less traffic to a resource. Requires Route 53 Traffic Flow.",
@@ -98,6 +110,7 @@ export const route53 = {
     },
     {
       id: "r53-ip-based-routing",
+      label: "IP-based routing",
       type: "scenario",
       front:
         "You want users from a particular ISP's IP range sent to a specific endpoint. Routing policy?",
@@ -106,6 +119,7 @@ export const route53 = {
     },
     {
       id: "r53-multivalue-routing",
+      label: "Multivalue answer routing",
       type: "definition",
       front: "What does multivalue answer routing return?",
       back: "Up to 8 records per query when routing to multiple resources. Can be associated with health checks.",
@@ -113,6 +127,7 @@ export const route53 = {
     },
     {
       id: "r53-health-check-basics",
+      label: "Endpoint health check basics",
       type: "definition",
       front:
         "Route 53 endpoint health checks - protocols, threshold for 'healthy', interval?",
@@ -121,6 +136,7 @@ export const route53 = {
     },
     {
       id: "r53-calculated-health-check",
+      label: "Calculated health check",
       type: "definition",
       front: "What is a calculated health check?",
       back: "One health check that combines the results of up to 256 child health checks using OR/AND/NOT logic - you specify how many children must pass for the parent to pass.",
@@ -128,6 +144,7 @@ export const route53 = {
     },
     {
       id: "r53-private-health-check",
+      label: "Health-check a private resource",
       type: "scenario",
       front:
         "Route 53's health checkers live outside the VPC and can't reach a private resource. How do you health-check it?",

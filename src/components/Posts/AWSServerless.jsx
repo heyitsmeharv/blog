@@ -206,6 +206,9 @@ const AWSServerless = () => {
           <TextListItem>
             <TextLink href="#aws-step-functions">Step Functions</TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="what-is-serverless">
@@ -424,6 +427,8 @@ const AWSServerless = () => {
           and human approval steps (via callbacks or integrations).
         </Paragraph>
         <PostImage src={StepFunctionExample} alt="AWS Step Functions example" />
+
+        <SectionHeading id="review">Review</SectionHeading>
 
         <ReviewTopicCTA deck="serverless" label="Serverless" />
 

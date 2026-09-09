@@ -227,6 +227,9 @@ const AWSSecurityEncryption = () => {
           <TextListItem>
             <TextLink href="#aws-macie">AWS Macie</TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="aws-encryption-overview">
@@ -861,6 +864,8 @@ const AWSSecurityEncryption = () => {
           to maintain compliance with data protection requirements.
         </Paragraph>
         <PostImage src={AWSMacie} alt="AWS Macie sensitive data discovery" />
+
+        <SectionHeading id="review">Review</SectionHeading>
 
         <ReviewTopicCTA
           deck="security-encryption"

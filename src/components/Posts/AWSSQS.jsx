@@ -95,6 +95,9 @@ const AWSSQS = () => {
           <TextListItem>
             <TextLink href="#fifo-queue">FIFO Queue</TextLink>
           </TextListItem>
+          <TextListItem>
+            <TextLink href="#review">Review</TextLink>
+          </TextListItem>
         </TextList>
 
         <SectionHeading id="sqs-introduction">
@@ -310,6 +313,8 @@ const AWSSQS = () => {
           FIFO queues can now go well beyond 300 / 3,000 msg/s by enabling high
           throughput mode.
         </UpdateNote>
+
+        <SubSectionHeading id="review">Review</SubSectionHeading>
 
         <ReviewTopicCTA deck="sqs" label="SQS" />
 

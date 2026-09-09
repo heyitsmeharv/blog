@@ -1,12 +1,90 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { ChevronForward } from "@styled-icons/ionicons-solid/ChevronForward";
 
 import { cardsForDecks } from "./decks";
 import { DeckIcon } from "./deckIcons";
 
 const Header = styled.header`
+  margin-bottom: 1.6rem;
+`;
+
+const Chevron = styled(ChevronForward)`
+  width: 1.6rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+  color: ${({ theme }) => theme.mutedText};
+  transition: transform 0.15s ease;
+`;
+
+const HowItWorks = styled.details`
   margin-bottom: 2.4rem;
+  border: 1px solid ${({ theme }) => theme.secondary}44;
+  border-radius: 0.8rem;
+  background: ${({ theme }) => theme.surface};
+  font-size: 1.4rem;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.mutedText};
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 1.1rem 1.4rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.text};
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  &[open] summary {
+    border-bottom: 1px solid ${({ theme }) => theme.secondary}44;
+  }
+
+  &[open] ${Chevron} {
+    transform: rotate(90deg);
+  }
+
+  summary:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.focus};
+    outline-offset: 2px;
+  }
+`;
+
+const HowBody = styled.div`
+  padding: 1.2rem 1.4rem 1.6rem;
+
+  p {
+    margin: 0 0 1rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  ul {
+    margin: 0 0 1rem;
+    padding-left: 1.8rem;
+  }
+
+  li {
+    margin: 0.3rem 0;
+  }
+
+  strong {
+    color: ${({ theme }) => theme.text};
+  }
+
+  a {
+    color: ${({ theme }) => theme.link};
+    font-weight: 700;
+  }
 `;
 
 const Code = styled.span`
@@ -286,6 +364,52 @@ export default function StartScreen({
         <Code>{exam.code}</Code>
         <Name>{exam.name}</Name>
       </Header>
+
+      <HowItWorks>
+        <summary>
+          How this works
+          <Chevron aria-hidden="true" />
+        </summary>
+        <HowBody>
+          <p>
+            These are spaced-repetition flashcards built on the{" "}
+            <strong>Leitner system</strong>. Every card sits in one of five
+            boxes:
+          </p>
+          <ul>
+            <li>New cards start in box 1 and are shown straight away.</li>
+            <li>
+              Answer <strong>Got it</strong> and the card moves up a box - you
+              won&apos;t see it again for a while, and the gap grows each time
+              (roughly 2, then 4, then 9, then 18 days).
+            </li>
+            <li>
+              Answer <strong>Missed it</strong> and it drops straight back to
+              box 1.
+            </li>
+            <li>
+              A card that reaches box 5 counts as <strong>mastered</strong>.
+            </li>
+          </ul>
+          <p>
+            <strong>Start review</strong> shows the cards that are due plus a
+            few new ones; <strong>Cram all</strong> ignores the schedule and
+            runs through every card in the decks you&apos;ve picked. Progress is
+            saved in this browser only.
+          </p>
+          <p>
+            The idea came from Nicky Case&apos;s{" "}
+            <a
+              href="https://ncase.me/remember/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              How To Remember Anything Forever-ish
+            </a>
+            .
+          </p>
+        </HowBody>
+      </HowItWorks>
 
       <SectionLabel>Decks</SectionLabel>
       <DeckList>

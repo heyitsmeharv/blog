@@ -38,6 +38,7 @@ import {
   TextListItem,
   IndentedTextList,
   IndentedTextListItem,
+  UpdateNote,
 } from "../Typography/Typography";
 
 // images
@@ -459,6 +460,12 @@ const AWSDatabases = () => {
           replicas and it's failover is instantaneous (30 seconds) but it all
           comes at a cost as it's roughly 20% more than an RDS instance.
         </Paragraph>
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          An Aurora cluster volume now grows up to 256 TiB on current engine
+          versions, not 128 TB.
+        </UpdateNote>
 
         <SubSectionHeading>Features of Aurora</SubSectionHeading>
 

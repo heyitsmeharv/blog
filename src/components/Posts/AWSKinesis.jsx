@@ -33,6 +33,7 @@ import {
   TextListItem,
   IndentedTextList,
   IndentedTextListItem,
+  UpdateNote,
 } from "../Typography/Typography";
 
 // components
@@ -407,6 +408,13 @@ const AWSKinesis = () => {
           Comparison Between Provisioned and On-Demand Modes
         </SubSectionHeading>
         <Table columns={columns} data={data} />
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          The on-demand figures have since changed: a stream now starts at 4
+          MB/s write / 8 MB/s read, and in some regions scales far past the 200
+          / 400 MB/s ceiling quoted here.
+        </UpdateNote>
 
         <SubSectionHeading>Kinesis Data Streams Security</SubSectionHeading>
         <PostImage

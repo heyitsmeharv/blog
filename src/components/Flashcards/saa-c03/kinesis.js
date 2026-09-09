@@ -40,7 +40,10 @@ export const kinesis = {
       id: "kinesis-capacity-modes",
       type: "comparison",
       front: "Kinesis Data Streams provisioned vs on-demand mode?",
-      back: "Provisioned: manual capacity based on shard count, cost based on shard count, best for predictable traffic and cost control. On-demand: scales automatically (up to 200 MB/s write, 400 MB/s read), pay for data throughput, best for unpredictable variable traffic.",
+      // On-demand now starts lower (4 MB/s write / 8 MB/s read) and, in
+      // us-east-1 / us-west-2 / eu-west-1, can scale far past 200/400 MB/s.
+      // 200 MB/s write / 400 MB/s read is the default ceiling for other regions.
+      back: "Provisioned: manual capacity based on shard count, cost based on shard count, best for predictable traffic and cost control. On-demand: scales automatically (default ceiling 200 MB/s write / 400 MB/s read; higher in some regions), pay for data throughput, best for unpredictable variable traffic.",
       ref: "Comparison Between Provisioned and On-Demand Modes",
     },
     {

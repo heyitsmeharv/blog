@@ -47,8 +47,12 @@ export const securityEncryption = {
     {
       id: "sec-kms-rotation",
       type: "definition",
+      // The post predates two KMS changes (verified against the KMS "Rotate AWS
+      // KMS keys" docs): customer-managed keys now have a real on-demand rotation
+      // API plus a configurable rotation period, and imported (EXTERNAL) key
+      // material now supports on-demand rotation too.
       front: "KMS key rotation by key type?",
-      back: "AWS-managed CMKs: automatic, yearly. Customer-managed CMKs: optional automatic rotation, plus on-demand rotation by creating a new CMK and moving the alias. Imported keys: manual rotation only, via aliases.",
+      back: "AWS-managed keys: automatic every ~1 year, can't be disabled. Customer-managed symmetric keys: optional automatic rotation (default 365 days, configurable 90-2560) plus true on-demand rotation. Imported key material: on-demand rotation by importing new material - no automatic rotation. Asymmetric, HMAC and custom-key-store keys: manual only (create a new key and repoint the alias).",
       ref: "Key Rotation",
     },
     {

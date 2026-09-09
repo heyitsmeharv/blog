@@ -83,7 +83,10 @@ export const databases = {
       type: "definition",
       front:
         "How does Aurora store data, and how does it compare to RDS on cost?",
-      back: "6 copies of the data across 3 AZs, storage striped across hundreds of volumes, auto-grows in 10 GB increments up to 128 TB. Compatible with PostgreSQL/MySQL. Roughly 20% more expensive than RDS.",
+      // The post says 128 TB. Current Aurora docs state the cluster volume grows
+      // up to 256 TiB on recent engine versions (verified against "Amazon Aurora
+      // storage"). 128 TiB was the previous ceiling.
+      back: "6 copies of the data across 3 AZs, storage striped across hundreds of volumes, auto-grows in 10 GB increments up to 128 TiB (256 TiB on current engine versions). Compatible with PostgreSQL/MySQL. Roughly 20% more expensive than RDS.",
       ref: "Amazon Aurora",
     },
     {

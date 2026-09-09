@@ -31,6 +31,7 @@ import {
   TextLink,
   TextList,
   TextListItem,
+  UpdateNote,
 } from "../Typography/Typography";
 
 // components
@@ -247,6 +248,12 @@ const AWSSQS = () => {
           <TextListItem>Limitation of 256kb per message sent.</TextListItem>
         </TextList>
 
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          The maximum SQS message size has since been raised from 256 KB to 1
+          MiB.
+        </UpdateNote>
+
         <SubSectionHeading>
           SQS with Auto Scaling Groups (ASG)
         </SubSectionHeading>
@@ -297,6 +304,12 @@ const AWSSQS = () => {
           msg/s with batching. It does however remove duplicate messages from
           being sent.
         </Paragraph>
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          FIFO queues can now go well beyond 300 / 3,000 msg/s by enabling high
+          throughput mode.
+        </UpdateNote>
 
         <ReviewTopicCTA deck="sqs" label="SQS" />
 

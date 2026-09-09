@@ -130,3 +130,24 @@ export const TertiaryHeading = styled.h3`
   font-style: italic;
   color: ${({ theme }) => theme.text};
 `;
+
+export const UpdateNote = styled.aside`
+  margin: 2rem 0 2.4rem;
+  padding: 1.4rem 1.8rem;
+  background: ${({ theme }) => theme.surface};
+  border-left: 4px solid ${({ theme }) => theme.secondary};
+  border-radius: 0.6rem;
+  color: ${({ theme }) => theme.text};
+  font-size: clamp(1.5rem, 1.7vw, 1.75rem);
+  line-height: 2.1;
+
+  strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    opacity: 0.85;
+  }
+`;

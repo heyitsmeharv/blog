@@ -140,7 +140,7 @@ export const monitoringAudit = {
       id: "mon-config-rules-no-block",
       type: "definition",
       front: "Do AWS Config rules block non-compliant actions?",
-      back: "No - they only detect and flag resources as COMPLIANT or NON_COMPLIANT. There are 75+ AWS managed rules, or write custom rules backed by Lambda.",
+      back: "No - they only detect and flag resources as COMPLIANT or NON_COMPLIANT. There are hundreds of AWS managed rules, or write custom rules backed by Lambda or Guard.",
       ref: "Config Rules",
     },
     {

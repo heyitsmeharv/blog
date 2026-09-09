@@ -31,6 +31,7 @@ import {
   TextListItem,
   IndentedTextList,
   IndentedTextListItem,
+  UpdateNote,
 } from "../Typography/Typography";
 
 // icons
@@ -373,6 +374,13 @@ const AWSSecurityEncryption = () => {
             <Strong>Imported keys</Strong>: only manual rotation via aliases.
           </TextListItem>
         </TextList>
+
+        <UpdateNote>
+          <strong>Updated since publishing</strong>
+          KMS has since added native on-demand rotation for customer-managed
+          keys (with a configurable rotation period), and on-demand rotation of
+          imported key material - no more creating new keys and moving aliases.
+        </UpdateNote>
 
         <SubSectionHeading>KMS Key Policies</SubSectionHeading>
         <Paragraph>

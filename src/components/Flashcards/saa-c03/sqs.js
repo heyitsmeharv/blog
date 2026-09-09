@@ -54,15 +54,22 @@ export const sqs = {
     {
       id: "sqs-message-size",
       type: "cloze",
+      // The post says 256 KB. AWS has since raised the SQS maximum message size
+      // to 1 MiB (verified against the "Amazon SQS message quotas" docs, which
+      // now state a 1,048,576-byte maximum). Bigger payloads still need the
+      // Extended Client Library, which stores the body in S3.
       front: "SQS message size limit: ___ per message.",
-      back: "256 KB.",
+      back: "1 MiB (raised from the old 256 KB limit). For larger payloads use the SQS Extended Client Library, which keeps the body in S3 (up to 2 GB).",
       ref: "Attributes",
     },
     {
       id: "sqs-fifo",
       type: "definition",
+      // The post only cites the 300 / 3,000 numbers. Those are the default
+      // (non-high-throughput) per-queue limits; high throughput mode raises the
+      // ceiling substantially (verified against the SQS message quotas docs).
       front: "What does a FIFO queue provide, and at what throughput?",
-      back: "Messages sent in the order the queue receives them, and duplicate messages removed. Limited to 300 msg/s without batching, 3,000 msg/s with batching.",
+      back: "Messages sent in the order the queue receives them, and duplicate messages removed. Default throughput: 300 msg/s (send/receive/delete) without batching, 3,000 msg/s with batching. High throughput mode raises this to thousands of TPS per queue (tens of thousands in the largest regions).",
       ref: "FIFO Queue",
     },
     {

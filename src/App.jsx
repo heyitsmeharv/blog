@@ -74,6 +74,7 @@ import LambdaPowertools from "./components/Posts/LambdaPowertools.jsx";
 import AWSMultiAccountSetup from "./components/Posts/AWSMultiAccountSetup.jsx";
 import AWSPatchManagement from "./components/Posts/AWSPatchManagement.jsx";
 import AWSDeployEC2 from "./components/Posts/AWSDeployEC2.jsx";
+import AgileSprintSetups from "./components/Posts/AgileSprintSetups.jsx";
 import { posts } from "./helpers/posts";
 import {
   blogText,
@@ -412,6 +413,11 @@ const App = () => {
                         exact
                         path="/blog/deploy-to-ec2"
                         component={AWSDeployEC2}
+                      />
+                      <Route
+                        exact
+                        path="/blog/agile-sprint-setups"
+                        component={AgileSprintSetups}
                       />
                       <Route component={NotFound} />
                     </Switch>

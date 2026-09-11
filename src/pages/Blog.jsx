@@ -85,6 +85,8 @@ import {
   KubernetesSVG,
   TerraformSVG,
   ConventionalCommitsSVG,
+  JIRASVG,
+  ConfluenceSVG,
 } from "../resources/styles/icons";
 
 // animations
@@ -1025,6 +1027,24 @@ export default function Blog() {
         navigate: "aws-patch-management",
         published: true,
       },
+      {
+        title: "Agile & Sprint Setups",
+        readingTime: "approx 15 mins",
+        type: "Theory",
+        date: "11/09/2026",
+        tags: [
+          { name: "DevOps", background: "#2d3436" },
+          { name: "Jira", background: "#0052CC", icon: <JIRASVG /> },
+          {
+            name: "Confluence",
+            background: "#172B4D",
+            icon: <ConfluenceSVG />,
+          },
+        ],
+        intro: `In this post, I'd like to share my personal experience with Agile and Scrum, and how I've seen them implemented in practice. I have found throughout working with various teams that, although Agile and Scrum are well documented and defined, people can have different opinions on what "correct" Agile looks like...`,
+        navigate: "agile-sprint-setups",
+        published: true,
+      },
     ].reverse(),
   );
 
@@ -1670,6 +1690,24 @@ export default function Blog() {
       ],
       intro: `I want to walkthrough how we can deploy to an EC2 instance, how it can be configured to be secure, to scale, and to be resilient. The goal is to walk through different configurations and show the differences between them. Everything below happens in the AWS Console and can be easily replicated in any AWS account...`,
       navigate: "deploy-to-ec2",
+      published: true,
+    },
+    {
+      title: "Agile & Sprint Setups",
+      readingTime: "approx 15 mins",
+      type: "Theory",
+      date: "11/09/2026",
+      tags: [
+        { name: "DevOps", background: "#2d3436" },
+        { name: "Jira", background: "#0052CC", icon: <JIRASVG /> },
+        {
+          name: "Confluence",
+          background: "#172B4D",
+          icon: <ConfluenceSVG />,
+        },
+      ],
+      intro: `In this post, I'd like to share my personal experience with Agile and Scrum, and how I've seen them implemented in practice. I have found throughout working with various teams that, although Agile and Scrum are well documented and defined, people can have different opinions on what "correct" Agile looks like...`,
+      navigate: "agile-sprint-setups",
       published: true,
     },
   ].reverse();
